@@ -24,11 +24,22 @@ class SelectedLocationsViewController: UIViewController {
         super.viewDidLoad()
         
         setUpTableview()
+        addButton()
         networkManager.delegate = self
-        networkManager.fetchWeather(cityName: "London")
-        networkManager.fetchWeather(cityName: "Paris")
-        networkManager.fetchWeather(cityName: "Milan")
-        contentTableView.reloadData()
+        styleUI()
+//        networkManager.fetchWeather(cityName: "London")
+//        networkManager.fetchWeather(cityName: "Paris")
+//        networkManager.fetchWeather(cityName: "Milan")
+//        contentTableView.reloadData()
+    }
+    
+    //MARK: - Actions
+    @objc func addButtonTapped(_ sender: UIButton) {
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let destinationVC = mainStoryboard.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else { return }
+        destinationVC.delegate = self
+        
+        navigationController?.pushViewController(destinationVC, animated: true)
     }
 }
 
@@ -58,6 +69,28 @@ private extension SelectedLocationsViewController {
         contentTableView.dataSource = self
         contentTableView.register(UINib(nibName: "SelectedLocationTableViewCell", bundle: nil), forCellReuseIdentifier: "SelectedLocationTableViewCell")
     }
+    
+    func addButton() {
+        let button = UIButton(frame: CGRect(x: view.frame.width - 100, y: view.frame.height - 100, width: 50, height: 50))
+        button.setTitle("Add", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .red
+        button.layer.cornerRadius = button.frame.width / 2
+        
+        button.addTarget(self, action: #selector(addButtonTapped(_:)), for: .touchUpInside)
+        view.addSubview(button)
+    }
+    
+    func styleUI() {
+        view.backgroundColor = .clear
+        let layer = CAGradientLayer()
+        layer.frame = view.bounds
+        
+        layer.colors = [UIColor.green.cgColor, UIColor.yellow.cgColor]
+        layer.startPoint = CGPoint(x: 0, y: 0)
+        layer.endPoint = CGPoint(x: 1, y: 1)
+        view.layer.addSublayer(layer)
+    }
 }
 
 //MARK: - Network Delegate
@@ -70,5 +103,14 @@ extension SelectedLocationsViewController: SelectedLocationWeatherManagerDelegat
     
     func didFailWithError(error: Error) {
         fatalError("Fail with error")
+    }
+}
+
+//MARK: - MapViewController Delegate Methods
+extension SelectedLocationsViewController: MapViewControllerDelegate {
+    func mapViewController(didAddLocation: (longitude: Double?, latitude: Double?)) {
+        if let lon = didAddLocation.longitude, let lat = didAddLocation.latitude {
+            networkManager.fetchWeatherBy(coordinates: (longitude: lon, latitude: lat))
+        }
     }
 }

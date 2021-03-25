@@ -9,7 +9,17 @@ import Foundation
 
 protocol SelectedLocationWeatherManagerDelegate: class {
     func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didUpdateWeather weather: SelectedLocationWeatherModel)
+    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, long: Double, lat: Double)
     func didFailWithError(error: Error)
+    func didRecieveEmptyResponse()
+}
+
+extension SelectedLocationWeatherManagerDelegate {
+    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didUpdateWeather weather: SelectedLocationWeatherModel){}
+    
+    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, long: Double, lat: Double ) {}
+    
+    func didRecieveEmptyResponse() {}
 }
 
 struct SelectedLocationWeatherManager {
@@ -31,6 +41,7 @@ struct SelectedLocationWeatherManager {
                     self.delegate?.didFailWithError(error: error!)
                     return
                 }
+                
                 if let safeData = data {
                     if let weather = self.parseJSON(safeData) {
                         self.delegate?.selectedLocationWeatherManager(self, didUpdateWeather: weather)
@@ -57,6 +68,56 @@ struct SelectedLocationWeatherManager {
         } catch {
             print("Couldnt parse JSON")
             return nil
+        }
+    }
+    
+    func getLocation(by cityName: String) {
+        let correctCityName = cityName.replacingOccurrences(of: " ", with: "")
+        if let url = URL(string: "https://api.openweathermap.org/geo/1.0/direct?q=\(correctCityName)&limit=1&appid=73894ed3d982502db57069e27afdfc6b") {
+            let session = URLSession(configuration: .default)
+            
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if error != nil {
+                    self.delegate?.didFailWithError(error: error!)
+                    return
+                }
+                
+                if let safeData = data {
+                    let decoder = JSONDecoder()
+                    do {
+                        let decodedData = try decoder.decode([Coordinates].self, from: safeData)
+                        guard decodedData.count > 0 else {
+                            delegate?.didRecieveEmptyResponse()
+                            return
+                        }
+                        delegate?.selectedLocationWeatherManager(self, long: decodedData[0].lon, lat: decodedData[0].lat)
+                    } catch {
+                        delegate?.didFailWithError(error: error)
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    func fetchWeatherBy(coordinates: (longitude: Double, latitude: Double)) {
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(coordinates.latitude)&lon=\(coordinates.longitude)&appid=73894ed3d982502db57069e27afdfc6b&units=metric"
+        if let url = URL(string: urlString) {
+            let session = URLSession(configuration: .default)
+            
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if error != nil {
+                    self.delegate?.didFailWithError(error: error!)
+                    return
+                }
+                
+                if let safeData = data {
+                    if let weather = self.parseJSON(safeData) {
+                        self.delegate?.selectedLocationWeatherManager(self, didUpdateWeather: weather)
+                    }
+                }
+            }
+            task.resume()
         }
     }
 }
