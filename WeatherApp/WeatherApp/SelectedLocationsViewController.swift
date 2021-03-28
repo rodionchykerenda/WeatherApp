@@ -10,6 +10,7 @@ import UIKit
 class SelectedLocationsViewController: UIViewController {
     
     //MARK: - Outlets
+    @IBOutlet weak var backgroundView: UIView!
     @IBOutlet private weak var contentTableView: UITableView!
     
     //MARK: - Private Properties
@@ -20,18 +21,27 @@ class SelectedLocationsViewController: UIViewController {
         }
     }
     
+    // MARK: - LifeCycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("VIEW DID LOAD")
         setUpTableview()
         addButton()
         networkManager.delegate = self
         styleUI()
-//        networkManager.fetchWeather(cityName: "London")
-//        networkManager.fetchWeather(cityName: "Paris")
-//        networkManager.fetchWeather(cityName: "Milan")
-//        contentTableView.reloadData()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
     
     //MARK: - Actions
     @objc func addButtonTapped(_ sender: UIButton) {
@@ -71,8 +81,9 @@ private extension SelectedLocationsViewController {
     }
     
     func addButton() {
-        let button = UIButton(frame: CGRect(x: view.frame.width - 100, y: view.frame.height - 100, width: 50, height: 50))
+        let button = UIButton(frame: CGRect(x: view.frame.width - 100, y: view.frame.height - 120, width: 80, height: 80))
         button.setTitle("Add", for: .normal)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .red
         button.layer.cornerRadius = button.frame.width / 2
@@ -82,14 +93,14 @@ private extension SelectedLocationsViewController {
     }
     
     func styleUI() {
-        view.backgroundColor = .clear
+        contentTableView.backgroundColor = .clear
         let layer = CAGradientLayer()
         layer.frame = view.bounds
         
-        layer.colors = [UIColor.green.cgColor, UIColor.yellow.cgColor]
-        layer.startPoint = CGPoint(x: 0, y: 0)
-        layer.endPoint = CGPoint(x: 1, y: 1)
-        view.layer.addSublayer(layer)
+        layer.colors = [UIColor(named: "TopBackgroundColor")?.cgColor, UIColor(named: "BottomBackgroundColor")?.cgColor]
+        layer.startPoint = CGPoint(x: 0.5, y: 0)
+        layer.endPoint = CGPoint(x: 0.5, y: 1)
+        backgroundView.layer.addSublayer(layer)
     }
 }
 
@@ -98,6 +109,13 @@ extension SelectedLocationsViewController: SelectedLocationWeatherManagerDelegat
     func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didUpdateWeather weather: SelectedLocationWeatherModel) {
         DispatchQueue.main.async {
             self.dataSource.append(weather)
+        }
+    }
+    
+    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didGetCityName name: String, at location: (long: Double, lat: Double)) {
+        DispatchQueue.main.async {
+            DataBaseManager.instance.addCity(latitude: location.lat, longitude: location.long, name: name)
+//            dataSource = DataBaseManager.instance.getCities()
         }
     }
     
@@ -110,7 +128,9 @@ extension SelectedLocationsViewController: SelectedLocationWeatherManagerDelegat
 extension SelectedLocationsViewController: MapViewControllerDelegate {
     func mapViewController(didAddLocation: (longitude: Double?, latitude: Double?)) {
         if let lon = didAddLocation.longitude, let lat = didAddLocation.latitude {
-            networkManager.fetchWeatherBy(coordinates: (longitude: lon, latitude: lat))
+            networkManager.getCityName(by: (lon, lat))
+            print("Delegate Method")
+            //networkManager.fetchWeatherBy(coordinates: (longitude: lon, latitude: lat))
         }
     }
 }

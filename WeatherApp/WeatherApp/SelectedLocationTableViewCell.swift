@@ -13,9 +13,19 @@ class SelectedLocationTableViewCell: UITableViewCell {
     @IBOutlet private weak var cityNameLabel: UILabel!
     @IBOutlet private weak var temperatureLabel: UILabel!
     
+    override class func awakeFromNib() {
+        super.awakeFromNib()
+    }
+    
     //MARK: - Helpers
     func update(selectedLocation: SelectedLocationWeatherModel) {
         cityNameLabel.text = selectedLocation.cityName
         temperatureLabel.text = selectedLocation.temperatureString + "°С"
+        styleUI()
+    }
+    
+    func styleUI() {
+        self.backgroundColor = .clear
+        contentView.backgroundColor = .clear
     }
 }

@@ -17,7 +17,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Abc-uD-baq">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kbW-xv-Mbn">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Abc-uD-baq">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
@@ -26,13 +30,18 @@
                         <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Abc-uD-baq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="E5B-OM-3WS"/>
+                            <constraint firstAttribute="bottom" secondItem="kbW-xv-Mbn" secondAttribute="bottom" id="K1t-0a-zFf"/>
                             <constraint firstItem="Abc-uD-baq" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="N6b-NQ-b08"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Abc-uD-baq" secondAttribute="bottom" id="U5j-y8-7EE"/>
                             <constraint firstItem="Abc-uD-baq" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="ofg-tV-fed"/>
+                            <constraint firstItem="kbW-xv-Mbn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="uI1-Z2-72Y"/>
+                            <constraint firstItem="kbW-xv-Mbn" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="vSM-7J-G1S"/>
+                            <constraint firstAttribute="trailing" secondItem="kbW-xv-Mbn" secondAttribute="trailing" id="wJ7-4t-aI0"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="yUC-0H-keT"/>
                     <connections>
+                        <outlet property="backgroundView" destination="kbW-xv-Mbn" id="m97-aM-OPy"/>
                         <outlet property="contentTableView" destination="Abc-uD-baq" id="o6L-TU-3Yk"/>
                     </connections>
                 </viewController>

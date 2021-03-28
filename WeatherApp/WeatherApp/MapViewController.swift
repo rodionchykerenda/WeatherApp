@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-protocol MapViewControllerDelegate {
+protocol MapViewControllerDelegate: class {
     func mapViewController(didAddLocation: (longitude: Double?, latitude: Double?))
 }
 
@@ -24,7 +24,7 @@ class MapViewController: UIViewController {
     private var resultSearchController: UISearchController? = nil
     
     //MARK: - Public Properties
-    var delegate: MapViewControllerDelegate?
+    weak var delegate: MapViewControllerDelegate?
     
     //MARK: - VC LifeCycle Methods
     override func viewDidLoad() {
@@ -155,9 +155,9 @@ extension MapViewController: SelectedLocationWeatherManagerDelegate {
         print("error")
     }
     
-    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, long: Double, lat: Double) {
+    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didGetLocation: (long: Double, lat: Double)) {
         DispatchQueue.main.async {
-            self.addPinOnMap(lat: lat, lon: long)
+            self.addPinOnMap(lat: didGetLocation.lat, lon: didGetLocation.long)
         }
     }
     
