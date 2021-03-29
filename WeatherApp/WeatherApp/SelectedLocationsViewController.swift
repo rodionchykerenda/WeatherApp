@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class SelectedLocationsViewController: UIViewController {
     
@@ -15,13 +16,16 @@ class SelectedLocationsViewController: UIViewController {
     
     //MARK: - Private Properties
     private var dataSource: [SelectedLocationWeatherModel] = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
+    private var currentLocationButton: UIButton?
+    private let locationManager = CLLocationManager()
     
     // MARK: - LifeCycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setUpTableview()
-        addButton()
+        makeAddButton()
+        makeCurrentLocationButton()
         loadAll()
         configureRefreshControl()
         styleUI()
@@ -46,6 +50,15 @@ class SelectedLocationsViewController: UIViewController {
         destinationVC.modalPresentationStyle = .fullScreen
         
         navigationController?.pushViewController(destinationVC, animated: true)
+    }
+    
+    @objc func currentLocationButtonTapped(_ sender: UIButton) {
+        guard dataSource[0].cityName != "Current Location" else {
+            return
+        }
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
     }
     
     @objc func handleRefreshControl() {
@@ -98,7 +111,7 @@ private extension SelectedLocationsViewController {
         contentTableView.register(UINib(nibName: "SelectedLocationTableViewCell", bundle: nil), forCellReuseIdentifier: "SelectedLocationTableViewCell")
     }
     
-    func addButton() {
+    func makeAddButton() {
         let button = UIButton(frame: CGRect(x: view.frame.width - 100, y: view.frame.height - 120, width: 80, height: 80))
         button.setTitle("Add", for: .normal)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
@@ -108,6 +121,21 @@ private extension SelectedLocationsViewController {
         
         button.addTarget(self, action: #selector(addButtonTapped(_:)), for: .touchUpInside)
         view.addSubview(button)
+    }
+    
+    func makeCurrentLocationButton() {
+        currentLocationButton = UIButton(frame: CGRect(x: 20, y: view.frame.height - 120, width: 80, height: 80))
+        
+        guard let currentLocationButton = currentLocationButton else { return }
+        
+        currentLocationButton.setTitle("Current", for: .normal)
+        currentLocationButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        currentLocationButton.setTitleColor(.white, for: .normal)
+        currentLocationButton.backgroundColor = .black
+        currentLocationButton.layer.cornerRadius = 40
+        
+        currentLocationButton.addTarget(self, action: #selector(currentLocationButtonTapped(_:)), for: .touchUpInside)
+        view.addSubview(currentLocationButton)
     }
     
     func styleUI() {
@@ -154,14 +182,15 @@ extension SelectedLocationsViewController: SelectedLocationWeatherManagerDelegat
                     self.dataSource[i].temperature = weather
                     self.contentTableView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .fade)
                 }
+                break
             }
         }
     }
     
     func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didGetCityName name: String, at location: (long: Double, lat: Double)) {
         DataBaseManager.instance.addCity(latitude: location.lat, longitude: location.long, name: name)
-        self.dataSource = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
-        self.loadAll()
+        dataSource = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
+        loadAll()
     }
     
     func didFailWithError(error: Error) {
@@ -177,5 +206,35 @@ extension SelectedLocationsViewController: MapViewControllerDelegate {
             networkManager.delegate = self
             networkManager.getCityName(by: (lon, lat))
         }
+    }
+}
+
+//MARK: - CLLocationManager Delegate Methods
+
+extension SelectedLocationsViewController: CLLocationManagerDelegate {
+    
+    @IBAction func locationPressed(_ sender: UIButton) {
+        locationManager.requestLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            locationManager.stopUpdatingLocation()
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            
+            dataSource.insert(SelectedLocationWeatherModel(cityName: "Current Location", temperature: nil, longtitude: lon, lattitude: lat), at: 0)
+            
+            DispatchQueue.main.async {
+                self.contentTableView.beginUpdates()
+                self.contentTableView.insertRows(at: [IndexPath(row: self.dataSource.count - 1, section: 0)], with: .fade)
+                self.contentTableView.endUpdates()
+                self.loadAll()
+            }
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
     }
 }
