@@ -35,8 +35,19 @@ class MapViewController: UIViewController {
         setUpSearchController()
     }
     
+    deinit {
+        mapView.removeAnnotations(mapView.annotations)
+    }
+    
     //MARK: - Actions
     @objc func addButtonTapped(_ sender: UIButton) {
+        if let latitude = latitude, let longitude = longitude {
+            if DataBaseManager.instance.isSelected(latitude: latitude, longitude: longitude) {
+                showAlreadyAddedAlert()
+                return
+            }
+        }
+        
         delegate?.mapViewController(didAddLocation: (longitude: longitude, latitude: latitude))
         
         navigationController?.popViewController(animated: true)
@@ -46,18 +57,16 @@ class MapViewController: UIViewController {
         
         let touchPoint = sender.location(in: mapView)
         let touchMapCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-        print("tapGestureHandler: touchMapCoordinate = \(touchMapCoordinate.latitude),\(touchMapCoordinate.longitude)")
         
         let geoCoder = CLGeocoder()
         let location = CLLocation(latitude: touchMapCoordinate.latitude, longitude: touchMapCoordinate.longitude)
-            
+        
         geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
-
-            // Place details
+            
             var placeMark: CLPlacemark!
             placeMark = placemarks?[0]
             
-            if let city = placeMark.addressDictionary!["City"] as? NSString {
+            if let city = placeMark.subAdministrativeArea {
                 DispatchQueue.main.async {
                     self.addPinOnMap(lat: touchMapCoordinate.latitude, lon: touchMapCoordinate.longitude)
                     self.resultSearchController?.searchBar.text = String(city)
@@ -134,6 +143,15 @@ private extension MapViewController {
         alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
     }
+    
+    func showAlreadyAddedAlert() {
+        let alert = UIAlertController(title: "Already exists", message: "This place was already added to your list.", preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 //MARK: - MapSearchDelegate Methods
@@ -151,6 +169,7 @@ extension MapViewController: MapSearchDelegate {
 
 //MARK: - NetworkManager Delegate
 extension MapViewController: SelectedLocationWeatherManagerDelegate {
+    
     func didFailWithError(error: Error) {
         print("error")
     }

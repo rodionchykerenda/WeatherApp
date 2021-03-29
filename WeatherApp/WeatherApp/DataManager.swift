@@ -10,7 +10,21 @@ import Foundation
 class DataManager {
     static let instance = DataManager()
     
-//    func getDataSourceModel(from coreDataModel: SelectedCity) -> SelectedLocationWeatherModel {
-//        let resultModel = SelectedLocationWeatherModel(conditionId: <#T##Int#>, cityName: <#T##String#>, temperature: <#T##Double#>, longtitude: <#T##Double#>, lattitude: <#T##Double#>)
-//    }
+    func getDataSourceModel(from coreDataModel: SelectedCity) -> SelectedLocationWeatherModel {
+        guard let name = coreDataModel.name, let lon = coreDataModel.longitude, let lat = coreDataModel.latitude else {
+            fatalError()
+        }
+        return SelectedLocationWeatherModel(cityName: name, temperature: nil, longtitude: Double(lon), lattitude: Double(lat))
+    }
+    
+    func getDataSourceModelArray(from coreDataModelArray: [SelectedCity]) -> [SelectedLocationWeatherModel] {
+        var resultArray = [SelectedLocationWeatherModel]()
+        
+        
+        for item in coreDataModelArray {
+            resultArray.append(getDataSourceModel(from: item))
+        }
+        
+        return resultArray
+    }
 }

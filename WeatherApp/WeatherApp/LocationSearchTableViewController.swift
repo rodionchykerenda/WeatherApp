@@ -40,7 +40,6 @@ class LocationSearchTableViewController: UITableViewController, MKLocalSearchCom
         }
         
         self.searchTerms = results.map { $0.title.components(separatedBy: ",")[0] }
-        //[0].components(separatedBy: ",")[0]
     }
 }
 

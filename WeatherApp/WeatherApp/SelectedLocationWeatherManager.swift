@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SelectedLocationWeatherManagerDelegate: class {
-    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didUpdateWeather weather: SelectedLocationWeatherModel)
+    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didUpdateWeather weather: Double, at location: (long: Double, lat: Double))
     func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didGetLocation location: (long: Double, lat: Double))
     func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didGetCityName name: String, at location: (long: Double, lat: Double))
     
@@ -17,7 +17,7 @@ protocol SelectedLocationWeatherManagerDelegate: class {
 }
 
 extension SelectedLocationWeatherManagerDelegate {
-    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didUpdateWeather weather: SelectedLocationWeatherModel){}
+    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didUpdateWeather weather: Double, at location: (long: Double, lat: Double)){}
     
     func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didGetCityName name: String, at location: (long: Double, lat: Double)) {}
     
@@ -31,44 +31,13 @@ struct SelectedLocationWeatherManager {
     
     weak var delegate: SelectedLocationWeatherManagerDelegate?
     
-    func fetchWeather(cityName: String) {
-        let urlString = "\(weatherURL)&q=\(cityName)"
-        performSelectedLocationRequest(with: urlString)
-    }
-    
-    func performSelectedLocationRequest(with urlString: String) {
-        if let url = URL(string: urlString) {
-            let session = URLSession(configuration: .default)
-            
-            let task = session.dataTask(with: url) { (data, response, error) in
-                if error != nil {
-                    self.delegate?.didFailWithError(error: error!)
-                    return
-                }
-                
-                if let safeData = data {
-                    if let weather = self.parseJSON(safeData) {
-                        self.delegate?.selectedLocationWeatherManager(self, didUpdateWeather: weather)
-                    }
-                }
-            }
-            task.resume()
-        }
-    }
-    
-    func parseJSON(_ weatherData: Data) -> SelectedLocationWeatherModel? {
+    func parseJSON(_ weatherData: Data) -> Double? {
         let decoder = JSONDecoder()
         do {
             let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
-            let id = decodedData.weather[0].id
             let temp = decodedData.main.temp
-            let name = decodedData.name
-            let longtitude = decodedData.coord.lon
-            let lattitude = decodedData.coord.lat
             
-            let weather = SelectedLocationWeatherModel(conditionId: id, cityName: name, temperature: temp, longtitude: longtitude, lattitude: lattitude)
-            
-            return weather
+            return temp
         } catch {
             print("Couldnt parse JSON")
             return nil
@@ -136,19 +105,19 @@ struct SelectedLocationWeatherManager {
     }
     
     func fetchWeatherBy(coordinates: (longitude: Double, latitude: Double)) {
-        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(coordinates.latitude)&lon=\(coordinates.longitude)&appid=73894ed3d982502db57069e27afdfc6b"
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(coordinates.latitude)&lon=\(coordinates.longitude)&appid=73894ed3d982502db57069e27afdfc6b&units=metric"
         if let url = URL(string: urlString) {
             let session = URLSession(configuration: .default)
             
             let task = session.dataTask(with: url) { (data, response, error) in
                 if error != nil {
                     self.delegate?.didFailWithError(error: error!)
-                    return
+                    fatalError()
                 }
                 
                 if let safeData = data {
                     if let weather = self.parseJSON(safeData) {
-                        self.delegate?.selectedLocationWeatherManager(self, didUpdateWeather: weather)
+                        self.delegate?.selectedLocationWeatherManager(self, didUpdateWeather: weather, at: (long: coordinates.longitude, lat: coordinates.latitude))
                     }
                 }
             }

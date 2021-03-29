@@ -21,9 +21,8 @@ class DataBaseManager {
         do {
             cities = try context.fetch(request)
         } catch {
-            print("Error loading genres,\(error)")
+            print("Error loading cities,\(error)")
         }
-        print (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         return cities
     }
     
@@ -38,16 +37,18 @@ class DataBaseManager {
     func addCity(latitude: Double, longitude: Double, name: String) {
         let newCity = SelectedCity(context: context)
         newCity.name = name
-        newCity.latitude = latitude
-        newCity.longitude = longitude
+        newCity.latitude = NSNumber(value: latitude)
+        newCity.longitude = NSNumber(value: longitude)
         saveData()
     }
     
     func isSelected(latitude: Double, longitude: Double) -> Bool {
         let cities = getCities()
         for item in cities {
-            if longitude == item.longitude, latitude == item.latitude {
-                return true
+            if let lon = item.longitude, let lat = item.latitude {
+                if longitude == Double(lon), latitude == Double(lat) {
+                    return true
+                }
             }
         }
         return false

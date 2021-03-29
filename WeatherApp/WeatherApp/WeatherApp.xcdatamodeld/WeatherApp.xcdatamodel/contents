@@ -2,12 +2,12 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Entity" representedClassName="Entity" syncable="YES" codeGenerationType="class"/>
     <entity name="SelectedCity" representedClassName="SelectedCity" syncable="YES" codeGenerationType="class">
-        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="latitude" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="longitude" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
     </entity>
     <elements>
-        <element name="SelectedCity" positionX="-63" positionY="-18" width="128" height="74"/>
         <element name="Entity" positionX="-54" positionY="-9" width="128" height="29"/>
+        <element name="SelectedCity" positionX="-63" positionY="-18" width="128" height="74"/>
     </elements>
 </model>

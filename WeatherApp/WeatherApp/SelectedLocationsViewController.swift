@@ -14,21 +14,16 @@ class SelectedLocationsViewController: UIViewController {
     @IBOutlet private weak var contentTableView: UITableView!
     
     //MARK: - Private Properties
-    private var networkManager = SelectedLocationWeatherManager()
-    private var dataSource = [SelectedLocationWeatherModel]() {
-        didSet {
-            contentTableView.reloadData()
-        }
-    }
+    private var dataSource: [SelectedLocationWeatherModel] = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
     
     // MARK: - LifeCycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("VIEW DID LOAD")
         setUpTableview()
         addButton()
-        networkManager.delegate = self
+        loadAll()
+        configureRefreshControl()
         styleUI()
     }
     
@@ -36,7 +31,7 @@ class SelectedLocationsViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
@@ -48,8 +43,17 @@ class SelectedLocationsViewController: UIViewController {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         guard let destinationVC = mainStoryboard.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else { return }
         destinationVC.delegate = self
+        destinationVC.modalPresentationStyle = .fullScreen
         
         navigationController?.pushViewController(destinationVC, animated: true)
+    }
+    
+    @objc func handleRefreshControl() {
+        loadAll()
+        
+        DispatchQueue.main.async {
+            self.contentTableView.refreshControl?.endRefreshing()
+        }
     }
 }
 
@@ -69,6 +73,20 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCell.EditingStyle.delete {
+            DispatchQueue.main.async {
+                DataBaseManager.instance.delete(city: DataBaseManager.instance.getCities()[indexPath.row])
+                self.dataSource.remove(at: indexPath.row)
+                self.contentTableView.deleteRows(at: [indexPath], with: .fade)
+            }
+        }
     }
 }
 
@@ -102,21 +120,48 @@ private extension SelectedLocationsViewController {
         layer.endPoint = CGPoint(x: 0.5, y: 1)
         backgroundView.layer.addSublayer(layer)
     }
+    
+    func loadAll() {
+        for i in 0..<dataSource.count {
+            dataSource[i].temperature = nil
+        }
+        
+        DispatchQueue.main.async {
+            self.contentTableView.reloadData()
+        }
+        
+        for item in dataSource {
+            var networkManager = SelectedLocationWeatherManager()
+            networkManager.delegate = self
+            networkManager.fetchWeatherBy(coordinates: (longitude: item.longtitude, latitude: item.lattitude))
+        }
+    }
+    
+    func configureRefreshControl () {
+        contentTableView.refreshControl = UIRefreshControl()
+        contentTableView.refreshControl?.addTarget(self, action:
+                                                    #selector(handleRefreshControl),
+                                                   for: .valueChanged)
+    }
 }
 
 //MARK: - Network Delegate
 extension SelectedLocationsViewController: SelectedLocationWeatherManagerDelegate {
-    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didUpdateWeather weather: SelectedLocationWeatherModel) {
-        DispatchQueue.main.async {
-            self.dataSource.append(weather)
+    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didUpdateWeather weather: Double, at location: (long: Double, lat: Double)) {
+        for i in 0..<dataSource.count {
+            if dataSource[i].lattitude == location.lat, dataSource[i].longtitude == location.long {
+                DispatchQueue.main.async {
+                    self.dataSource[i].temperature = weather
+                    self.contentTableView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .fade)
+                }
+            }
         }
     }
     
     func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didGetCityName name: String, at location: (long: Double, lat: Double)) {
-        DispatchQueue.main.async {
-            DataBaseManager.instance.addCity(latitude: location.lat, longitude: location.long, name: name)
-//            dataSource = DataBaseManager.instance.getCities()
-        }
+        DataBaseManager.instance.addCity(latitude: location.lat, longitude: location.long, name: name)
+        self.dataSource = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
+        self.loadAll()
     }
     
     func didFailWithError(error: Error) {
@@ -128,9 +173,9 @@ extension SelectedLocationsViewController: SelectedLocationWeatherManagerDelegat
 extension SelectedLocationsViewController: MapViewControllerDelegate {
     func mapViewController(didAddLocation: (longitude: Double?, latitude: Double?)) {
         if let lon = didAddLocation.longitude, let lat = didAddLocation.latitude {
+            var networkManager = SelectedLocationWeatherManager()
+            networkManager.delegate = self
             networkManager.getCityName(by: (lon, lat))
-            print("Delegate Method")
-            //networkManager.fetchWeatherBy(coordinates: (longitude: lon, latitude: lat))
         }
     }
 }
