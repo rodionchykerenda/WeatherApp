@@ -9,93 +9,110 @@ import UIKit
 import CoreLocation
 
 class SelectedLocationsViewController: UIViewController {
-    
-    //MARK: - Outlets
-    @IBOutlet weak var backgroundView: UIView!
+
+    // MARK: - Outlets
+    @IBOutlet private weak var backgroundView: UIView!
     @IBOutlet private weak var contentTableView: UITableView!
-    
-    //MARK: - Private Properties
+
+    // MARK: - Private Properties
     private var dataSource: [SelectedLocationWeatherModel] = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
+    private let dataBaseManager = DataBaseManager.instance
     private var currentLocationButton: UIButton?
     private let locationManager = CLLocationManager()
-    
+
     // MARK: - LifeCycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setUpTableview()
         makeAddButton()
         makeCurrentLocationButton()
-        loadAll()
+        loadAllWeathers()
         configureRefreshControl()
         styleUI()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
-    
-    
-    //MARK: - Actions
+
+    // MARK: - Actions
     @objc func addButtonTapped(_ sender: UIButton) {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let destinationVC = mainStoryboard.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else { return }
-        destinationVC.delegate = self
-        destinationVC.modalPresentationStyle = .fullScreen
-        
-        navigationController?.pushViewController(destinationVC, animated: true)
-    }
-    
-    @objc func currentLocationButtonTapped(_ sender: UIButton) {
-        guard dataSource[0].cityName != "Current Location" else {
+        guard let destinationVC = mainStoryboard.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else {
             return
         }
+
+        destinationVC.delegate = self
+        destinationVC.modalPresentationStyle = .fullScreen
+
+        navigationController?.pushViewController(destinationVC, animated: true)
+    }
+
+    @objc func currentLocationButtonTapped(_ sender: UIButton) {
+        guard !dataSource.isEmpty else {
+            locationManager.delegate = self
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestLocation()
+
+            return
+        }
+        guard dataSource[0].longtitude != locationManager.location?.coordinate.longitude,
+              dataSource[0].longtitude != locationManager.location?.coordinate.latitude else {
+            return
+        }
+
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
     }
-    
+
     @objc func handleRefreshControl() {
-        loadAll()
-        
-        DispatchQueue.main.async {
-            self.contentTableView.refreshControl?.endRefreshing()
+        loadAllWeathers {
+                self.contentTableView.refreshControl?.endRefreshing()
         }
     }
 }
 
-//MARK: - TableView Delegate And DataSource Methods
+// MARK: - TableView Delegate And DataSource Methods
 extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "SelectedLocationTableViewCell", for: indexPath) as? SelectedLocationTableViewCell else { fatalError("Couldnt dequeue reusable cell") }
-        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "SelectedLocationTableViewCell",
+                                                       for: indexPath)
+                as? SelectedLocationTableViewCell else {
+            fatalError("Couldnt dequeue reusable cell")
+        }
+
         cell.update(selectedLocation: dataSource[indexPath.row])
-        
+
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
-    
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+
+    func tableView(_ tableView: UITableView,
+                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
     }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
+    func tableView(_ tableView: UITableView,
+                   commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {
             DispatchQueue.main.async {
-                DataBaseManager.instance.delete(city: DataBaseManager.instance.getCities()[indexPath.row])
+                self.dataBaseManager.delete(city: self.dataBaseManager.getCities()[indexPath.row])
                 self.dataSource.remove(at: indexPath.row)
                 self.contentTableView.deleteRows(at: [indexPath], with: .fade)
             }
@@ -103,137 +120,184 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
     }
 }
 
-//MARK: - Helpers
+// MARK: - Helpers
 private extension SelectedLocationsViewController {
     func setUpTableview() {
         contentTableView.delegate = self
         contentTableView.dataSource = self
-        contentTableView.register(UINib(nibName: "SelectedLocationTableViewCell", bundle: nil), forCellReuseIdentifier: "SelectedLocationTableViewCell")
+        contentTableView.register(UINib(nibName: "SelectedLocationTableViewCell",
+                                        bundle: nil),
+                                  forCellReuseIdentifier: "SelectedLocationTableViewCell")
     }
-    
+
     func makeAddButton() {
-        let button = UIButton(frame: CGRect(x: view.frame.width - 100, y: view.frame.height - 120, width: 80, height: 80))
+        let button = UIButton()
+
         button.setTitle("Add", for: .normal)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .red
-        button.layer.cornerRadius = button.frame.width / 2
-        
+
         button.addTarget(self, action: #selector(addButtonTapped(_:)), for: .touchUpInside)
         view.addSubview(button)
+
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
+                                      constant: -20).isActive = true
+        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                       constant: -40).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 80).isActive = true
+
+        button.layer.cornerRadius = 40
     }
-    
+
     func makeCurrentLocationButton() {
-        currentLocationButton = UIButton(frame: CGRect(x: 20, y: view.frame.height - 120, width: 80, height: 80))
-        
+        currentLocationButton = UIButton()
+
         guard let currentLocationButton = currentLocationButton else { return }
-        
+
         currentLocationButton.setTitle("Current", for: .normal)
         currentLocationButton.titleLabel?.adjustsFontSizeToFitWidth = true
         currentLocationButton.setTitleColor(.white, for: .normal)
         currentLocationButton.backgroundColor = .black
-        currentLocationButton.layer.cornerRadius = 40
-        
-        currentLocationButton.addTarget(self, action: #selector(currentLocationButtonTapped(_:)), for: .touchUpInside)
+
+        currentLocationButton.addTarget(self,
+                                        action: #selector(currentLocationButtonTapped(_:)),
+                                        for: .touchUpInside)
         view.addSubview(currentLocationButton)
+
+        currentLocationButton.translatesAutoresizingMaskIntoConstraints = false
+        currentLocationButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
+                                                    constant: 20).isActive = true
+        currentLocationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                                      constant: -40).isActive = true
+        currentLocationButton.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        currentLocationButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+
+        currentLocationButton.layer.cornerRadius = 40
     }
-    
+
     func styleUI() {
         contentTableView.backgroundColor = .clear
         let layer = CAGradientLayer()
         layer.frame = view.bounds
-        
-        layer.colors = [UIColor(named: "TopBackgroundColor")?.cgColor, UIColor(named: "BottomBackgroundColor")?.cgColor]
+
+        if let topColor = UIColor(named: "TopBackgroundColor")?.cgColor,
+           let bottomColor = UIColor(named: "BottomBackgroundColor")?.cgColor {
+            layer.colors = [topColor, bottomColor]
+        }
+
         layer.startPoint = CGPoint(x: 0.5, y: 0)
         layer.endPoint = CGPoint(x: 0.5, y: 1)
         backgroundView.layer.addSublayer(layer)
     }
-    
-    func loadAll() {
-        for i in 0..<dataSource.count {
-            dataSource[i].temperature = nil
+
+    func loadAllWeathers(completionHandler: @escaping () -> Void = {}) {
+        for index in 0..<dataSource.count {
+            dataSource[index].temperature = nil
         }
-        
+
         DispatchQueue.main.async {
             self.contentTableView.reloadData()
         }
-        
-        for item in dataSource {
-            var networkManager = SelectedLocationWeatherManager()
-            networkManager.delegate = self
-            networkManager.fetchWeatherBy(coordinates: (longitude: item.longtitude, latitude: item.lattitude))
+
+        var weathersLoaded = 0
+
+        dataSource.map {
+            let networkManager = WeatherNetworkManager()
+            networkManager.getTemperatureBy(coordinates: (longitude: $0.longtitude,
+                                                          latitude: $0.lattitude)) { (temperature, coordinates, error) in
+                if let error = error {
+                    fatalError("\(error)")
+                }
+
+                guard let coordinates = coordinates, let temperature = temperature else {
+                    fatalError()
+                }
+
+                for index in 0..<self.dataSource.count
+                where self.dataSource[index].lattitude == coordinates.lat &&
+                    self.dataSource[index].longtitude == coordinates.long {
+                    DispatchQueue.main.async {
+                        weathersLoaded += 1
+
+                        self.dataSource[index].temperature = temperature
+                        self.contentTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+
+                        if weathersLoaded == self.dataSource.count {
+                            completionHandler()
+                            weathersLoaded = 0
+                        }
+                    }
+                    break
+                }
+            }
         }
     }
-    
+
     func configureRefreshControl () {
         contentTableView.refreshControl = UIRefreshControl()
-        contentTableView.refreshControl?.addTarget(self, action:
-                                                    #selector(handleRefreshControl),
+        contentTableView.refreshControl?.addTarget(self,
+                                                   action: #selector(handleRefreshControl),
                                                    for: .valueChanged)
     }
 }
 
-//MARK: - Network Delegate
-extension SelectedLocationsViewController: SelectedLocationWeatherManagerDelegate {
-    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didUpdateWeather weather: Double, at location: (long: Double, lat: Double)) {
-        for i in 0..<dataSource.count {
-            if dataSource[i].lattitude == location.lat, dataSource[i].longtitude == location.long {
-                DispatchQueue.main.async {
-                    self.dataSource[i].temperature = weather
-                    self.contentTableView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .fade)
+// MARK: - MapViewController Delegate Methods
+extension SelectedLocationsViewController: MapViewControllerDelegate {
+    func mapViewController(_ sender: MapViewController,
+                           didAddLocation: (longitude: Double?, latitude: Double?)) {
+        if let longitude = didAddLocation.longitude, let latitude = didAddLocation.latitude {
+            let networkManager = WeatherNetworkManager()
+            networkManager.getCityName(with: (longitude: longitude,
+                                              latitude: latitude)) { (cityName, coordinates, error) in
+                if let error = error {
+                    fatalError("\(error)")
                 }
-                break
+
+                guard let coordinates = coordinates, let cityName = cityName else {
+                    fatalError()
+                }
+
+                self.dataBaseManager.addCity(latitude: coordinates.lat,
+                                             longitude: coordinates.long,
+                                             name: cityName)
+                self.dataSource = DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities())
+                self.loadAllWeathers()
             }
         }
     }
-    
-    func selectedLocationWeatherManager(_ weatherManager: SelectedLocationWeatherManager, didGetCityName name: String, at location: (long: Double, lat: Double)) {
-        DataBaseManager.instance.addCity(latitude: location.lat, longitude: location.long, name: name)
-        dataSource = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
-        loadAll()
-    }
-    
-    func didFailWithError(error: Error) {
-        fatalError("Fail with error")
-    }
 }
 
-//MARK: - MapViewController Delegate Methods
-extension SelectedLocationsViewController: MapViewControllerDelegate {
-    func mapViewController(didAddLocation: (longitude: Double?, latitude: Double?)) {
-        if let lon = didAddLocation.longitude, let lat = didAddLocation.latitude {
-            var networkManager = SelectedLocationWeatherManager()
-            networkManager.delegate = self
-            networkManager.getCityName(by: (lon, lat))
-        }
-    }
-}
-
-//MARK: - CLLocationManager Delegate Methods
-
+// MARK: - CLLocationManager Delegate Methods
 extension SelectedLocationsViewController: CLLocationManagerDelegate {
-    
-    @IBAction func locationPressed(_ sender: UIButton) {
+    @IBAction func locationButtonPressed(_ sender: UIButton) {
         locationManager.requestLocation()
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last {
-            locationManager.stopUpdatingLocation()
-            let lat = location.coordinate.latitude
-            let lon = location.coordinate.longitude
-            
-            dataSource.insert(SelectedLocationWeatherModel(cityName: "Current Location", temperature: nil, longtitude: lon, lattitude: lat), at: 0)
-            
-            DispatchQueue.main.async {
-                self.contentTableView.beginUpdates()
-                self.contentTableView.insertRows(at: [IndexPath(row: self.dataSource.count - 1, section: 0)], with: .fade)
-                self.contentTableView.endUpdates()
-                self.loadAll()
-            }
+        guard let location = locations.last else {
+            return
+        }
+
+        locationManager.stopUpdatingLocation()
+        let latitude = location.coordinate.latitude
+        let longitude = location.coordinate.longitude
+
+        dataSource.insert(SelectedLocationWeatherModel(cityName: "Current Location",
+                                                       temperature: nil,
+                                                       longtitude: longitude, lattitude: latitude), at: 0)
+
+        DispatchQueue.main.async {
+            self.contentTableView.beginUpdates()
+            self.contentTableView.insertRows(at: [IndexPath(row: self.dataSource.count - 1, section: 0)],
+                                             with: .fade)
+            self.contentTableView.endUpdates()
+            self.loadAllWeathers()
         }
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
     }

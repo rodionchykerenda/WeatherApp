@@ -10,11 +10,10 @@ import CoreData
 
 class DataBaseManager {
     static let instance = DataBaseManager()
-    
+
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    
-    //MARK: - Data Manipulation Methods
+
+    // MARK: - Data Manipulation Methods
     func getCities() -> [SelectedCity] {
         let request: NSFetchRequest<SelectedCity> = SelectedCity.fetchRequest()
         var cities = [SelectedCity]()
@@ -25,7 +24,7 @@ class DataBaseManager {
         }
         return cities
     }
-    
+
     func saveData() {
         do {
             try context.save()
@@ -33,7 +32,7 @@ class DataBaseManager {
             print("Error saving data")
         }
     }
-    
+
     func addCity(latitude: Double, longitude: Double, name: String) {
         let newCity = SelectedCity(context: context)
         newCity.name = name
@@ -41,19 +40,19 @@ class DataBaseManager {
         newCity.longitude = NSNumber(value: longitude)
         saveData()
     }
-    
+
     func isSelected(latitude: Double, longitude: Double) -> Bool {
         let cities = getCities()
         for item in cities {
-            if let lon = item.longitude, let lat = item.latitude {
-                if longitude == Double(lon), latitude == Double(lat) {
+            if let selectedLongitude = item.longitude, let selectedLatitude = item.latitude {
+                if longitude == Double(selectedLongitude), latitude == Double(selectedLatitude) {
                     return true
                 }
             }
         }
         return false
     }
-    
+
     func delete(city: SelectedCity) {
         context.delete(city)
         saveData()

@@ -24,6 +24,11 @@ struct Weather: Codable {
 }
 
 struct Coordinates: Codable {
-    let lon: Double
-    let lat: Double
+    let longitude: Double
+    let latitude: Double
+
+    private enum CodingKeys : String, CodingKey {
+        case longitude = "lon"
+        case latitude = "lat"
+    }
 }

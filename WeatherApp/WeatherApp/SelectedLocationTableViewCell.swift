@@ -8,13 +8,13 @@
 import UIKit
 
 class SelectedLocationTableViewCell: UITableViewCell {
-    
-    //MARK: - Outlets
+
+    // MARK: - Outlets
     @IBOutlet private weak var cityNameLabel: UILabel!
     @IBOutlet private weak var temperatureLabel: UILabel!
     private var spinner: UIActivityIndicatorView?
-    
-    //MARK: - Helpers
+
+    // MARK: - Setters
     func update(selectedLocation: SelectedLocationWeatherModel) {
         cityNameLabel.text = selectedLocation.cityName
         if let temp = selectedLocation.temperature {
@@ -25,20 +25,36 @@ class SelectedLocationTableViewCell: UITableViewCell {
         }
         styleUI()
     }
-    
+}
+
+// MARK: - Private Helpers
+private extension SelectedLocationTableViewCell {
+
     func styleUI() {
         self.backgroundColor = .clear
         contentView.backgroundColor = .clear
     }
-    
+
     func addActivityIndicator() {
+        spinner = UIActivityIndicatorView()
+
+        guard let spinner = spinner else {
+            fatalError()
+        }
+
+        contentView.addSubview(spinner)
+
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.rightAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.rightAnchor).isActive = true
+        spinner.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        spinner.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor).isActive = true
+        spinner.leftAnchor.constraint(equalTo: cityNameLabel.safeAreaLayoutGuide.rightAnchor).isActive = true
+
         temperatureLabel.isHidden = true
-        spinner?.isHidden = false
-        spinner = UIActivityIndicatorView(frame: CGRect(x: self.frame.size.width - 70, y: self.frame.size.height - 70, width: 50, height: 50))
-        spinner?.startAnimating()
-        contentView.addSubview(spinner!)
+        spinner.isHidden = false
+        spinner.startAnimating()
     }
-    
+
     func removeActivityIndicator() {
         temperatureLabel.isHidden = false
         spinner?.stopAnimating()
