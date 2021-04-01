@@ -133,7 +133,7 @@ private extension SelectedLocationsViewController {
     func makeAddButton() {
         let button = UIButton()
 
-        button.setTitle("Add", for: .normal)
+        button.setTitle(NSLocalizedString("add_button_title", comment: ""), for: .normal)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .red
@@ -157,7 +157,7 @@ private extension SelectedLocationsViewController {
 
         guard let currentLocationButton = currentLocationButton else { return }
 
-        currentLocationButton.setTitle("Current", for: .normal)
+        currentLocationButton.setTitle(NSLocalizedString("current_button_title", comment: ""), for: .normal)
         currentLocationButton.titleLabel?.adjustsFontSizeToFitWidth = true
         currentLocationButton.setTitleColor(.white, for: .normal)
         currentLocationButton.backgroundColor = .black
@@ -285,7 +285,8 @@ extension SelectedLocationsViewController: CLLocationManagerDelegate {
         let latitude = location.coordinate.latitude
         let longitude = location.coordinate.longitude
 
-        dataSource.insert(SelectedLocationWeatherModel(cityName: "Current Location",
+        dataSource.insert(SelectedLocationWeatherModel(cityName: NSLocalizedString("current_location",
+                                                                                   comment: ""),
                                                        temperature: nil,
                                                        longtitude: longitude, lattitude: latitude), at: 0)
 

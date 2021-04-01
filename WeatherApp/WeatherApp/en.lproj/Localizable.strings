@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  WeatherApp
+
+  Created by Rodion Chikerenda on 31.03.2021.
+  
+*/
+"already_exists_title" = "Already exists";
+"already_exists_message" = "This place was already added to your list.";
+"ok" = "Ok";
+"find_city_name_error" = "Couldn't find city name. Try to selecet closer.";
+"city_search_placeholder" = "Search for places";
+"empty_response_alert_title" = "Empty response";
+"empty_response_alert_message" = "Sorry, we dont have this place in our DataBase. Try to find some other places close to this location.";
+"add_button_title" = "Add";
+"current_button_title" = "Current";
+"current_location" = "Current location";
+"huy" = "huy";

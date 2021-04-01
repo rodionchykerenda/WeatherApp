@@ -10,6 +10,7 @@ import Foundation
 struct WeatherNetworkManager {
     private let appID = "&appid=73894ed3d982502db57069e27afdfc6b"
     private let session = URLSession(configuration: .default)
+    private let preferredLanguage = NSLocale.preferredLanguages[0].components(separatedBy: "-")[0]
 
     func parseJSON(_ weatherData: Data) -> Double? {
         let decoder = JSONDecoder()
@@ -27,8 +28,12 @@ struct WeatherNetworkManager {
         let cityName = cityName.replacingOccurrences(of: " ", with: "")
         let geoURL = "https://api.openweathermap.org/geo/1.0/"
         let limit = "&limit=1"
+        let fullUrlString = "\(geoURL)direct?q=\(cityName)\(limit)\(appID)"
 
-        guard let requestUrl = URL(string: "\(geoURL)direct?q=\(cityName)\(limit)\(appID)") else { return }
+        guard let  encodedURL = fullUrlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let requestUrl = URL(string: encodedURL) else {
+            return
+        }
 
         let task = session.dataTask(with: requestUrl) { (data, _, error) in
             if let error = error {
@@ -73,15 +78,23 @@ struct WeatherNetworkManager {
             let decoder = JSONDecoder()
             do {
                 let decodedData = try decoder.decode([CityName].self, from: safeData)
+
                 guard !decodedData.isEmpty else {
                     completionHandler(nil, nil, nil)
                     return
                 }
 
-                completionHandler(decodedData[0].name,
-                                  (long: coordinates.longitude,
-                                   lat: coordinates.latitude),
-                                  nil)
+                if preferredLanguage == "ru" {
+                    completionHandler(decodedData[0].localNames.russian,
+                                      (long: coordinates.longitude,
+                                       lat: coordinates.latitude),
+                                      nil)
+                } else {
+                    completionHandler(decodedData[0].localNames.english,
+                                      (long: coordinates.longitude,
+                                       lat: coordinates.latitude),
+                                      nil)
+                }
             } catch {
                 completionHandler(nil, nil, error)
             }
