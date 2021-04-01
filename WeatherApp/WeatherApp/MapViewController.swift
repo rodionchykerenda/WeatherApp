@@ -86,7 +86,7 @@ class MapViewController: UIViewController {
             } else {
                 DispatchQueue.main.async {
                     self.resultSearchController?.searchBar.text = ""
-                    self.resultSearchController?.searchBar.placeholder = "Couldn't find city name. Try to selecet closer."
+                    self.resultSearchController?.searchBar.placeholder = NSLocalizedString("find_city_name_error", comment: "")
                 }
             }
         })
@@ -104,7 +104,7 @@ private extension MapViewController {
                                             y: view.frame.height - 100,
                                             width: 200,
                                             height: 40))
-        button.setTitle("Add", for: .normal)
+        button.setTitle(NSLocalizedString("add_button_title", comment: ""), for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .red
         button.layer.cornerRadius = 20
@@ -126,7 +126,7 @@ private extension MapViewController {
         resultSearchController?.searchResultsUpdater = locationSearchTable
         let searchBar = resultSearchController!.searchBar
         searchBar.sizeToFit()
-        searchBar.placeholder = "Search for places"
+        searchBar.placeholder = NSLocalizedString("city_search_placeholder", comment: "")
         navigationItem.titleView = resultSearchController?.searchBar
         resultSearchController?.hidesNavigationBarDuringPresentation = false
         definesPresentationContext = true
@@ -151,22 +151,22 @@ private extension MapViewController {
     }
 
     func showEmptyResponseAlert() {
-        let alert = UIAlertController(title: "Empty response",
-                                      message: "Sorry, we dont have this place in our DataBase. Try to find some other places close to this location.",
+        let alert = UIAlertController(title: NSLocalizedString("empty_response_alert_title", comment: ""),
+                                      message: NSLocalizedString("empty_response_alert_message", comment: ""),
                                       preferredStyle: .alert)
 
-        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        let okAction = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler: nil)
 
         alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
     }
 
     func showAlreadyAddedAlert() {
-        let alert = UIAlertController(title: "Already exists",
-                                      message: "This place was already added to your list.",
+        let alert = UIAlertController(title: NSLocalizedString("already_exists_title", comment: ""),
+                                      message: NSLocalizedString("already_exists_message", comment: ""),
                                       preferredStyle: .alert)
 
-        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        let okAction = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler: nil)
 
         alert.addAction(okAction)
         present(alert, animated: true, completion: nil)

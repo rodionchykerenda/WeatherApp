@@ -7,9 +7,16 @@
 
 import Foundation
 
-struct SelectedLocationWeatherModel {
-    let cityName: String
+protocol WeatherModel {
+    var cityName: String { get set }
+    var temperature: Double? { get set }
+    var longtitude: Double { get set }
+    var lattitude: Double { get set }
+}
+
+struct SelectedLocationWeatherModel: WeatherModel {
+    var cityName: String
     var temperature: Double?
-    let longtitude: Double
-    let lattitude: Double
+    var longtitude: Double
+    var lattitude: Double
 }

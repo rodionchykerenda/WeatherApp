@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  WeatherApp
+
+  Created by Rodion Chikerenda on 31.03.2021.
+  
+*/
+"already_exists_title" = "Уже существует";
+"already_exists_message" = "Это место уже есть в вашем списке";
+"ok" = "Oк";
+"find_city_name_error" = "Не найдено навзвание города. Попробуйте нажать ближе.";
+"city_search_placeholder" = "Найдите город";
+"empty_response_alert_title" = "Не найдено";
+"empty_response_alert_message" = "Мы не смогли найти это место в нашей базе данных. Попробуйте найти другие города поблизости.";
+"add_button_title" = "Добавить";
+"current_button_title" = "Здесь";
+"current_location" = "Текущая локация";
+"huy" = "хуй";

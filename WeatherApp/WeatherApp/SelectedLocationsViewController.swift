@@ -15,7 +15,7 @@ class SelectedLocationsViewController: UIViewController {
     @IBOutlet private weak var contentTableView: UITableView!
 
     // MARK: - Private Properties
-    private var dataSource: [SelectedLocationWeatherModel] = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
+    private var dataSource: [WeatherModel] = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
     private let dataBaseManager = DataBaseManager.instance
     private var currentLocationButton: UIButton?
     private let locationManager = CLLocationManager()
@@ -24,6 +24,7 @@ class SelectedLocationsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setUpLocationManager()
         setUpTableview()
         makeAddButton()
         makeCurrentLocationButton()
@@ -56,20 +57,22 @@ class SelectedLocationsViewController: UIViewController {
     }
 
     @objc func currentLocationButtonTapped(_ sender: UIButton) {
+
+//        guard locationManager.location != nil else {
+//            locationManager.requestLocation()
+//            return
+//        }
+
         guard !dataSource.isEmpty else {
-            locationManager.delegate = self
-            locationManager.requestWhenInUseAuthorization()
             locationManager.requestLocation()
 
             return
         }
-        guard dataSource[0].longtitude != locationManager.location?.coordinate.longitude,
-              dataSource[0].longtitude != locationManager.location?.coordinate.latitude else {
+
+        guard dataSource[0] as? CurrentLocationWeatherModel == nil else {
             return
         }
 
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
     }
 
@@ -112,7 +115,11 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
                    forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {
             DispatchQueue.main.async {
-                self.dataBaseManager.delete(city: self.dataBaseManager.getCities()[indexPath.row])
+
+                if self.dataSource[indexPath.row] as? CurrentLocationWeatherModel == nil {
+                self.dataBaseManager.delete(city: DataManager.instance.isContainedCurrentLocation(in: self.dataSource) ? self.dataBaseManager.getCities()[indexPath.row - 1] : self.dataBaseManager.getCities()[indexPath.row])
+                }
+
                 self.dataSource.remove(at: indexPath.row)
                 self.contentTableView.deleteRows(at: [indexPath], with: .fade)
             }
@@ -130,10 +137,15 @@ private extension SelectedLocationsViewController {
                                   forCellReuseIdentifier: "SelectedLocationTableViewCell")
     }
 
+    func setUpLocationManager() {
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+    }
+
     func makeAddButton() {
         let button = UIButton()
 
-        button.setTitle("Add", for: .normal)
+        button.setTitle(NSLocalizedString("add_button_title", comment: ""), for: .normal)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .red
@@ -157,7 +169,7 @@ private extension SelectedLocationsViewController {
 
         guard let currentLocationButton = currentLocationButton else { return }
 
-        currentLocationButton.setTitle("Current", for: .normal)
+        currentLocationButton.setTitle(NSLocalizedString("current_button_title", comment: ""), for: .normal)
         currentLocationButton.titleLabel?.adjustsFontSizeToFitWidth = true
         currentLocationButton.setTitleColor(.white, for: .normal)
         currentLocationButton.backgroundColor = .black
@@ -263,7 +275,14 @@ extension SelectedLocationsViewController: MapViewControllerDelegate {
                 self.dataBaseManager.addCity(latitude: coordinates.lat,
                                              longitude: coordinates.long,
                                              name: cityName)
-                self.dataSource = DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities())
+
+                if DataManager.instance.isContainedCurrentLocation(in: self.dataSource) {
+                    self.dataSource.removeSubrange(1..<self.dataSource.count)
+                    self.dataSource.append(contentsOf: DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities()))
+                } else {
+                    self.dataSource = DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities())
+                }
+
                 self.loadAllWeathers()
             }
         }
@@ -272,9 +291,6 @@ extension SelectedLocationsViewController: MapViewControllerDelegate {
 
 // MARK: - CLLocationManager Delegate Methods
 extension SelectedLocationsViewController: CLLocationManagerDelegate {
-    @IBAction func locationButtonPressed(_ sender: UIButton) {
-        locationManager.requestLocation()
-    }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
@@ -285,12 +301,11 @@ extension SelectedLocationsViewController: CLLocationManagerDelegate {
         let latitude = location.coordinate.latitude
         let longitude = location.coordinate.longitude
 
-        dataSource.insert(SelectedLocationWeatherModel(cityName: "Current Location",
-                                                       temperature: nil,
-                                                       longtitude: longitude, lattitude: latitude), at: 0)
+        let currentLocation = CurrentLocationWeatherModel(longtitude: longitude, lattitude: latitude)
 
         DispatchQueue.main.async {
             self.contentTableView.beginUpdates()
+            self.dataSource.insert(currentLocation, at: 0)
             self.contentTableView.insertRows(at: [IndexPath(row: self.dataSource.count - 1, section: 0)],
                                              with: .fade)
             self.contentTableView.endUpdates()
