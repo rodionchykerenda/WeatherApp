@@ -115,12 +115,9 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
                    forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {
             DispatchQueue.main.async {
+
                 if self.dataSource[indexPath.row] as? CurrentLocationWeatherModel == nil {
-                    if DataManager.instance.isContainedCurrentLocation(in: self.dataSource) {
-                        self.dataBaseManager.delete(city: self.dataBaseManager.getCities()[indexPath.row - 1])
-                    } else {
-                        self.dataBaseManager.delete(city: self.dataBaseManager.getCities()[indexPath.row])
-                    }
+                self.dataBaseManager.delete(city: DataManager.instance.isContainedCurrentLocation(in: self.dataSource) ? self.dataBaseManager.getCities()[indexPath.row - 1] : self.dataBaseManager.getCities()[indexPath.row])
                 }
 
                 self.dataSource.remove(at: indexPath.row)

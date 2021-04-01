@@ -33,8 +33,8 @@ class DataManager {
 
     func isContainedCurrentLocation(in dataSource: [WeatherModel]) -> Bool {
         for item in dataSource
-            where item as? CurrentLocationWeatherModel != nil {
-                return true
+        where item as? CurrentLocationWeatherModel != nil {
+            return true
 
         }
 
