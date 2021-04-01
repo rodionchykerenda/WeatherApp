@@ -10,7 +10,6 @@ import Foundation
 struct WeatherNetworkManager {
     private let appID = "&appid=73894ed3d982502db57069e27afdfc6b"
     private let session = URLSession(configuration: .default)
-    private let preferredLanguage = NSLocale.preferredLanguages[0].components(separatedBy: "-")[0]
 
     func parseJSON(_ weatherData: Data) -> Double? {
         let decoder = JSONDecoder()
@@ -84,7 +83,7 @@ struct WeatherNetworkManager {
                     return
                 }
 
-                if preferredLanguage == "ru" {
+                if NSLocale.preferredLanguages[0].components(separatedBy: "-")[0] == "ru" {
                     completionHandler(decodedData[0].localNames.russian,
                                       (long: coordinates.longitude,
                                        lat: coordinates.latitude),

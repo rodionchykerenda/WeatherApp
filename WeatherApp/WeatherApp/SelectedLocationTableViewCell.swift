@@ -15,7 +15,7 @@ class SelectedLocationTableViewCell: UITableViewCell {
     private var spinner: UIActivityIndicatorView?
 
     // MARK: - Setters
-    func update(selectedLocation: SelectedLocationWeatherModel) {
+    func update(selectedLocation: WeatherModel) {
         cityNameLabel.text = selectedLocation.cityName
         if let temp = selectedLocation.temperature {
             temperatureLabel.text = String(format: "%.0f", temp) + "°С"
