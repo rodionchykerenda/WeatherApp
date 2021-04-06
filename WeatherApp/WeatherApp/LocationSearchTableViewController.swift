@@ -8,14 +8,15 @@
 import UIKit
 import MapKit
 
-protocol MapSearchDelegate: class {
-    func mapSearchDelegate(didSelectItem item: String)
+protocol LocationSearchTableViewControllerDelegate: class {
+    func locationSearchTableViewController(_ sender: LocationSearchTableViewController,
+                                           didSelectItem item: String)
 }
 
 class LocationSearchTableViewController: UITableViewController, MKLocalSearchCompleterDelegate {
 
     // MARK: - Public Properties
-    weak var handleMapSearchDelegate: MapSearchDelegate?
+    weak var locationSearchTableViewControllerDelegate: LocationSearchTableViewControllerDelegate?
 
     // MARK: - Private Properties
     private var searchTerms: [String] = [] {
@@ -78,7 +79,8 @@ extension LocationSearchTableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedItem = searchTerms[indexPath.row]
-        handleMapSearchDelegate?.mapSearchDelegate(didSelectItem: selectedItem)
+        locationSearchTableViewControllerDelegate?.locationSearchTableViewController(self,
+                                                                                     didSelectItem: selectedItem)
         dismiss(animated: true, completion: nil)
     }
 }

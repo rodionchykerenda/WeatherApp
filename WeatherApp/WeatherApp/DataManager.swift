@@ -18,26 +18,15 @@ class DataManager {
         }
         return SelectedLocationWeatherModel(cityName: name,
                                             temperature: nil,
-                                            longtitude: Double(longitude), lattitude: Double(latitude))
+                                            longtitude: Double(truncating: longitude),
+                                            lattitude: Double(truncating: latitude))
     }
 
     func getDataSourceModelArray(from coreDataModelArray: [SelectedCity]) -> [SelectedLocationWeatherModel] {
-        var resultArray = [SelectedLocationWeatherModel]()
-
-        for item in coreDataModelArray {
-            resultArray.append(getDataSourceModel(from: item))
-        }
-
-        return resultArray
+        return coreDataModelArray.compactMap { getDataSourceModel(from: $0) }
     }
 
     func isContainedCurrentLocation(in dataSource: [WeatherModel]) -> Bool {
-        for item in dataSource
-        where item as? CurrentLocationWeatherModel != nil {
-            return true
-
-        }
-
-        return false
+        return !dataSource.filter { $0 as? CurrentLocationWeatherModel != nil }.isEmpty
     }
 }

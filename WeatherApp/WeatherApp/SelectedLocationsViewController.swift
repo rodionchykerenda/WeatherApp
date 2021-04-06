@@ -15,8 +15,11 @@ class SelectedLocationsViewController: UIViewController {
     @IBOutlet private weak var contentTableView: UITableView!
 
     // MARK: - Private Properties
-    private var dataSource: [WeatherModel] = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
+    private let dataManager = DataManager.instance
     private let dataBaseManager = DataBaseManager.instance
+
+    private var dataSource: [WeatherModel] = []
+
     private var currentLocationButton: UIButton?
     private let locationManager = CLLocationManager()
 
@@ -24,18 +27,22 @@ class SelectedLocationsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setUpLocationManager()
-        setUpTableview()
-        makeAddButton()
-        makeCurrentLocationButton()
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        setUpData()
+        setUpDelegates()
         loadAllWeathers()
-        configureRefreshControl()
         styleUI()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        Storage.instance.reset()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -58,11 +65,6 @@ class SelectedLocationsViewController: UIViewController {
 
     @objc func currentLocationButtonTapped(_ sender: UIButton) {
 
-//        guard locationManager.location != nil else {
-//            locationManager.requestLocation()
-//            return
-//        }
-
         guard !dataSource.isEmpty else {
             locationManager.requestLocation()
 
@@ -77,8 +79,12 @@ class SelectedLocationsViewController: UIViewController {
     }
 
     @objc func handleRefreshControl() {
-        loadAllWeathers {
+        if dataSource.isEmpty {
+            contentTableView.refreshControl?.endRefreshing()
+        } else {
+            loadAllWeathers {
                 self.contentTableView.refreshControl?.endRefreshing()
+            }
         }
     }
 }
@@ -117,7 +123,7 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
             DispatchQueue.main.async {
 
                 if self.dataSource[indexPath.row] as? CurrentLocationWeatherModel == nil {
-                self.dataBaseManager.delete(city: DataManager.instance.isContainedCurrentLocation(in: self.dataSource) ? self.dataBaseManager.getCities()[indexPath.row - 1] : self.dataBaseManager.getCities()[indexPath.row])
+                    self.dataBaseManager.delete(city: DataManager.instance.isContainedCurrentLocation(in: self.dataSource) ? self.dataBaseManager.getCities()[indexPath.row - 1] : self.dataBaseManager.getCities()[indexPath.row])
                 }
 
                 self.dataSource.remove(at: indexPath.row)
@@ -125,10 +131,44 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
             }
         }
     }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dataBaseManager.addLocation(latitude: dataSource[indexPath.row].lattitude,
+                                    longitude: dataSource[indexPath.row].longtitude,
+                                    name: dataSource[indexPath.row].cityName)
+
+        let detailStoryBoard = UIStoryboard(name: "Detail", bundle: nil)
+
+        guard let detailWeatherVC = detailStoryBoard.instantiateViewController(withIdentifier: "DetailWeatherViewController") as? DetailWeatherViewController,
+              let dailyDetailWeatherVC = detailStoryBoard.instantiateViewController(withIdentifier: "DailyDetailWeatherViewController") as? DailyDetailWeatherViewController else {
+            return
+        }
+
+//        Storage.instance.attach(dailyDetailWeatherVC)
+
+        detailWeatherVC.selectedLocation = dataBaseManager.getLocations().last
+
+        let tabBarViewController = UITabBarController()
+
+        tabBarViewController.setViewControllers([detailWeatherVC, dailyDetailWeatherVC], animated: false)
+
+        navigationController?.pushViewController(tabBarViewController, animated: true)
+    }
 }
 
 // MARK: - Helpers
 private extension SelectedLocationsViewController {
+    func setUpDelegates() {
+        setUpTableview()
+        configureRefreshControl()
+        setUpLocationManager()
+    }
+
+    func setUpData() {
+        dataBaseManager.deleteAllLocations()
+        dataSource = dataManager.getDataSourceModelArray(from: dataBaseManager.getCities())
+    }
+
     func setUpTableview() {
         contentTableView.delegate = self
         contentTableView.dataSource = self
@@ -203,6 +243,9 @@ private extension SelectedLocationsViewController {
         layer.startPoint = CGPoint(x: 0.5, y: 0)
         layer.endPoint = CGPoint(x: 0.5, y: 1)
         backgroundView.layer.addSublayer(layer)
+
+        makeAddButton()
+        makeCurrentLocationButton()
     }
 
     func loadAllWeathers(completionHandler: @escaping () -> Void = {}) {
