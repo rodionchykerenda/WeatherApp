@@ -11,7 +11,7 @@ struct WeatherNetworkManager {
     private let appID = "&appid=73894ed3d982502db57069e27afdfc6b"
     private let session = URLSession(configuration: .default)
 
-    func parseJSON(_ weatherData: Data) -> Double? {
+    func parseWeatherJSON(_ weatherData: Data) -> Double? {
         let decoder = JSONDecoder()
         do {
             let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
@@ -21,6 +21,38 @@ struct WeatherNetworkManager {
             print("Couldnt parse JSON")
             return nil
         }
+    }
+
+    func getDetailWeatherBy(longitude: Double, latitude: Double,
+                            completionHandler: @escaping (GlobalWeatherData?, Error?) -> Void) {
+        let baseUrl = "https://api.openweathermap.org/data/2.5/onecall?"
+        let metrics = "&units=metric"
+        let fullUrlString = "\(baseUrl)lat=\(latitude)&lon=\(longitude)&exclude=minutely\(appID)\(metrics)"
+
+        guard let encodedURL = fullUrlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let requestUrl = URL(string: encodedURL) else {
+            return
+        }
+
+        let task = session.dataTask(with: requestUrl) { (data, _, error) in
+            if let error = error {
+                completionHandler(nil, error)
+                return
+            }
+
+            guard let safeData = data else { return }
+
+            let decoder = JSONDecoder()
+
+            do {
+                let decodedData = try decoder.decode(GlobalWeatherData.self, from: safeData)
+                completionHandler(decodedData, nil)
+            } catch {
+                print("Couldnt parse JSON")
+                completionHandler(nil, nil)
+            }
+        }
+        task.resume()
     }
 
     func getCoordinates(by cityName: String, completionHandler: @escaping (Coordinates?, Error?) -> Void) {
@@ -42,12 +74,15 @@ struct WeatherNetworkManager {
 
             if let safeData = data {
                 let decoder = JSONDecoder()
+
                 do {
                     let decodedData = try decoder.decode([Coordinates].self, from: safeData)
+
                     guard !decodedData.isEmpty else {
                         completionHandler(nil, nil)
                         return
                     }
+
                     completionHandler(decodedData[0], nil)
                 } catch {
                     completionHandler(nil, error)
@@ -63,9 +98,11 @@ struct WeatherNetworkManager {
                                                    Error?) -> Void) {
         let baseUrl = "https://api.openweathermap.org/geo/1.0/reverse?"
 
+        // swiftlint:disable line_length
         guard let requestURL = URL(string: "\(baseUrl)lat=\(coordinates.latitude)&lon=\(coordinates.longitude)&limit=1\(appID)") else {
             return
         }
+        // swiftlint:enable line_length
 
         let task = session.dataTask(with: requestURL) { (data, _, error) in
             if let error = error {
@@ -117,7 +154,7 @@ struct WeatherNetworkManager {
             }
 
             if let safeData = data {
-                if let weather = self.parseJSON(safeData) {
+                if let weather = self.parseWeatherJSON(safeData) {
                     completionHandler(weather,
                                       (long: coordinates.longitude, lat: coordinates.latitude),
                                       nil)

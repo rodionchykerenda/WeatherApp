@@ -7,6 +7,7 @@
 
 import Foundation
 
+// model remove
 protocol WeatherModel {
     var cityName: String { get set }
     var temperature: Double? { get set }

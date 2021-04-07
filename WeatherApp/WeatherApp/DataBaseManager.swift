@@ -13,10 +13,11 @@ class DataBaseManager {
 
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
-    // MARK: - Data Manipulation Methods
+    // MARK: - CRUD for SelectedCity
     func getCities() -> [SelectedCity] {
         let request: NSFetchRequest<SelectedCity> = SelectedCity.fetchRequest()
         var cities = [SelectedCity]()
+
         do {
             cities = try context.fetch(request)
         } catch {
@@ -43,18 +44,62 @@ class DataBaseManager {
 
     func isSelected(latitude: Double, longitude: Double) -> Bool {
         let cities = getCities()
-        for item in cities {
-            if let selectedLongitude = item.longitude, let selectedLatitude = item.latitude {
-                if longitude == Double(selectedLongitude), latitude == Double(selectedLatitude) {
-                    return true
-                }
+
+        return !cities.filter {
+            guard let selectedLongitude = $0.longitude,
+               let selectedLatitude = $0.latitude,
+               longitude == Double(truncating: selectedLongitude),
+               latitude == Double(truncating: selectedLatitude) else {
+                return false
             }
-        }
-        return false
+
+            return true
+        }.isEmpty
     }
 
     func delete(city: SelectedCity) {
         context.delete(city)
         saveData()
+    }
+
+    // MARK: - CRUD for SelectedLocation
+    func getLocations() -> [SelectedLocation] {
+        let request: NSFetchRequest<SelectedLocation> = SelectedLocation.fetchRequest()
+        var cities = [SelectedLocation]()
+
+        do {
+            cities = try context.fetch(request)
+        } catch {
+            print("Error loading cities,\(error)")
+        }
+
+        return cities
+    }
+
+    func addLocation(latitude: Double, longitude: Double, name: String) {
+        let newLocation = SelectedLocation(context: context)
+        newLocation.longitude = NSNumber(value: longitude)
+        newLocation.latitude = NSNumber(value: latitude)
+        newLocation.name = name
+        saveData()
+    }
+
+    func deleteAllLocations() {
+        let request: NSFetchRequest<SelectedLocation> = SelectedLocation.fetchRequest()
+        request.returnsObjectsAsFaults = false
+
+        do {
+            let incidents = try context.fetch(request)
+
+            guard !incidents.isEmpty else { return }
+
+            incidents.forEach {
+                self.context.delete($0)
+            }
+
+            try context.save()
+        } catch {
+            fatalError()
+        }
     }
 }

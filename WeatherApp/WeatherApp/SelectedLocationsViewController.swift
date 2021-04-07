@@ -9,14 +9,16 @@ import UIKit
 import CoreLocation
 
 class SelectedLocationsViewController: UIViewController {
-
     // MARK: - Outlets
     @IBOutlet private weak var backgroundView: UIView!
     @IBOutlet private weak var contentTableView: UITableView!
 
     // MARK: - Private Properties
-    private var dataSource: [WeatherModel] = DataManager.instance.getDataSourceModelArray(from: DataBaseManager.instance.getCities())
+    private let dataManager = DataManager.instance
     private let dataBaseManager = DataBaseManager.instance
+
+    private var dataSource: [WeatherModel] = []
+
     private var currentLocationButton: UIButton?
     private let locationManager = CLLocationManager()
 
@@ -24,18 +26,21 @@ class SelectedLocationsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setUpLocationManager()
-        setUpTableview()
-        makeAddButton()
-        makeCurrentLocationButton()
+        setUpData()
+        setUpDelegates()
         loadAllWeathers()
-        configureRefreshControl()
         styleUI()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        StorageManager.instance.reset()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -46,9 +51,11 @@ class SelectedLocationsViewController: UIViewController {
     // MARK: - Actions
     @objc func addButtonTapped(_ sender: UIButton) {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        // swiftlint:disable line_length
         guard let destinationVC = mainStoryboard.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else {
             return
         }
+        // swiftlint:enable line_length
 
         destinationVC.delegate = self
         destinationVC.modalPresentationStyle = .fullScreen
@@ -57,12 +64,6 @@ class SelectedLocationsViewController: UIViewController {
     }
 
     @objc func currentLocationButtonTapped(_ sender: UIButton) {
-
-//        guard locationManager.location != nil else {
-//            locationManager.requestLocation()
-//            return
-//        }
-
         guard !dataSource.isEmpty else {
             locationManager.requestLocation()
 
@@ -77,8 +78,12 @@ class SelectedLocationsViewController: UIViewController {
     }
 
     @objc func handleRefreshControl() {
-        loadAllWeathers {
+        if dataSource.isEmpty {
+            contentTableView.refreshControl?.endRefreshing()
+        } else {
+            loadAllWeathers {
                 self.contentTableView.refreshControl?.endRefreshing()
+            }
         }
     }
 }
@@ -115,20 +120,55 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
                    forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {
             DispatchQueue.main.async {
-
+                // swiftlint:disable line_length
                 if self.dataSource[indexPath.row] as? CurrentLocationWeatherModel == nil {
-                self.dataBaseManager.delete(city: DataManager.instance.isContainedCurrentLocation(in: self.dataSource) ? self.dataBaseManager.getCities()[indexPath.row - 1] : self.dataBaseManager.getCities()[indexPath.row])
+                    self.dataBaseManager.delete(city: DataManager.instance.isContainedCurrentLocation(in: self.dataSource) ? self.dataBaseManager.getCities()[indexPath.row - 1] : self.dataBaseManager.getCities()[indexPath.row])
                 }
+                // swiftlint:enable line_length
 
                 self.dataSource.remove(at: indexPath.row)
                 self.contentTableView.deleteRows(at: [indexPath], with: .fade)
             }
         }
     }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dataBaseManager.addLocation(latitude: dataSource[indexPath.row].lattitude,
+                                    longitude: dataSource[indexPath.row].longtitude,
+                                    name: dataSource[indexPath.row].cityName)
+
+        let detailStoryBoard = UIStoryboard(name: "Detail", bundle: nil)
+
+        // swiftlint:disable line_length
+        guard let detailWeatherVC = detailStoryBoard.instantiateViewController(withIdentifier: "DetailWeatherViewController") as? DetailWeatherViewController,
+              let dailyDetailWeatherVC = detailStoryBoard.instantiateViewController(withIdentifier: "DailyDetailWeatherViewController") as? DailyDetailWeatherViewController else {
+            return
+        }
+        // swiftlint:enable line_length
+
+        detailWeatherVC.selectedLocation = dataBaseManager.getLocations().last
+
+        let tabBarViewController = UITabBarController()
+
+        tabBarViewController.setViewControllers([detailWeatherVC, dailyDetailWeatherVC], animated: false)
+
+        navigationController?.pushViewController(tabBarViewController, animated: true)
+    }
 }
 
 // MARK: - Helpers
 private extension SelectedLocationsViewController {
+    func setUpDelegates() {
+        setUpTableview()
+        configureRefreshControl()
+        setUpLocationManager()
+    }
+
+    func setUpData() {
+        dataBaseManager.deleteAllLocations()
+        dataSource = dataManager.getDataSourceModelArray(from: dataBaseManager.getCities())
+    }
+
     func setUpTableview() {
         contentTableView.delegate = self
         contentTableView.dataSource = self
@@ -203,6 +243,9 @@ private extension SelectedLocationsViewController {
         layer.startPoint = CGPoint(x: 0.5, y: 0)
         layer.endPoint = CGPoint(x: 0.5, y: 1)
         backgroundView.layer.addSublayer(layer)
+
+        makeAddButton()
+        makeCurrentLocationButton()
     }
 
     func loadAllWeathers(completionHandler: @escaping () -> Void = {}) {
@@ -278,7 +321,9 @@ extension SelectedLocationsViewController: MapViewControllerDelegate {
 
                 if DataManager.instance.isContainedCurrentLocation(in: self.dataSource) {
                     self.dataSource.removeSubrange(1..<self.dataSource.count)
-                    self.dataSource.append(contentsOf: DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities()))
+                    self.dataSource.append(contentsOf:
+                                            DataManager.instance.getDataSourceModelArray(from:
+                                                                                            self.dataBaseManager.getCities()))
                 } else {
                     self.dataSource = DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities())
                 }
@@ -291,7 +336,6 @@ extension SelectedLocationsViewController: MapViewControllerDelegate {
 
 // MARK: - CLLocationManager Delegate Methods
 extension SelectedLocationsViewController: CLLocationManagerDelegate {
-
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
             return

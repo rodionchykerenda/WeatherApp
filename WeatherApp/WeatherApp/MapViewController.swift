@@ -15,7 +15,6 @@ protocol MapViewControllerDelegate: class {
 }
 
 class MapViewController: UIViewController {
-
     // MARK: - Outlets
     @IBOutlet private weak var mapView: MKMapView!
 
@@ -75,7 +74,7 @@ class MapViewController: UIViewController {
                 return
             }
 
-            placeMark = placemarks[0]
+            placeMark = placemarks.first
 
             if let city = placeMark.subAdministrativeArea {
                 DispatchQueue.main.async {
@@ -100,17 +99,25 @@ private extension MapViewController {
     }
 
     func addButton() {
-        let button = UIButton(frame: CGRect(x: (view.frame.width / 2) - 100,
-                                            y: view.frame.height - 100,
-                                            width: 200,
-                                            height: 40))
+        let button = UIButton()
+
         button.setTitle(NSLocalizedString("add_button_title", comment: ""), for: .normal)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .red
-        button.layer.cornerRadius = 20
 
         button.addTarget(self, action: #selector(addButtonTapped(_:)), for: .touchUpInside)
         view.addSubview(button)
+
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
+                                      constant: -20).isActive = true
+        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                       constant: -40).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 80).isActive = true
+
+        button.layer.cornerRadius = 40
     }
 
     func setUpTapGestureRecognizer() {
@@ -120,17 +127,20 @@ private extension MapViewController {
     }
 
     func setUpSearchController() {
+        // swiftlint:disable line_length
         guard let locationSearchTable = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LocationSearchTable") as? LocationSearchTableViewController else { return }
-
+        // swiftlint:enable line_length
         resultSearchController = UISearchController(searchResultsController: locationSearchTable)
         resultSearchController?.searchResultsUpdater = locationSearchTable
-        let searchBar = resultSearchController!.searchBar
+
+        guard let searchBar = resultSearchController?.searchBar else { return }
+
         searchBar.sizeToFit()
         searchBar.placeholder = NSLocalizedString("city_search_placeholder", comment: "")
         navigationItem.titleView = resultSearchController?.searchBar
         resultSearchController?.hidesNavigationBarDuringPresentation = false
         definesPresentationContext = true
-        locationSearchTable.handleMapSearchDelegate = self
+        locationSearchTable.locationSearchTableViewControllerDelegate = self
     }
 
     func addPinOnMap(pinLatitude: Double, pinLongitude: Double) {
@@ -150,35 +160,35 @@ private extension MapViewController {
         mapView.addAnnotation(mapAnnotation)
     }
 
-    func showEmptyResponseAlert() {
-        let alert = UIAlertController(title: NSLocalizedString("empty_response_alert_title", comment: ""),
-                                      message: NSLocalizedString("empty_response_alert_message", comment: ""),
+    func makeAlert(title: String, message: String) {
+        let alert = UIAlertController(title: NSLocalizedString(title, comment: ""),
+                                      message: NSLocalizedString(message, comment: ""),
                                       preferredStyle: .alert)
 
-        let okAction = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler: nil)
+        let okAction = UIAlertAction(title: NSLocalizedString("ok", comment: ""),
+                                     style: .default,
+                                     handler: nil)
 
         alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
+    }
+
+    func showEmptyResponseAlert() {
+        makeAlert(title: NSLocalizedString("empty_response_alert_title", comment: ""),
+                  message: NSLocalizedString("empty_response_alert_message", comment: ""))
     }
 
     func showAlreadyAddedAlert() {
-        let alert = UIAlertController(title: NSLocalizedString("already_exists_title", comment: ""),
-                                      message: NSLocalizedString("already_exists_message", comment: ""),
-                                      preferredStyle: .alert)
-
-        let okAction = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler: nil)
-
-        alert.addAction(okAction)
-        present(alert, animated: true, completion: nil)
+        makeAlert(title: NSLocalizedString("already_exists_title", comment: ""),
+                  message: NSLocalizedString("already_exists_message", comment: ""))
     }
 }
 
-// MARK: - MapSearchDelegate Methods
-extension MapViewController: MapSearchDelegate {
-    func mapSearchDelegate(didSelectItem item: String) {
-        DispatchQueue.main.async {
-            self.resultSearchController?.searchBar.text = item
-        }
+// MARK: - LocationSearchTableViewControllerDelegate Methods
+extension MapViewController: LocationSearchTableViewControllerDelegate {
+    func locationSearchTableViewController(_ sender: LocationSearchTableViewController,
+                                           didSelectItem item: String) {
+        resultSearchController?.searchBar.text = item
 
         let networkManager = WeatherNetworkManager()
         networkManager.getCoordinates(by: item.replacingOccurrences(of: " ", with: "+")) { (coordinates, error) in

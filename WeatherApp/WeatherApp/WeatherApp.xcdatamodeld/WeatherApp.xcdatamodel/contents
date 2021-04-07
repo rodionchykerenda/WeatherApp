@@ -6,11 +6,12 @@
         <attribute name="name" attributeType="String"/>
     </entity>
     <entity name="SelectedLocation" representedClassName="SelectedLocation" syncable="YES" codeGenerationType="class">
-        <attribute name="latitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="longitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="latitude" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="longitude" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
     </entity>
     <elements>
-        <element name="SelectedLocation" positionX="-54" positionY="-9" width="128" height="59"/>
         <element name="SelectedCity" positionX="-63" positionY="-18" width="128" height="74"/>
+        <element name="SelectedLocation" positionX="-54" positionY="-9" width="128" height="74"/>
     </elements>
 </model>

@@ -16,49 +16,77 @@
                     <view key="view" contentMode="scaleToFill" id="CzR-Mp-TrC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sJ9-WJ-rxX">
+                                <rect key="frame" x="157" y="398" width="100" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="nqG-2O-onC"/>
+                                    <constraint firstAttribute="width" constant="100" id="qkl-cc-D8f"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cKh-rQ-PZ6">
+                                <rect key="frame" x="0.0" y="56" width="394" height="65"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="SMe-T7-feu"/>
                         <color key="backgroundColor" systemColor="systemPinkColor"/>
+                        <constraints>
+                            <constraint firstItem="sJ9-WJ-rxX" firstAttribute="centerX" secondItem="CzR-Mp-TrC" secondAttribute="centerX" id="5Rx-G8-EaY"/>
+                            <constraint firstItem="sJ9-WJ-rxX" firstAttribute="centerY" secondItem="CzR-Mp-TrC" secondAttribute="centerY" id="yqh-Wq-PXL"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="MFE-AJ-CxD"/>
+                    <connections>
+                        <outlet property="cityNameLabel" destination="cKh-rQ-PZ6" id="6wA-J6-lWo"/>
+                        <outlet property="temperatureLabel" destination="sJ9-WJ-rxX" id="VVL-H5-AGb"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fw5-MG-QPC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1209" y="-100"/>
-        </scene>
-        <!--Tab Bar Controller-->
-        <scene sceneID="6GC-x4-WLB">
-            <objects>
-                <tabBarController storyboardIdentifier="TabBarVeiwController" automaticallyAdjustsScrollViewInsets="NO" id="5Me-Ja-7cG" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Xnf-Ln-UcK">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="vc2-Vp-Ojm" kind="relationship" relationship="viewControllers" id="Mbl-DH-zGj"/>
-                        <segue destination="zLy-Ab-Wbh" kind="relationship" relationship="viewControllers" id="c9n-DE-WbO"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="rzR-eM-AQc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="161" y="260"/>
+            <point key="canvasLocation" x="1208.6956521739132" y="-100.44642857142857"/>
         </scene>
         <!--Item-->
         <scene sceneID="ZTq-Mk-R5H">
             <objects>
-                <viewController id="zLy-Ab-Wbh" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DailyDetailWeatherViewController" id="zLy-Ab-Wbh" customClass="DailyDetailWeatherViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ewh-gU-iga">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gFG-cS-FgM">
+                                <rect key="frame" x="20" y="71" width="384" height="62"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fS3-7t-dyN">
+                                <rect key="frame" x="82" y="295" width="261" height="187"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="wWS-s9-leh"/>
                         <color key="backgroundColor" systemColor="systemTealColor"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="2Rd-Op-xyi"/>
+                    <connections>
+                        <outlet property="cityNameLabel" destination="gFG-cS-FgM" id="CGj-kB-WKr"/>
+                        <outlet property="temperatureLabel" destination="fS3-7t-dyN" id="1mx-i2-nll"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yat-5j-AnY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1209" y="631"/>
+            <point key="canvasLocation" x="2044.9275362318842" y="-100.44642857142857"/>
         </scene>
     </scenes>
     <resources>
