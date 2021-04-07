@@ -8,7 +8,6 @@
 import UIKit
 
 class SelectedLocationTableViewCell: UITableViewCell {
-
     // MARK: - Outlets
     @IBOutlet private weak var cityNameLabel: UILabel!
     @IBOutlet private weak var temperatureLabel: UILabel!
@@ -31,7 +30,6 @@ class SelectedLocationTableViewCell: UITableViewCell {
 
 // MARK: - Private Helpers
 private extension SelectedLocationTableViewCell {
-
     func styleUI() {
         self.backgroundColor = .clear
         contentView.backgroundColor = .clear

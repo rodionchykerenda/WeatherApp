@@ -8,17 +8,19 @@
 import Foundation
 
 protocol StorageObserver: class {
-    func update(storage: Storage)
+    func didGetUpdated(storage: StorageManager)
 }
 
-class Storage {
-    static let instance = Storage()
-
+class StorageManager {
     private(set) var isLoading: Bool = false
 
     private lazy var observers = [StorageObserver]()
 
+    private let networkManager = WeatherNetworkManager()
+
     var globalWeather: GlobalWeatherData?
+
+    static let instance = StorageManager()
 
     func attach(_ observer: StorageObserver) {
         observers.append(observer)
@@ -31,12 +33,11 @@ class Storage {
     }
 
     func notify() {
-        observers.forEach({ $0.update(storage: self)})
+        observers.forEach({ $0.didGetUpdated(storage: self) })
     }
 
     func getWeatherForLocationBy(longitude: Double, latitude: Double) {
         setLoading()
-        let networkManager = WeatherNetworkManager()
         networkManager.getDetailWeatherBy(longitude: longitude,
                                           latitude: latitude) { (weatherData, error) in
             guard let safeWeatherData = weatherData, error == nil else {
@@ -59,6 +60,6 @@ class Storage {
     }
 
     func setLoading() {
-        isLoading = !isLoading
+        isLoading.toggle()
     }
 }

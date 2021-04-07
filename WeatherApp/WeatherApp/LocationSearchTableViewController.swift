@@ -14,7 +14,6 @@ protocol LocationSearchTableViewControllerDelegate: class {
 }
 
 class LocationSearchTableViewController: UITableViewController, MKLocalSearchCompleterDelegate {
-
     // MARK: - Public Properties
     weak var locationSearchTableViewControllerDelegate: LocationSearchTableViewControllerDelegate?
 
@@ -63,7 +62,6 @@ extension LocationSearchTableViewController: UISearchResultsUpdating {
 
 // MARK: - TableView Delegate And DataSource Methods
 extension LocationSearchTableViewController {
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchTerms.count
     }

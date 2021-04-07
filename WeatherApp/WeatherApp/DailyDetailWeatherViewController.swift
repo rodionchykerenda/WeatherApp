@@ -7,10 +7,13 @@
 
 import UIKit
 
-class DailyDetailWeatherViewController: UIViewController, Spinner {
+class DailyDetailWeatherViewController: UIViewController, LoadableView {
     // MARK: - Outlets
     @IBOutlet private weak var cityNameLabel: UILabel!
     @IBOutlet private weak var temperatureLabel: UILabel!
+
+    // MARK: - Private Properties
+    let storage = StorageManager.instance
 
     // MARK: - Public Properties
     var loaderView: UIView?
@@ -18,30 +21,13 @@ class DailyDetailWeatherViewController: UIViewController, Spinner {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        Storage.instance.attach(self)
-
-        guard !Storage.instance.isLoading else {
-
-            showSpinner()
-            return
-        }
-
-        updateUI()
-    }
-
-    deinit {
-        print("Daily Deinit")
+        loadData()
     }
 }
 
 // MARK: - Observer Methods
 extension DailyDetailWeatherViewController: StorageObserver {
-    func update(storage: Storage) {
-//        guard let globalWeather = storage.globalWeather else {
-//
-//            return
-//        }
-
+    func didGetUpdated(storage: StorageManager) {
         DispatchQueue.main.async {
             self.updateUI()
 
@@ -53,8 +39,19 @@ extension DailyDetailWeatherViewController: StorageObserver {
 // MARK: - Helpers
 private extension DailyDetailWeatherViewController {
     func updateUI() {
-        guard let globalWeather = Storage.instance.globalWeather else { return }
+        guard let globalWeather = storage.globalWeather else { return }
 
-        self.temperatureLabel.text = String(globalWeather.current.feelsLike)
+        temperatureLabel.text = String(globalWeather.current.feelsLike)
+    }
+
+    func loadData() {
+        storage.attach(self)
+
+        guard !storage.isLoading else {
+            showSpinner()
+            return
+        }
+
+        updateUI()
     }
 }

@@ -17,6 +17,7 @@ class DataBaseManager {
     func getCities() -> [SelectedCity] {
         let request: NSFetchRequest<SelectedCity> = SelectedCity.fetchRequest()
         var cities = [SelectedCity]()
+
         do {
             cities = try context.fetch(request)
         } catch {
@@ -43,15 +44,16 @@ class DataBaseManager {
 
     func isSelected(latitude: Double, longitude: Double) -> Bool {
         let cities = getCities()
-        // filter
+
         return !cities.filter {
-            if let selectedLongitude = $0.longitude,
+            guard let selectedLongitude = $0.longitude,
                let selectedLatitude = $0.latitude,
                longitude == Double(truncating: selectedLongitude),
-               latitude == Double(truncating: selectedLatitude) {
-                return true
+               latitude == Double(truncating: selectedLatitude) else {
+                return false
             }
-            return false
+
+            return true
         }.isEmpty
     }
 
@@ -64,11 +66,13 @@ class DataBaseManager {
     func getLocations() -> [SelectedLocation] {
         let request: NSFetchRequest<SelectedLocation> = SelectedLocation.fetchRequest()
         var cities = [SelectedLocation]()
+
         do {
             cities = try context.fetch(request)
         } catch {
             print("Error loading cities,\(error)")
         }
+
         return cities
     }
 
@@ -87,13 +91,13 @@ class DataBaseManager {
         do {
             let incidents = try context.fetch(request)
 
-            if !incidents.isEmpty {
+            guard !incidents.isEmpty else { return }
 
-                for result: NSManagedObject in incidents {
-                    context.delete(result)
-                }
-                try context.save()
+            incidents.forEach {
+                self.context.delete($0)
             }
+
+            try context.save()
         } catch {
             fatalError()
         }

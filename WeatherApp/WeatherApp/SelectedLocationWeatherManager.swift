@@ -23,25 +23,13 @@ struct WeatherNetworkManager {
         }
     }
 
-//    func parseDetailWeatherJSON(_ weatherData: Data) -> GlobalWeatherData? {
-//        let decoder = JSONDecoder()
-//        do {
-//            let decodedData = try decoder.decode(GlobalWeatherData.self, from: weatherData)
-//
-//            return decodedData
-//        } catch {
-//            print("Couldnt parse JSON")
-//            return nil
-//        }
-//    }
-
     func getDetailWeatherBy(longitude: Double, latitude: Double,
                             completionHandler: @escaping (GlobalWeatherData?, Error?) -> Void) {
         let baseUrl = "https://api.openweathermap.org/data/2.5/onecall?"
         let metrics = "&units=metric"
         let fullUrlString = "\(baseUrl)lat=\(latitude)&lon=\(longitude)&exclude=minutely\(appID)\(metrics)"
 
-        guard let  encodedURL = fullUrlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+        guard let encodedURL = fullUrlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
               let requestUrl = URL(string: encodedURL) else {
             return
         }
@@ -52,15 +40,16 @@ struct WeatherNetworkManager {
                 return
             }
 
-            if let safeData = data {
-                let decoder = JSONDecoder()
-                do {
-                    let decodedData = try decoder.decode(GlobalWeatherData.self, from: safeData)
-                    completionHandler(decodedData, nil)
-                } catch {
-                    print("Couldnt parse JSON")
-                    completionHandler(nil, nil)
-                }
+            guard let safeData = data else { return }
+
+            let decoder = JSONDecoder()
+
+            do {
+                let decodedData = try decoder.decode(GlobalWeatherData.self, from: safeData)
+                completionHandler(decodedData, nil)
+            } catch {
+                print("Couldnt parse JSON")
+                completionHandler(nil, nil)
             }
         }
         task.resume()
@@ -85,12 +74,15 @@ struct WeatherNetworkManager {
 
             if let safeData = data {
                 let decoder = JSONDecoder()
+
                 do {
                     let decodedData = try decoder.decode([Coordinates].self, from: safeData)
+
                     guard !decodedData.isEmpty else {
                         completionHandler(nil, nil)
                         return
                     }
+
                     completionHandler(decodedData[0], nil)
                 } catch {
                     completionHandler(nil, error)

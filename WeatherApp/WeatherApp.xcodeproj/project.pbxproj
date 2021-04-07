@@ -142,9 +142,9 @@
 		8F924253260B639000D84DB0 /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
-				8F6CC274261C5BAC00F245CC /* Protocol */,
 				8F924274260B76B500D84DB0 /* Model */,
 				D1356EA8260DE4BF00E435C2 /* Flow */,
+				8F6CC274261C5BAC00F245CC /* Protocol */,
 				8F92426D260B754400D84DB0 /* Supporting Files */,
 				8F924265260B639100D84DB0 /* Info.plist */,
 				8F92425D260B639000D84DB0 /* WeatherApp.xcdatamodeld */,
@@ -285,11 +285,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8F924268260B639100D84DB0 /* Build configuration list for PBXNativeTarget "WeatherApp" */;
 			buildPhases = (
+				8F75B85126122967008433F2 /* ShellScript */,
 				E5D72F19ED2636E0A258559C /* [CP] Check Pods Manifest.lock */,
 				8F92424D260B639000D84DB0 /* Sources */,
 				8F92424E260B639000D84DB0 /* Frameworks */,
 				8F92424F260B639000D84DB0 /* Resources */,
-				8F75B85126122967008433F2 /* ShellScript */,
 			);
 			buildRules = (
 			);

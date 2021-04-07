@@ -7,10 +7,13 @@
 
 import UIKit
 
-class DetailWeatherViewController: UIViewController, Spinner {
+class DetailWeatherViewController: UIViewController, LoadableView {
     // MARK: - Outlets
     @IBOutlet private weak var temperatureLabel: UILabel!
     @IBOutlet private weak var cityNameLabel: UILabel!
+
+    // MARK: - Private Properties
+    private let srotage = StorageManager.instance
 
     // MARK: - Public Properties
     var selectedLocation: SelectedLocation?
@@ -20,8 +23,29 @@ class DetailWeatherViewController: UIViewController, Spinner {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        loadData()
+    }
+}
 
+// MARK: - Observer Methods
+extension DetailWeatherViewController: StorageObserver {
+    func didGetUpdated(storage: StorageManager) {
+        DispatchQueue.main.async {
+            self.updateUI()
+            self.removeSpinner()
+        }
+    }
+}
+
+// MARK: - Helpers
+private extension DetailWeatherViewController {
+    func updateUI() {
+        guard let globalWeather = srotage.globalWeather else { return }
+
+        temperatureLabel.text = String(globalWeather.current.temperature)
+    }
+
+    func loadData() {
         showSpinner()
 
         guard let longitude = selectedLocation?.longitude,
@@ -30,35 +54,11 @@ class DetailWeatherViewController: UIViewController, Spinner {
             return
         }
 
-        Storage.instance.attach(self)
+        srotage.attach(self)
 
         self.cityNameLabel.text = cityName
 
-        Storage.instance.getWeatherForLocationBy(longitude: Double(truncating: longitude),
+        srotage.getWeatherForLocationBy(longitude: Double(truncating: longitude),
                                         latitude: Double(truncating: latitude))
-    }
-
-    deinit {
-        print("Detail Deinit")
-    }
-}
-
-// MARK: - Observer Methods
-extension DetailWeatherViewController: StorageObserver {
-    func update(storage: Storage) {
-        DispatchQueue.main.async {
-            self.updateUI()
-            self.removeSpinner()
-
-        }
-    }
-}
-
-// MARK: - Helpers
-private extension DetailWeatherViewController {
-    func updateUI() {
-        guard let globalWeather = Storage.instance.globalWeather else { return }
-
-        temperatureLabel.text = String(globalWeather.current.feelsLike)
     }
 }

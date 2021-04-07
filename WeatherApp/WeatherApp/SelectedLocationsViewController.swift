@@ -9,7 +9,6 @@ import UIKit
 import CoreLocation
 
 class SelectedLocationsViewController: UIViewController {
-
     // MARK: - Outlets
     @IBOutlet private weak var backgroundView: UIView!
     @IBOutlet private weak var contentTableView: UITableView!
@@ -27,7 +26,6 @@ class SelectedLocationsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         setUpData()
         setUpDelegates()
         loadAllWeathers()
@@ -42,7 +40,7 @@ class SelectedLocationsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        Storage.instance.reset()
+        StorageManager.instance.reset()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -64,7 +62,6 @@ class SelectedLocationsViewController: UIViewController {
     }
 
     @objc func currentLocationButtonTapped(_ sender: UIButton) {
-
         guard !dataSource.isEmpty else {
             locationManager.requestLocation()
 
@@ -121,7 +118,6 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
                    forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {
             DispatchQueue.main.async {
-
                 if self.dataSource[indexPath.row] as? CurrentLocationWeatherModel == nil {
                     self.dataBaseManager.delete(city: DataManager.instance.isContainedCurrentLocation(in: self.dataSource) ? self.dataBaseManager.getCities()[indexPath.row - 1] : self.dataBaseManager.getCities()[indexPath.row])
                 }
@@ -143,8 +139,6 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
               let dailyDetailWeatherVC = detailStoryBoard.instantiateViewController(withIdentifier: "DailyDetailWeatherViewController") as? DailyDetailWeatherViewController else {
             return
         }
-
-//        Storage.instance.attach(dailyDetailWeatherVC)
 
         detailWeatherVC.selectedLocation = dataBaseManager.getLocations().last
 
@@ -321,7 +315,9 @@ extension SelectedLocationsViewController: MapViewControllerDelegate {
 
                 if DataManager.instance.isContainedCurrentLocation(in: self.dataSource) {
                     self.dataSource.removeSubrange(1..<self.dataSource.count)
-                    self.dataSource.append(contentsOf: DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities()))
+                    self.dataSource.append(contentsOf:
+                                            DataManager.instance.getDataSourceModelArray(from:
+                                                                                            self.dataBaseManager.getCities()))
                 } else {
                     self.dataSource = DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities())
                 }
@@ -334,7 +330,6 @@ extension SelectedLocationsViewController: MapViewControllerDelegate {
 
 // MARK: - CLLocationManager Delegate Methods
 extension SelectedLocationsViewController: CLLocationManagerDelegate {
-
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
             return

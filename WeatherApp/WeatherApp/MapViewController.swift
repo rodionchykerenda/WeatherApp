@@ -15,7 +15,6 @@ protocol MapViewControllerDelegate: class {
 }
 
 class MapViewController: UIViewController {
-
     // MARK: - Outlets
     @IBOutlet private weak var mapView: MKMapView!
 
