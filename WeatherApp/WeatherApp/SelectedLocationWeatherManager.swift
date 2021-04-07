@@ -98,9 +98,11 @@ struct WeatherNetworkManager {
                                                    Error?) -> Void) {
         let baseUrl = "https://api.openweathermap.org/geo/1.0/reverse?"
 
+        // swiftlint:disable line_length
         guard let requestURL = URL(string: "\(baseUrl)lat=\(coordinates.latitude)&lon=\(coordinates.longitude)&limit=1\(appID)") else {
             return
         }
+        // swiftlint:enable line_length
 
         let task = session.dataTask(with: requestURL) { (data, _, error) in
             if let error = error {

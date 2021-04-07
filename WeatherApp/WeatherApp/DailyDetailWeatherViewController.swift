@@ -27,7 +27,7 @@ class DailyDetailWeatherViewController: UIViewController, LoadableView {
 
 // MARK: - Observer Methods
 extension DailyDetailWeatherViewController: StorageObserver {
-    func didGetUpdated(storage: StorageManager) {
+    func didGetUpdated(globalWeatherData: GlobalWeatherData?) {
         DispatchQueue.main.async {
             self.updateUI()
 
@@ -39,7 +39,7 @@ extension DailyDetailWeatherViewController: StorageObserver {
 // MARK: - Helpers
 private extension DailyDetailWeatherViewController {
     func updateUI() {
-        guard let globalWeather = storage.globalWeather else { return }
+        guard let globalWeather = storage.getGlobalWeatherData() else { return }
 
         temperatureLabel.text = String(globalWeather.current.feelsLike)
     }

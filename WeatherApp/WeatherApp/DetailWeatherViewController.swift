@@ -29,7 +29,7 @@ class DetailWeatherViewController: UIViewController, LoadableView {
 
 // MARK: - Observer Methods
 extension DetailWeatherViewController: StorageObserver {
-    func didGetUpdated(storage: StorageManager) {
+    func didGetUpdated(globalWeatherData: GlobalWeatherData?) {
         DispatchQueue.main.async {
             self.updateUI()
             self.removeSpinner()
@@ -40,7 +40,7 @@ extension DetailWeatherViewController: StorageObserver {
 // MARK: - Helpers
 private extension DetailWeatherViewController {
     func updateUI() {
-        guard let globalWeather = srotage.globalWeather else { return }
+        guard let globalWeather = srotage.getGlobalWeatherData() else { return }
 
         temperatureLabel.text = String(globalWeather.current.temperature)
     }

@@ -51,9 +51,11 @@ class SelectedLocationsViewController: UIViewController {
     // MARK: - Actions
     @objc func addButtonTapped(_ sender: UIButton) {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        // swiftlint:disable line_length
         guard let destinationVC = mainStoryboard.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else {
             return
         }
+        // swiftlint:enable line_length
 
         destinationVC.delegate = self
         destinationVC.modalPresentationStyle = .fullScreen
@@ -118,9 +120,11 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
                    forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {
             DispatchQueue.main.async {
+                // swiftlint:disable line_length
                 if self.dataSource[indexPath.row] as? CurrentLocationWeatherModel == nil {
                     self.dataBaseManager.delete(city: DataManager.instance.isContainedCurrentLocation(in: self.dataSource) ? self.dataBaseManager.getCities()[indexPath.row - 1] : self.dataBaseManager.getCities()[indexPath.row])
                 }
+                // swiftlint:enable line_length
 
                 self.dataSource.remove(at: indexPath.row)
                 self.contentTableView.deleteRows(at: [indexPath], with: .fade)
@@ -135,10 +139,12 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
 
         let detailStoryBoard = UIStoryboard(name: "Detail", bundle: nil)
 
+        // swiftlint:disable line_length
         guard let detailWeatherVC = detailStoryBoard.instantiateViewController(withIdentifier: "DetailWeatherViewController") as? DetailWeatherViewController,
               let dailyDetailWeatherVC = detailStoryBoard.instantiateViewController(withIdentifier: "DailyDetailWeatherViewController") as? DailyDetailWeatherViewController else {
             return
         }
+        // swiftlint:enable line_length
 
         detailWeatherVC.selectedLocation = dataBaseManager.getLocations().last
 

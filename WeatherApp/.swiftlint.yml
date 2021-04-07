@@ -31,6 +31,7 @@ analyzer_rules: # Rules run by `swiftlint analyze` (experimental)
 
 # configurable rules can be customized from this configuration file
 # binary rules can set their severity level
+force_unwrapping: error
 force_cast: warning # implicitly
 force_try:
   severity: warning # explicitly

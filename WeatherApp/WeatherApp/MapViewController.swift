@@ -127,10 +127,9 @@ private extension MapViewController {
     }
 
     func setUpSearchController() {
-        // swiftlint:disable all
+        // swiftlint:disable line_length
         guard let locationSearchTable = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LocationSearchTable") as? LocationSearchTableViewController else { return }
-        // swiftlint:enable all
-
+        // swiftlint:enable line_length
         resultSearchController = UISearchController(searchResultsController: locationSearchTable)
         resultSearchController?.searchResultsUpdater = locationSearchTable
 

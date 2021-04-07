@@ -8,7 +8,7 @@
 import Foundation
 
 protocol StorageObserver: class {
-    func didGetUpdated(storage: StorageManager)
+    func didGetUpdated(globalWeatherData: GlobalWeatherData?)
 }
 
 class StorageManager {
@@ -18,7 +18,7 @@ class StorageManager {
 
     private let networkManager = WeatherNetworkManager()
 
-    var globalWeather: GlobalWeatherData?
+    private var globalWeather: GlobalWeatherData?
 
     static let instance = StorageManager()
 
@@ -33,7 +33,7 @@ class StorageManager {
     }
 
     func notify() {
-        observers.forEach({ $0.didGetUpdated(storage: self) })
+        observers.forEach({ $0.didGetUpdated(globalWeatherData: globalWeather) })
     }
 
     func getWeatherForLocationBy(longitude: Double, latitude: Double) {
@@ -61,5 +61,9 @@ class StorageManager {
 
     func setLoading() {
         isLoading.toggle()
+    }
+
+    func getGlobalWeatherData() -> GlobalWeatherData? {
+        return globalWeather
     }
 }
