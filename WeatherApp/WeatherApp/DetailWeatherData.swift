@@ -45,9 +45,13 @@ struct HourlyWeatherData: Codable {
 
 struct Temperature: Codable {
     let daily: Double
+    let minTemp: Double
+    let maxTemp: Double
 
     private enum CodingKeys: String, CodingKey {
         case daily = "day"
+        case minTemp = "min"
+        case maxTemp = "max"
     }
 }
 

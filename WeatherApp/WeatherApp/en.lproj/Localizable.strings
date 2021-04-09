@@ -15,4 +15,10 @@
 "add_button_title" = "Add";
 "current_button_title" = "Current";
 "current_location" = "Current location";
-"huy" = "huy";
+"back_button_title" = "Back";
+"humidity" = "Humidity";
+"pressure" = "Pressure";
+"min_temp" = "Min Temp";
+"max_temp" = "Max Temp";
+"wind_speed" = "Wind Speed";
+"feels_like" = "Feels Like";

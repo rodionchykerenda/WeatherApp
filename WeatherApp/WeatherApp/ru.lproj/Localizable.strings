@@ -15,4 +15,10 @@
 "add_button_title" = "Добавить";
 "current_button_title" = "Здесь";
 "current_location" = "Текущая локация";
-"huy" = "хуй";
+"back_button_title" = "Назад";
+"humidity" = "Влажность";
+"pressure" = "Давление";
+"min_temp" = "Мин Темп";
+"max_temp" = "Макс Темп";
+"wind_speed" = "Скорость Ветра";
+"feels_like" = "Чувствуется";
