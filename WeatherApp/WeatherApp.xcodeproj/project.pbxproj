@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7D4E0D3F79AEEBD6B18D206D /* Pods_WeatherApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11D2AD86C8F96C8865AE8D27 /* Pods_WeatherApp.framework */; };
+		8F0056C426244A6E00884592 /* DetailWeatherRowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F0056C326244A6E00884592 /* DetailWeatherRowsViewModel.swift */; };
+		8F0056C926244F6900884592 /* String+ColorName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F0056C826244F6900884592 /* String+ColorName.swift */; };
+		8F0056CC2624517F00884592 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F0056CB2624517F00884592 /* Helper.swift */; };
 		8F0629B2261222650091D2F3 /* DetailWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F0629B1261222650091D2F3 /* DetailWeatherViewController.swift */; };
 		8F271E9B261F29DD00F75FC7 /* MainCurrentWeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F271E9A261F29DD00F75FC7 /* MainCurrentWeatherViewModel.swift */; };
 		8F38FEE226207ED6008B05E4 /* DetailCurrentWeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F38FEE026207ED6008B05E4 /* DetailCurrentWeatherTableViewCell.swift */; };
@@ -57,6 +60,9 @@
 /* Begin PBXFileReference section */
 		11D2AD86C8F96C8865AE8D27 /* Pods_WeatherApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		72CF6C324900F39652590F73 /* Pods-WeatherApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherApp.debug.xcconfig"; path = "Target Support Files/Pods-WeatherApp/Pods-WeatherApp.debug.xcconfig"; sourceTree = "<group>"; };
+		8F0056C326244A6E00884592 /* DetailWeatherRowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailWeatherRowsViewModel.swift; sourceTree = "<group>"; };
+		8F0056C826244F6900884592 /* String+ColorName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+ColorName.swift"; sourceTree = "<group>"; };
+		8F0056CB2624517F00884592 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		8F0629B1261222650091D2F3 /* DetailWeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailWeatherViewController.swift; sourceTree = "<group>"; };
 		8F271E9A261F29DD00F75FC7 /* MainCurrentWeatherViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCurrentWeatherViewModel.swift; sourceTree = "<group>"; };
 		8F38FEE026207ED6008B05E4 /* DetailCurrentWeatherTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCurrentWeatherTableViewCell.swift; sourceTree = "<group>"; };
@@ -120,6 +126,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8F0056C726244F4B00884592 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				8F0056C826244F6900884592 /* String+ColorName.swift */,
+			);
+			name = Extension;
+			sourceTree = "<group>";
+		};
 		8F38FEE526207EE1008B05E4 /* DetailCurrentWeatherTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -162,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				8F38FEF72620948A008B05E4 /* DetailWeatherName.swift */,
+				8F0056C326244A6E00884592 /* DetailWeatherRowsViewModel.swift */,
 			);
 			name = Enum;
 			sourceTree = "<group>";
@@ -208,6 +223,7 @@
 				D1356EB62610DF0000E435C2 /* DataManager.swift */,
 				8F92428A260B94AA00D84DB0 /* DataBaseManager.swift */,
 				8F7508D8261AFC520082ACF6 /* Storage.swift */,
+				8F0056CB2624517F00884592 /* Helper.swift */,
 			);
 			name = Manager;
 			sourceTree = "<group>";
@@ -286,6 +302,7 @@
 			children = (
 				8F924274260B76B500D84DB0 /* Model */,
 				D1356EA8260DE4BF00E435C2 /* Flow */,
+				8F0056C726244F4B00884592 /* Extension */,
 				8F6CC274261C5BAC00F245CC /* Protocol */,
 				8F92426D260B754400D84DB0 /* Supporting Files */,
 				8F924265260B639100D84DB0 /* Info.plist */,
@@ -549,6 +566,7 @@
 			files = (
 				8F709A0A262060850067F558 /* HoursWeatherCollectionViewCell.swift in Sources */,
 				8F38FEFB2620A309008B05E4 /* DailyDetailWeatherModel.swift in Sources */,
+				8F0056C426244A6E00884592 /* DetailWeatherRowsViewModel.swift in Sources */,
 				8F38FF002620A744008B05E4 /* DailyDetailTableViewCell.swift in Sources */,
 				8F92425F260B639000D84DB0 /* WeatherApp.xcdatamodeld in Sources */,
 				8F38FEF82620948A008B05E4 /* DetailWeatherName.swift in Sources */,
@@ -559,6 +577,7 @@
 				8F92428E260B9FC400D84DB0 /* MapViewController.swift in Sources */,
 				8F92427F260B7BCF00D84DB0 /* WeatherData.swift in Sources */,
 				8F7508D9261AFC520082ACF6 /* Storage.swift in Sources */,
+				8F0056C926244F6900884592 /* String+ColorName.swift in Sources */,
 				8FAAC5F12617640B0011FC58 /* DetailWeatherData.swift in Sources */,
 				8F38FEF02620829D008B05E4 /* DetailWeatherHandler.swift in Sources */,
 				8F38FEEA26207F33008B05E4 /* DetailWeatherCollectionViewCell.swift in Sources */,
@@ -567,6 +586,7 @@
 				8F38FEF3262082F8008B05E4 /* DetailWeatherViewModel.swift in Sources */,
 				8F0629B2261222650091D2F3 /* DetailWeatherViewController.swift in Sources */,
 				8FAAC5EB261749B50011FC58 /* DailyDetailWeatherViewController.swift in Sources */,
+				8F0056CC2624517F00884592 /* Helper.swift in Sources */,
 				8F92427C260B790C00D84DB0 /* SelectedLocationWeatherManager.swift in Sources */,
 				8F924255260B639000D84DB0 /* AppDelegate.swift in Sources */,
 				8FA04637260C97050042F47C /* LocationSearchTableViewController.swift in Sources */,

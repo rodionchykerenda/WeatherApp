@@ -10,7 +10,7 @@ import UIKit
 class DataManager {
     static let instance = DataManager()
 
-    private let dateFormater = DateFormatter()
+    private let dateHelper = Helper()
 
     func getDataSourceModel(from coreDataModel: SelectedCity) -> SelectedLocationWeatherModel {
         guard let name = coreDataModel.name,
@@ -33,18 +33,17 @@ class DataManager {
     }
 
     func getCurrentWeatherModel(from networkModel: CurrentWeatherData, with name: String) -> MainCurrentWeatherViewModel {
-        let date = Date(timeIntervalSince1970: Double(networkModel.date))
-        dateFormater.dateFormat = "EEEE, MMM d, yyyy"
-        let dateString = dateFormater.string(from: date).capitalized
-
-        dateFormater.dateFormat = "HH:mm"
-        let sunriseDate = Date(timeIntervalSince1970: Double(networkModel.sunrise))
-        let sunsetDate = Date(timeIntervalSince1970: Double(networkModel.sunset))
-        let sunrise = dateFormater.string(from: sunriseDate)
-        let sunset = dateFormater.string(from: sunsetDate)
+        let dateString = dateHelper.getFullDate(with: Double(networkModel.date))
+        let sunrise = dateHelper.getOnlyTimeDate(with: networkModel.sunrise)
+        let sunset = dateHelper.getOnlyTimeDate(with: networkModel.sunset)
         let temperature = String(Int(networkModel.temperature)) + "°С"
-        let conditionName = getConditionName(by: networkModel.weather[0].id)
-        let description = networkModel.weather[0].description.components(separatedBy: " ").map {
+
+        guard let weather = networkModel.weather.first else {
+            fatalError()
+        }
+
+        let conditionName = getConditionName(by: weather.id)
+        let description = weather.description.components(separatedBy: " ").map {
             $0.capitalized
         }.joined(separator: " ")
 
@@ -66,8 +65,13 @@ class DataManager {
     func getDetailWeatherViewModalArray(from networkModel: GlobalWeatherData) -> [DetailWeatherViewModel] {
         let humidity = String(networkModel.current.humidity) + "%"
         let windSpeed = String(Int(networkModel.current.windSpeed)) + "m/s"
-        let minTemp = String(Int(networkModel.daily[0].temperature.minTemp)) + "°С"
-        let maxTemp = String(Int(networkModel.daily[0].temperature.maxTemp)) + "°С"
+
+        guard let firstDayTemperature = networkModel.daily.first else {
+            fatalError()
+        }
+
+        let minTemp = String(Int(firstDayTemperature.temperature.minTemp)) + "°С"
+        let maxTemp = String(Int(firstDayTemperature.temperature.maxTemp)) + "°С"
         let feelsLike = String(Int(networkModel.current.feelsLike)) + "°С"
         let pressure = String(Int(networkModel.current.pressure)) + "hPa"
 
@@ -142,13 +146,15 @@ class DataManager {
     }
 
     private func getDailyViewModel(from networkModel: DailyWeatherData) -> DailyDetailWeatherModel {
-        let date = Date(timeIntervalSince1970: Double(networkModel.date))
-        dateFormater.dateFormat = "EEEE"
-        let dayString = dateFormater.string(from: date).capitalized
+        let dayString = dateHelper.getOnlyDayDate(with: Double(networkModel.date))
 
         let temperature = String(Int(networkModel.temperature.daily)) + "°С"
 
-        let condtitionName = getConditionName(by: networkModel.weather[0].id)
+        guard let weather = networkModel.weather.first else {
+            fatalError()
+        }
+
+        let condtitionName = getConditionName(by: weather.id)
 
         return DailyDetailWeatherModel(dayName: dayString, temperature: temperature, conditionName: condtitionName)
     }
@@ -156,11 +162,13 @@ class DataManager {
     private func getHoursViewModel(from networkModel: HourlyWeatherData) -> HoursWeatherViewModel {
         let temperature = String(Int(networkModel.temperature)) + "°С"
 
-        let time = Date(timeIntervalSince1970: Double(networkModel.date))
-        dateFormater.dateFormat = "HH:mm"
-        let timeString = dateFormater.string(from: time).capitalized
+        let timeString = dateHelper.getOnlyTimeDate(with: Double(networkModel.date))
 
-        let conditionName = getConditionName(by: networkModel.weather[0].id)
+        guard let weather = networkModel.weather.first else {
+            fatalError()
+        }
+
+        let conditionName = getConditionName(by: weather.id)
 
         return HoursWeatherViewModel(time: timeString, temperature: temperature, conditionName: conditionName)
     }

@@ -22,3 +22,5 @@
 "max_temp" = "Max Temp";
 "wind_speed" = "Wind Speed";
 "feels_like" = "Feels Like";
+"weather" = "Weather";
+"daily" = "Daily";

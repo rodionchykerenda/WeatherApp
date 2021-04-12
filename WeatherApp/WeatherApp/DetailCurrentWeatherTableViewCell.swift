@@ -12,6 +12,15 @@ class DetailCurrentWeatherTableViewCell: UITableViewCell {
     @IBOutlet private weak var contentCollectionView: UICollectionView!
     @IBOutlet private weak var backView: UIView!
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        styleUI()
+    }
+
+    // MARK: - Public Properties
+    static let identifier = "DetailCurrentWeatherTableViewCell"
+
     func styleUI() {
         backView.layer.cornerRadius = 20
         backView.backgroundColor = UIColor(named: "BottomBackgroundColor")
@@ -21,8 +30,8 @@ class DetailCurrentWeatherTableViewCell: UITableViewCell {
         // swiftlint:enable line_length
         contentCollectionView.delegate = dataSourceDelegate
         contentCollectionView.dataSource = dataSourceDelegate
-        contentCollectionView.register(UINib(nibName: "DetailWeatherCollectionViewCell", bundle: nil),
-                                       forCellWithReuseIdentifier: "DetailWeatherCollectionViewCell")
+        contentCollectionView.register(UINib(nibName: String(describing: DetailWeatherCollectionViewCell.self), bundle: nil),
+                                       forCellWithReuseIdentifier: DetailWeatherCollectionViewCell.identifier)
         contentCollectionView.reloadData()
     }
 }

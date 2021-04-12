@@ -15,6 +15,7 @@ class DailyDetailWeatherViewController: UIViewController, LoadableView {
     // MARK: - Private Properties
     private let storage = StorageManager.instance
     private var dataSource = [DailyDetailWeatherModel]()
+    private let dataManager = DataManager.instance
 
     // MARK: - Public Properties
     var loaderView: UIView?
@@ -43,7 +44,7 @@ private extension DailyDetailWeatherViewController {
     func updateUI() {
         guard let globalWeather = storage.getGlobalWeatherData() else { return }
 
-        dataSource = DataManager.instance.getDailyWeatherViewModelArray(from: globalWeather.daily)
+        dataSource = dataManager.getDailyWeatherViewModelArray(from: globalWeather.daily)
 
         contentTableView.reloadData()
     }
@@ -55,6 +56,7 @@ private extension DailyDetailWeatherViewController {
             showSpinner()
             return
         }
+
         DispatchQueue.main.async {
             self.updateUI()
         }
@@ -72,8 +74,8 @@ private extension DailyDetailWeatherViewController {
         let layer = CAGradientLayer()
         layer.frame = view.bounds
 
-        if let topColor = UIColor(named: "TopBackgroundColor")?.cgColor,
-           let bottomColor = UIColor(named: "BottomBackgroundColor")?.cgColor {
+        if let topColor = UIColor(named: String.topColor)?.cgColor,
+           let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
             layer.colors = [topColor, bottomColor]
         }
 
@@ -104,4 +106,8 @@ extension DailyDetailWeatherViewController: UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 140
     }
+}
+
+extension String {
+    static let topColorName = "TopColor"
 }

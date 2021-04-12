@@ -68,6 +68,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             let tabBarViewController = UITabBarController()
 
+            detailWeatherVC.title = NSLocalizedString("weather", comment: "")
+
+            dailyDetailWeatherVC.title = NSLocalizedString("daily", comment: "")
+
             tabBarViewController.setViewControllers([detailWeatherVC, dailyDetailWeatherVC], animated: false)
 
             navigationController.setViewControllers([selectedLocationVC, tabBarViewController],

@@ -8,8 +8,14 @@
 import UIKit
 
 class DetailWeatherHandler: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    var dataSource = [DetailWeatherViewModel]()
+    private(set) var dataSource = [DetailWeatherViewModel]()
 
+    // MARK: - Setters
+    func setDataSource(with array: [DetailWeatherViewModel]) {
+        dataSource = array
+    }
+
+    // MARK: - CollectionView Delegate & DataSource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataSource.count
     }

@@ -8,8 +8,14 @@
 import UIKit
 
 class HoursWeatherHandler: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    var dataSource = [HoursWeatherViewModel]()
+    private(set) var dataSource = [HoursWeatherViewModel]()
 
+    // MARK: - Setters
+    func setDataSource(with array: [HoursWeatherViewModel]) {
+        dataSource = array
+    }
+
+    // MARK: - CollectionView Delegate & DataSource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataSource.count
     }

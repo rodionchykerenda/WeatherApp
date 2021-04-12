@@ -13,6 +13,9 @@ class DetailWeatherCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var detailWeatherNameLabel: UILabel!
     @IBOutlet private weak var detailWeatherValueLabel: UILabel!
 
+    // MARK: - Public Properties
+    static let identifier = "DetailWeatherCollectionViewCell"
+
     func update(with detailWeatherViewModel: DetailWeatherViewModel) {
         detailWeatherNameLabel.text = DataManager.instance.getLocalizedName(from: detailWeatherViewModel.name)
         detailWeatherValueLabel.text = detailWeatherViewModel.value

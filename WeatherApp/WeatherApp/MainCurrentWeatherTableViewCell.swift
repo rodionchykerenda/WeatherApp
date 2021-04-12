@@ -19,14 +19,10 @@ class MainCurrentWeatherTableViewCell: UITableViewCell {
     @IBOutlet private weak var sunriseImage: UIImageView!
     @IBOutlet private weak var sunsetImage: UIImageView!
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
+    // MARK: - Public Properties
+    static let identifier = "MainCurrentWeatherTableViewCell"
 
+    // MARK: - Setters
     func update(with model: MainCurrentWeatherViewModel?) {
         cityNameLabel.text = model?.cityName
         weatherDescriptionLabel.text = model?.description
