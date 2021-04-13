@@ -10,8 +10,14 @@
         <attribute name="longitude" attributeType="Double" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
     </entity>
+    <entity name="UnitMeasurement" representedClassName="UnitMeasurement" syncable="YES" codeGenerationType="class">
+        <attribute name="distance" attributeType="String"/>
+        <attribute name="hours" attributeType="String"/>
+        <attribute name="metrics" attributeType="String"/>
+    </entity>
     <elements>
         <element name="SelectedCity" positionX="-63" positionY="-18" width="128" height="74"/>
         <element name="SelectedLocation" positionX="-54" positionY="-9" width="128" height="74"/>
+        <element name="UnitMeasurement" positionX="-54" positionY="9" width="128" height="74"/>
     </elements>
 </model>

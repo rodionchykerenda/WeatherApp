@@ -102,4 +102,46 @@ class DataBaseManager {
             fatalError()
         }
     }
+
+    // MARK: - CRUD for UnitMeasurement
+    func getUnits() -> [UnitMeasurement] {
+        let request: NSFetchRequest<UnitMeasurement> = UnitMeasurement.fetchRequest()
+        var units = [UnitMeasurement]()
+
+        do {
+            units = try context.fetch(request)
+        } catch {
+            print("Error loading cities,\(error)")
+        }
+
+        return units
+    }
+
+    func addUnit(hours: String, distance: String, metrics: String) {
+        let newUnit = UnitMeasurement(context: context)
+        newUnit.hours = hours
+        newUnit.distance = distance
+        newUnit.metrics = metrics
+
+        saveData()
+    }
+
+    func deleteAllUnits() {
+        let request: NSFetchRequest<UnitMeasurement> = UnitMeasurement.fetchRequest()
+        request.returnsObjectsAsFaults = false
+
+        do {
+            let incidents = try context.fetch(request)
+
+            guard !incidents.isEmpty else { return }
+
+            incidents.forEach {
+                self.context.delete($0)
+            }
+
+            try context.save()
+        } catch {
+            fatalError()
+        }
+    }
 }

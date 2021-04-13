@@ -20,7 +20,7 @@ struct LocalNames: Codable {
     let russian: String
 
     private enum CodingKeys: String, CodingKey {
-        case english = "en"
+        case english = "ascii"
         case russian = "ru"
     }
 }

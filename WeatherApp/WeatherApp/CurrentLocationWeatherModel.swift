@@ -9,7 +9,7 @@ import Foundation
 
 struct CurrentLocationWeatherModel: WeatherModel {
     var cityName: String = NSLocalizedString("current_location", comment: "")
-    var temperature: Double?
+    var temperature: String?
     var longtitude: Double
     var lattitude: Double
 }

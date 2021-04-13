@@ -28,8 +28,12 @@ struct WeatherNetworkManager {
         let baseUrl = "https://api.openweathermap.org/data/2.5/onecall?"
         let metrics = "&units=metric"
         var language = "&lang=en"
+
+        guard let prefferedLanguage = NSLocale.preferredLanguages.first else {
+            return
+        }
         
-        if NSLocale.preferredLanguages[0].components(separatedBy: "-")[0] == "ru" {
+        if prefferedLanguage.components(separatedBy: "-")[0] == "ru" {
             language = "&lang=ru"
         }
 

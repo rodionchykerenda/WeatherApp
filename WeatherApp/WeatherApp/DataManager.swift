@@ -10,7 +10,7 @@ import UIKit
 class DataManager {
     static let instance = DataManager()
 
-    private let dateHelper = Helper()
+    private let measurementHelper = Helper()
 
     func getDataSourceModel(from coreDataModel: SelectedCity) -> SelectedLocationWeatherModel {
         guard let name = coreDataModel.name,
@@ -33,10 +33,10 @@ class DataManager {
     }
 
     func getCurrentWeatherModel(from networkModel: CurrentWeatherData, with name: String) -> MainCurrentWeatherViewModel {
-        let dateString = dateHelper.getFullDate(with: Double(networkModel.date))
-        let sunrise = dateHelper.getOnlyTimeDate(with: networkModel.sunrise)
-        let sunset = dateHelper.getOnlyTimeDate(with: networkModel.sunset)
-        let temperature = String(Int(networkModel.temperature)) + "°С"
+        let dateString = measurementHelper.getFullDate(with: Double(networkModel.date))
+        let sunrise = measurementHelper.getOnlyTimeDate(with: networkModel.sunrise)
+        let sunset = measurementHelper.getOnlyTimeDate(with: networkModel.sunset)
+        let temperature = measurementHelper.getCorrectTemperature(from: networkModel.temperature)
 
         guard let weather = networkModel.weather.first else {
             fatalError()
@@ -64,15 +64,15 @@ class DataManager {
 
     func getDetailWeatherViewModalArray(from networkModel: GlobalWeatherData) -> [DetailWeatherViewModel] {
         let humidity = String(networkModel.current.humidity) + "%"
-        let windSpeed = String(Int(networkModel.current.windSpeed)) + "m/s"
+        let windSpeed = measurementHelper.getCorrectDistanceMeasurement(from: networkModel.current.windSpeed)
 
         guard let firstDayTemperature = networkModel.daily.first else {
             fatalError()
         }
 
-        let minTemp = String(Int(firstDayTemperature.temperature.minTemp)) + "°С"
-        let maxTemp = String(Int(firstDayTemperature.temperature.maxTemp)) + "°С"
-        let feelsLike = String(Int(networkModel.current.feelsLike)) + "°С"
+        let minTemp = measurementHelper.getCorrectTemperature(from: firstDayTemperature.temperature.minTemp)
+        let maxTemp = measurementHelper.getCorrectTemperature(from: firstDayTemperature.temperature.maxTemp)
+        let feelsLike = measurementHelper.getCorrectTemperature(from: networkModel.current.feelsLike)
         let pressure = String(Int(networkModel.current.pressure)) + "hPa"
 
         return [DetailWeatherViewModel(name: .humidity, value: humidity),
@@ -123,6 +123,30 @@ class DataManager {
         }
     }
 
+    func getDistanceMeasurement(from string: String) -> DistanceMeasurement {
+        if string == "metres" {
+            return .metres
+        }
+
+        return .miles
+    }
+
+    func getTimeFormat(from string: String) -> TimeFormat {
+        if string == "12" {
+            return .twelve
+        }
+
+        return .twentyFour
+    }
+
+    func getTemperatureMeasurement(from string: String) -> TemperatureMeasurement {
+        if string == "°С" {
+            return .celcius
+        }
+
+        return .farenheit
+    }
+
     // MARK: - Helpers
     private func getConditionName(by id: Int) -> String {
         switch id {
@@ -146,9 +170,9 @@ class DataManager {
     }
 
     private func getDailyViewModel(from networkModel: DailyWeatherData) -> DailyDetailWeatherModel {
-        let dayString = dateHelper.getOnlyDayDate(with: Double(networkModel.date))
+        let dayString = measurementHelper.getOnlyDayDate(with: Double(networkModel.date))
 
-        let temperature = String(Int(networkModel.temperature.daily)) + "°С"
+        let temperature = measurementHelper.getCorrectTemperature(from: networkModel.temperature.daily)
 
         guard let weather = networkModel.weather.first else {
             fatalError()
@@ -160,9 +184,9 @@ class DataManager {
     }
 
     private func getHoursViewModel(from networkModel: HourlyWeatherData) -> HoursWeatherViewModel {
-        let temperature = String(Int(networkModel.temperature)) + "°С"
+        let temperature = measurementHelper.getCorrectTemperature(from: networkModel.temperature)
 
-        let timeString = dateHelper.getOnlyTimeDate(with: Double(networkModel.date))
+        let timeString = measurementHelper.getOnlyTimeDate(with: Double(networkModel.date))
 
         guard let weather = networkModel.weather.first else {
             fatalError()

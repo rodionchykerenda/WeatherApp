@@ -14,6 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        setSettings()
+
         return didStart()
     }
 
@@ -82,5 +84,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
 
         return true
+    }
+
+    private func setSettings() {
+        guard let settingsMeasurement = DataBaseManager.instance.getUnits().last,
+              let hours = settingsMeasurement.hours,
+              let distance = settingsMeasurement.distance,
+              let metrics = settingsMeasurement.metrics else {
+            return
+        }
+
+        UnitMeasurementManager.instance.hours = DataManager.instance.getTimeFormat(from: hours)
+        UnitMeasurementManager.instance.distance = DataManager.instance.getDistanceMeasurement(from: distance)
+        UnitMeasurementManager.instance.metrics = DataManager.instance.getTemperatureMeasurement(from: metrics)
     }
 }
