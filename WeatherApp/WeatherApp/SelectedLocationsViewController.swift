@@ -34,7 +34,7 @@ class SelectedLocationsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -45,7 +45,7 @@ class SelectedLocationsViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
     // MARK: - Actions
@@ -150,6 +150,10 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
 
         let tabBarViewController = UITabBarController()
 
+        detailWeatherVC.title = NSLocalizedString("weather", comment: "")
+
+        dailyDetailWeatherVC.title = NSLocalizedString("daily", comment: "")
+
         tabBarViewController.setViewControllers([detailWeatherVC, dailyDetailWeatherVC], animated: false)
 
         navigationController?.pushViewController(tabBarViewController, animated: true)
@@ -235,8 +239,8 @@ private extension SelectedLocationsViewController {
         let layer = CAGradientLayer()
         layer.frame = view.bounds
 
-        if let topColor = UIColor(named: "TopBackgroundColor")?.cgColor,
-           let bottomColor = UIColor(named: "BottomBackgroundColor")?.cgColor {
+        if let topColor = UIColor(named: String.topColor)?.cgColor,
+           let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
             layer.colors = [topColor, bottomColor]
         }
 

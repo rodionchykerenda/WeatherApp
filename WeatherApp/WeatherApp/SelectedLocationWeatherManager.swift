@@ -27,7 +27,13 @@ struct WeatherNetworkManager {
                             completionHandler: @escaping (GlobalWeatherData?, Error?) -> Void) {
         let baseUrl = "https://api.openweathermap.org/data/2.5/onecall?"
         let metrics = "&units=metric"
-        let fullUrlString = "\(baseUrl)lat=\(latitude)&lon=\(longitude)&exclude=minutely\(appID)\(metrics)"
+        var language = "&lang=en"
+        
+        if NSLocale.preferredLanguages[0].components(separatedBy: "-")[0] == "ru" {
+            language = "&lang=ru"
+        }
+
+        let fullUrlString = "\(baseUrl)lat=\(latitude)&lon=\(longitude)&exclude=minutely\(appID)\(metrics)\(language)"
 
         guard let encodedURL = fullUrlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
               let requestUrl = URL(string: encodedURL) else {
