@@ -24,3 +24,8 @@
 "feels_like" = "Чувствуется";
 "weather" = "Погода";
 "daily" = "Подневно";
+"settings" = "Настройки";
+"metres" = "метры";
+"miles" = "мили";
+"miles_per_hours" = "мили/ч";
+"metre_per_second" = "метр/с";

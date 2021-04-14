@@ -65,9 +65,7 @@ private extension DailyDetailWeatherViewController {
     func setUpDelegates() {
         contentTableView.delegate = self
         contentTableView.dataSource = self
-        contentTableView.register(UINib(nibName: "DailyDetailTableViewCell",
-                                        bundle: nil),
-                                  forCellReuseIdentifier: "DailyDetailTableViewCell")
+        contentTableView.register(cellType: DailyDetailTableViewCell.self)
     }
 
     func styleUI() {
@@ -92,11 +90,7 @@ extension DailyDetailWeatherViewController: UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // swiftlint:disable line_length
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DailyDetailTableViewCell", for: indexPath) as? DailyDetailTableViewCell else {
-            // swiftlint:enable line_length
-            fatalError()
-        }
+        let cell = tableView.dequeueReusableCell(for: indexPath, cellType: DailyDetailTableViewCell.self)
 
         cell.update(with: dataSource[indexPath.row])
 
@@ -106,8 +100,4 @@ extension DailyDetailWeatherViewController: UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 140
     }
-}
-
-extension String {
-    static let topColorName = "TopColor"
 }

@@ -17,8 +17,8 @@ class SelectedLocationTableViewCell: UITableViewCell {
     func update(selectedLocation: WeatherModel) {
         cityNameLabel.text = selectedLocation.cityName
 
-        if let temp = selectedLocation.temperature {
-            temperatureLabel.text = String(format: "%.0f", temp) + "°С"
+        if let temperature = selectedLocation.temperature {
+            temperatureLabel.text = temperature
             removeActivityIndicator()
         } else {
             addActivityIndicator()

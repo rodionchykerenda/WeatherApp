@@ -16,6 +16,7 @@ class SelectedLocationsViewController: UIViewController {
     // MARK: - Private Properties
     private let dataManager = DataManager.instance
     private let dataBaseManager = DataBaseManager.instance
+    private let measurementHelper = UnitMeasurementHelper()
 
     private var dataSource: [WeatherModel] = []
 
@@ -77,6 +78,18 @@ class SelectedLocationsViewController: UIViewController {
         locationManager.requestLocation()
     }
 
+    @objc func settingsButtonTapped(_ sender: UIButton) {
+        let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
+
+        guard let destinationVC = settingsStoryboard.instantiateViewController(withIdentifier: "MainSettingsViewController") as? MainSettingsViewController else {
+            return
+        }
+
+        destinationVC.modalPresentationStyle = .fullScreen
+
+        navigationController?.pushViewController(destinationVC, animated: true)
+    }
+
     @objc func handleRefreshControl() {
         if dataSource.isEmpty {
             contentTableView.refreshControl?.endRefreshing()
@@ -95,11 +108,7 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "SelectedLocationTableViewCell",
-                                                       for: indexPath)
-                as? SelectedLocationTableViewCell else {
-            fatalError("Couldnt dequeue reusable cell")
-        }
+        let cell = contentTableView.dequeueReusableCell(for: indexPath, cellType: SelectedLocationTableViewCell.self)
 
         cell.update(selectedLocation: dataSource[indexPath.row])
 
@@ -176,9 +185,10 @@ private extension SelectedLocationsViewController {
     func setUpTableview() {
         contentTableView.delegate = self
         contentTableView.dataSource = self
-        contentTableView.register(UINib(nibName: "SelectedLocationTableViewCell",
-                                        bundle: nil),
-                                  forCellReuseIdentifier: "SelectedLocationTableViewCell")
+        contentTableView.register(cellType: SelectedLocationTableViewCell.self)
+//        contentTableView.register(UINib(nibName: "SelectedLocationTableViewCell",
+//                                        bundle: nil),
+//                                  forCellReuseIdentifier: "SelectedLocationTableViewCell")
     }
 
     func setUpLocationManager() {
@@ -208,6 +218,28 @@ private extension SelectedLocationsViewController {
         button.layer.cornerRadius = 40
     }
 
+    func makeSettingsButton() {
+        let button = UIButton()
+
+        button.setTitle(NSLocalizedString("settings", comment: ""), for: .normal)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .lightGray
+
+        button.addTarget(self, action: #selector(settingsButtonTapped(_:)), for: .touchUpInside)
+        view.addSubview(button)
+
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
+                                                    constant: 20).isActive = true
+        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                                      constant: -140).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 80).isActive = true
+
+        button.layer.cornerRadius = 40
+    }
+
     func makeCurrentLocationButton() {
         currentLocationButton = UIButton()
 
@@ -222,7 +254,7 @@ private extension SelectedLocationsViewController {
                                         action: #selector(currentLocationButtonTapped(_:)),
                                         for: .touchUpInside)
         view.addSubview(currentLocationButton)
-
+        
         currentLocationButton.translatesAutoresizingMaskIntoConstraints = false
         currentLocationButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
                                                     constant: 20).isActive = true
@@ -250,6 +282,7 @@ private extension SelectedLocationsViewController {
 
         makeAddButton()
         makeCurrentLocationButton()
+        makeSettingsButton()
     }
 
     func loadAllWeathers(completionHandler: @escaping () -> Void = {}) {
@@ -275,13 +308,15 @@ private extension SelectedLocationsViewController {
                     fatalError()
                 }
 
+                let correctWeather = self.measurementHelper.getCorrectTemperature(from: temperature)
+
                 for index in 0..<self.dataSource.count
                 where self.dataSource[index].lattitude == coordinates.lat &&
                     self.dataSource[index].longtitude == coordinates.long {
                     DispatchQueue.main.async {
                         weathersLoaded += 1
 
-                        self.dataSource[index].temperature = temperature
+                        self.dataSource[index].temperature = correctWeather
                         self.contentTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .fade)
 
                         if weathersLoaded == self.dataSource.count {

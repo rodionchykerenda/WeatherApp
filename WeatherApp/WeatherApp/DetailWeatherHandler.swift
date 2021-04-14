@@ -21,11 +21,7 @@ class DetailWeatherHandler: NSObject, UICollectionViewDelegate, UICollectionView
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // swiftlint:disable line_length
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DetailWeatherCollectionViewCell", for: indexPath) as? DetailWeatherCollectionViewCell else {
-            fatalError()
-        }
-        // swiftlint:enable line_length
+        let cell = collectionView.dequeueReusableCell(for: indexPath, cellType: DetailWeatherCollectionViewCell.self)
 
         cell.update(with: dataSource[indexPath.row])
 

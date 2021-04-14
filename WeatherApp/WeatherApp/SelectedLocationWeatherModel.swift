@@ -7,17 +7,16 @@
 
 import Foundation
 
-// model remove
 protocol WeatherModel {
     var cityName: String { get set }
-    var temperature: Double? { get set }
+    var temperature: String? { get set }
     var longtitude: Double { get set }
     var lattitude: Double { get set }
 }
 
 struct SelectedLocationWeatherModel: WeatherModel {
     var cityName: String
-    var temperature: Double?
+    var temperature: String?
     var longtitude: Double
     var lattitude: Double
 }

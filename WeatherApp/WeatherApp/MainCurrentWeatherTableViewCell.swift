@@ -19,9 +19,6 @@ class MainCurrentWeatherTableViewCell: UITableViewCell {
     @IBOutlet private weak var sunriseImage: UIImageView!
     @IBOutlet private weak var sunsetImage: UIImageView!
 
-    // MARK: - Public Properties
-    static let identifier = "MainCurrentWeatherTableViewCell"
-
     // MARK: - Setters
     func update(with model: MainCurrentWeatherViewModel?) {
         cityNameLabel.text = model?.cityName

@@ -21,11 +21,7 @@ class HoursWeatherHandler: NSObject, UICollectionViewDelegate, UICollectionViewD
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // swiftlint:disable line_length
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HoursWeatherCollectionViewCell", for: indexPath) as? HoursWeatherCollectionViewCell else {
-            // swiftlint:enable line_length
-            fatalError()
-        }
+        let cell = collectionView.dequeueReusableCell(for: indexPath, cellType: HoursWeatherCollectionViewCell.self)
 
         cell.update(with: dataSource[indexPath.row])
 

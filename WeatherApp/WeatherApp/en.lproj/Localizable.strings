@@ -24,3 +24,8 @@
 "feels_like" = "Feels Like";
 "weather" = "Weather";
 "daily" = "Daily";
+"settings" = "Settings";
+"metres" = "metres";
+"miles" = "miles";
+"miles_per_hours" = "miles/h";
+"metre_per_second" = "metre/s";

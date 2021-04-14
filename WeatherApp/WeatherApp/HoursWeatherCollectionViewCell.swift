@@ -13,9 +13,6 @@ class HoursWeatherCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var temperatureLabel: UILabel!
     @IBOutlet private weak var conditionImage: UIImageView!
 
-    // MARK: - Public Properties
-    static let identifier = "HoursWeatherCollectionViewCell"
-
     func update(with hoursWeatherModel: HoursWeatherViewModel) {
         timeOutlet.text = hoursWeatherModel.time
         temperatureLabel.text = hoursWeatherModel.temperature
