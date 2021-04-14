@@ -16,7 +16,7 @@ class SelectedLocationsViewController: UIViewController {
     // MARK: - Private Properties
     private let dataManager = DataManager.instance
     private let dataBaseManager = DataBaseManager.instance
-    private let measurementHelper = Helper()
+    private let measurementHelper = UnitMeasurementHelper()
 
     private var dataSource: [WeatherModel] = []
 
@@ -108,11 +108,7 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "SelectedLocationTableViewCell",
-                                                       for: indexPath)
-                as? SelectedLocationTableViewCell else {
-            fatalError("Couldnt dequeue reusable cell")
-        }
+        let cell = contentTableView.dequeueReusableCell(for: indexPath, cellType: SelectedLocationTableViewCell.self)
 
         cell.update(selectedLocation: dataSource[indexPath.row])
 
@@ -189,9 +185,10 @@ private extension SelectedLocationsViewController {
     func setUpTableview() {
         contentTableView.delegate = self
         contentTableView.dataSource = self
-        contentTableView.register(UINib(nibName: "SelectedLocationTableViewCell",
-                                        bundle: nil),
-                                  forCellReuseIdentifier: "SelectedLocationTableViewCell")
+        contentTableView.register(cellType: SelectedLocationTableViewCell.self)
+//        contentTableView.register(UINib(nibName: "SelectedLocationTableViewCell",
+//                                        bundle: nil),
+//                                  forCellReuseIdentifier: "SelectedLocationTableViewCell")
     }
 
     func setUpLocationManager() {

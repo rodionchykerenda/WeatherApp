@@ -10,7 +10,7 @@ import UIKit
 class DataManager {
     static let instance = DataManager()
 
-    private let measurementHelper = Helper()
+    private let measurementHelper = UnitMeasurementHelper()
 
     func getDataSourceModel(from coreDataModel: SelectedCity) -> SelectedLocationWeatherModel {
         guard let name = coreDataModel.name,
@@ -124,7 +124,7 @@ class DataManager {
     }
 
     func getDistanceMeasurement(from string: String) -> DistanceMeasurement {
-        if string == "metres" {
+        if string == String.metres {
             return .metres
         }
 
@@ -132,7 +132,7 @@ class DataManager {
     }
 
     func getTimeFormat(from string: String) -> TimeFormat {
-        if string == "12" {
+        if string == String.twelve {
             return .twelve
         }
 

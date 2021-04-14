@@ -46,8 +46,7 @@ private extension MainSettingsViewController {
     func setUpTableView() {
         contentTableView.delegate = self
         contentTableView.dataSource = self
-        contentTableView.register(UINib(nibName: String(describing: SegmentedControlTableViewCell.self), bundle: nil),
-                                  forCellReuseIdentifier: SegmentedControlTableViewCell.identifier)
+        contentTableView.register(cellType: SegmentedControlTableViewCell.self)
     }
 
     func setUpSegmentedControlCell(name: String,
@@ -55,10 +54,7 @@ private extension MainSettingsViewController {
                                    selectedOption: MeasurementEnum,
                                    categoryName: SettingsRowsViewModel,
                                    for indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = contentTableView.dequeueReusableCell(withIdentifier: SegmentedControlTableViewCell.identifier,
-                                                       for: indexPath) as? SegmentedControlTableViewCell else {
-            fatalError()
-        }
+        let cell = contentTableView.dequeueReusableCell(for: indexPath, cellType: SegmentedControlTableViewCell.self)
 
         cell.delegate = self
 
@@ -81,13 +77,13 @@ extension MainSettingsViewController: UITableViewDelegate, UITableViewDataSource
         switch dataSource[indexPath.row] {
         case .hours:
             return setUpSegmentedControlCell(name: "Hours",
-                                             segmentedControlNames: (first: "12", second: "24"),
+                                             segmentedControlNames: (first: String.twelve, second: String.twentyFour),
                                              selectedOption: unitMeasurementManager.hours,
                                              categoryName: dataSource[indexPath.row],
                                              for: indexPath)
         case .metrics:
             return setUpSegmentedControlCell(name: "Metrics",
-                                             segmentedControlNames: (first: "°C", second: "°F"),
+                                             segmentedControlNames: (first: String.celcius, second: String.farenheit),
                                              selectedOption: unitMeasurementManager.metrics,
                                              categoryName: dataSource[indexPath.row],
                                              for: indexPath)
@@ -99,7 +95,7 @@ extension MainSettingsViewController: UITableViewDelegate, UITableViewDataSource
                                              categoryName: dataSource[indexPath.row],
                                              for: indexPath)
         default:
-            fatalError()
+            fatalError("Couldnt find proper cell")
         }
     }
 
@@ -110,22 +106,24 @@ extension MainSettingsViewController: UITableViewDelegate, UITableViewDataSource
 
 // MARK: - SegmentedControlCell Delegate Methods
 extension MainSettingsViewController: SegmentedControlTableViewCellDelegate {
-    func segmentedControlTableViewCell(_ sender: SegmentedControlTableViewCell, selectedOption: Int) {
+    func segmentedControlTableViewCell(_ sender: SegmentedControlTableViewCell, didSelectOption selectedOption: Int) {
         guard let indexPath = contentTableView.indexPath(for: sender) else {
             return
         }
 
         saveButton.isEnabled = true
 
+        let isSelectedOptionZero = selectedOption == 0
+
         switch dataSource[indexPath.row] {
         case .hours:
-            unitMeasurementManager.hours = selectedOption == 0 ? .twelve : .twentyFour
+            unitMeasurementManager.hours = isSelectedOptionZero ? .twelve : .twentyFour
 
         case .distance:
-            unitMeasurementManager.distance = selectedOption == 0 ? .metres : .miles
+            unitMeasurementManager.distance = isSelectedOptionZero ? .metres : .miles
 
         case .metrics:
-            unitMeasurementManager.metrics = selectedOption == 0 ? .celcius : .farenheit
+            unitMeasurementManager.metrics = isSelectedOptionZero ? .celcius : .farenheit
 
         default:
             return

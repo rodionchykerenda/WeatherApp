@@ -111,12 +111,9 @@ private extension DetailWeatherViewController {
     func setUpTableView() {
         contentTableView.delegate = self
         contentTableView.dataSource = self
-        contentTableView.register(UINib(nibName: String(describing: MainCurrentWeatherTableViewCell.self), bundle: nil),
-                                  forCellReuseIdentifier: MainCurrentWeatherTableViewCell.identifier)
-        contentTableView.register(UINib(nibName: String(describing: HoursWeatherTableViewCell.self), bundle: nil),
-                                  forCellReuseIdentifier: HoursWeatherTableViewCell.identifier)
-        contentTableView.register(UINib(nibName: String(describing: DetailCurrentWeatherTableViewCell.self), bundle: nil),
-                                  forCellReuseIdentifier: DetailCurrentWeatherTableViewCell.identifier)
+        contentTableView.register(cellType: MainCurrentWeatherTableViewCell.self)
+        contentTableView.register(cellType: HoursWeatherTableViewCell.self)
+        contentTableView.register(cellType: DetailCurrentWeatherTableViewCell.self)
     }
 
     func styleUI() {
@@ -143,29 +140,20 @@ extension DetailWeatherViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch dataSource[indexPath.row] {
         case .main:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainCurrentWeatherTableViewCell.identifier,
-                                                           for: indexPath) as? MainCurrentWeatherTableViewCell else {
-                fatalError()
-            }
+            let cell = tableView.dequeueReusableCell(for: indexPath, cellType: MainCurrentWeatherTableViewCell.self)
 
             cell.update(with: mainCurrentWeatherModel)
             return cell
 
         case .hourly:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: HoursWeatherTableViewCell.identifier,
-                                                           for: indexPath) as? HoursWeatherTableViewCell else {
-                fatalError()
-            }
+            let cell = tableView.dequeueReusableCell(for: indexPath, cellType: HoursWeatherTableViewCell.self)
 
             cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: hoursCollectionHandler)
 
             return cell
 
         case .detail:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailCurrentWeatherTableViewCell.identifier,
-                                                           for: indexPath) as? DetailCurrentWeatherTableViewCell else {
-                fatalError()
-            }
+            let cell = tableView.dequeueReusableCell(for: indexPath, cellType: DetailCurrentWeatherTableViewCell.self)
 
             cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: detailCollectionHandler)
 

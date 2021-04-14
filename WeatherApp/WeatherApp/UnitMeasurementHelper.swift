@@ -1,5 +1,5 @@
 //
-//  Helper.swift
+//  UnitMeasurementHelper.swift
 //  WeatherApp
 //
 //  Created by Rodion Chykerenda on 12.04.2021.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Helper {
+class UnitMeasurementHelper {
     private let dateFormater = DateFormatter()
     private let fullDateFormat = "EEEE, MMM d, yyyy"
     private let onlyTimeFormat24 = "HH:mm"
@@ -25,19 +25,26 @@ class Helper {
     }
 
     func getOnlyTimeDate(with unixDate: Double) -> String {
-        guard UnitMeasurementManager.instance.hours == .twelve else {
-            return getDate(from: unixDate, with: onlyTimeFormat24)
+        if unitMeasurementManager.hours == .twentyFour {
+            dateFormater.dateFormat = onlyTimeFormat24
+        } else {
+            dateFormater.dateFormat = onlyTimeFormat12
         }
 
-        return getDate(from: unixDate, with: onlyTimeFormat12)
+        let date = Date(timeIntervalSince1970: unixDate)
+        dateFormater.locale = Locale(identifier: "en_US_POSIX")
+        dateFormater.timeZone = TimeZone(secondsFromGMT: 0)
+        
+        return dateFormater.string(from: date)
     }
 
     func getCorrectTemperature(from celcius: Double) -> String {
         if unitMeasurementManager.metrics == .farenheit {
-            return String(format: "%.0f", (celcius * 9/5) + 59) + "°F"
+            return String(format: "%.0f",
+                          (celcius * Double.toFarenheitMultiplier) + Double.toFarenheitConstant) + String.farenheit
         }
 
-        return String(format: "%.0f", celcius) + "°C"
+        return String(format: "%.0f", celcius) + String.celcius
     }
 
     func getCorrectDistanceMeasurement(from speed: Double) -> String {
@@ -45,7 +52,7 @@ class Helper {
             return String(format: "%.0f", speed) + NSLocalizedString("metre_per_second", comment: "")
         }
 
-        return String(format: "%.0f", speed * 2,237) + NSLocalizedString("miles_per_hours", comment: "")
+        return String(format: "%.0f", speed * Double.toMilesPerHourMultiplier) + NSLocalizedString("miles_per_hours", comment: "")
     }
 
     // MARK: - Helpers

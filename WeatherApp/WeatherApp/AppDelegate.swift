@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        setSettings()
+        configureSettings()
 
         return didStart()
     }
@@ -86,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    private func setSettings() {
+    private func configureSettings() {
         guard let settingsMeasurement = DataBaseManager.instance.getUnits().last,
               let hours = settingsMeasurement.hours,
               let distance = settingsMeasurement.distance,

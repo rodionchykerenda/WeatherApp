@@ -99,7 +99,7 @@ class DataBaseManager {
 
             try context.save()
         } catch {
-            fatalError()
+            fatalError("Couldn't fetch delete request")
         }
     }
 
@@ -141,7 +141,7 @@ class DataBaseManager {
 
             try context.save()
         } catch {
-            fatalError()
+            fatalError("Couldn't fetch delete request")
         }
     }
 }

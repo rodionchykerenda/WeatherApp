@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SegmentedControlTableViewCellDelegate: class {
-    func segmentedControlTableViewCell(_ sender: SegmentedControlTableViewCell, selectedOption: Int)
+    func segmentedControlTableViewCell(_ sender: SegmentedControlTableViewCell, didSelectOption selectedOption: Int)
 }
 
 class SegmentedControlTableViewCell: UITableViewCell {
@@ -17,7 +17,6 @@ class SegmentedControlTableViewCell: UITableViewCell {
     @IBOutlet private weak var segmentedControl: UISegmentedControl!
 
     // MARK: - Public Properties
-    static let identifier = "SegmentedControlTableViewCell"
     weak var delegate: SegmentedControlTableViewCellDelegate?
 
     // MARK: - Setters
@@ -35,8 +34,12 @@ class SegmentedControlTableViewCell: UITableViewCell {
                 return
             }
 
-            if hoursSelectedEnum == .twentyFour {
+            switch hoursSelectedEnum {
+            case .twentyFour:
                 segmentedControl.selectedSegmentIndex = 1
+
+            case .twelve:
+                segmentedControl.selectedSegmentIndex = 0
             }
 
         case .metrics:
@@ -44,8 +47,12 @@ class SegmentedControlTableViewCell: UITableViewCell {
                 return
             }
 
-            if tempSelectedEnum == .farenheit {
+            switch tempSelectedEnum {
+            case .farenheit:
                 segmentedControl.selectedSegmentIndex = 1
+
+            case .celcius:
+                segmentedControl.selectedSegmentIndex = 0
             }
 
         case .distance:
@@ -53,8 +60,12 @@ class SegmentedControlTableViewCell: UITableViewCell {
                 return
             }
 
-            if distanceSelectedEnum == .miles {
+            switch distanceSelectedEnum {
+            case .miles:
                 segmentedControl.selectedSegmentIndex = 1
+
+            case .metres:
+                segmentedControl.selectedSegmentIndex = 0
             }
 
         default:
@@ -65,6 +76,6 @@ class SegmentedControlTableViewCell: UITableViewCell {
     // MARK: - Actions
     @IBAction private func segmentedControlChanged(_ sender: UISegmentedControl) {
         delegate?.segmentedControlTableViewCell(self,
-                                                selectedOption: sender.selectedSegmentIndex)
+                                                didSelectOption: sender.selectedSegmentIndex)
     }
 }
