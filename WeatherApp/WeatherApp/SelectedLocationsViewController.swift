@@ -66,6 +66,7 @@ class SelectedLocationsViewController: UIViewController {
 
     @objc func currentLocationButtonTapped(_ sender: UIButton) {
         guard !dataSource.isEmpty else {
+            locationManager.delegate = self
             locationManager.startUpdatingLocation()
 
             return
@@ -75,6 +76,7 @@ class SelectedLocationsViewController: UIViewController {
             return
         }
 
+        locationManager.delegate = self
         locationManager.startUpdatingLocation()
     }
 
@@ -188,14 +190,11 @@ private extension SelectedLocationsViewController {
         contentTableView.delegate = self
         contentTableView.dataSource = self
         contentTableView.register(cellType: SelectedLocationTableViewCell.self)
-//        contentTableView.register(UINib(nibName: "SelectedLocationTableViewCell",
-//                                        bundle: nil),
-//                                  forCellReuseIdentifier: "SelectedLocationTableViewCell")
     }
 
     func setUpLocationManager() {
         locationManager.requestWhenInUseAuthorization()
-        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
     }
 
     func makeAddButton() {
@@ -383,6 +382,7 @@ extension SelectedLocationsViewController: CLLocationManagerDelegate {
         }
 
         locationManager.stopUpdatingLocation()
+        locationManager.delegate = nil
         let latitude = location.coordinate.latitude
         let longitude = location.coordinate.longitude
 
