@@ -31,6 +31,10 @@ class DetailWeatherHandler: NSObject, UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.size.width / 2 - 20, height: collectionView.frame.size.height / 3 - 10)
+        guard !dataSource.isEmpty else {
+            return CGSize(width: 0, height: 0)
+        }
+        
+        return CGSize(width: collectionView.frame.size.width / 2 - 20, height: 100)
     }
 }

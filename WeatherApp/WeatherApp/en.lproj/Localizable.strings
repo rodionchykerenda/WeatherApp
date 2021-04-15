@@ -29,3 +29,7 @@
 "miles" = "miles";
 "miles_per_hours" = "miles/h";
 "metre_per_second" = "metre/s";
+"metrics" = "Metrics";
+"distance" = "Distance";
+"hours" = "Hours";
+"weather_details" = "Weather details";
