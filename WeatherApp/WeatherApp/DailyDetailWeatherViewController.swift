@@ -16,6 +16,7 @@ class DailyDetailWeatherViewController: UIViewController, LoadableView {
     private let storage = StorageManager.instance
     private var dataSource = [DailyDetailWeatherModel]()
     private let dataManager = DataManager.instance
+    private var gradientLayer = CAGradientLayer()
 
     // MARK: - Public Properties
     var loaderView: UIView?
@@ -69,17 +70,16 @@ private extension DailyDetailWeatherViewController {
     }
 
     func styleUI() {
-        let layer = CAGradientLayer()
-        layer.frame = view.bounds
+        gradientLayer.frame = view.bounds
 
         if let topColor = UIColor(named: String.topColor)?.cgColor,
            let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
-            layer.colors = [topColor, bottomColor]
+            gradientLayer.colors = [topColor, bottomColor]
         }
 
-        layer.startPoint = CGPoint(x: 0.5, y: 0)
-        layer.endPoint = CGPoint(x: 0.5, y: 1)
-        backView.layer.addSublayer(layer)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        backView.layer.addSublayer(gradientLayer)
     }
 }
 
@@ -99,5 +99,23 @@ extension DailyDetailWeatherViewController: UITableViewDelegate, UITableViewData
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 140
+    }
+}
+
+// MARK: - Dark/Light Mode Appearance
+extension DailyDetailWeatherViewController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if #available(iOS 13.0, *) {
+            guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else {
+                return
+            }
+
+            if let topColor = UIColor(named: String.topColor)?.cgColor,
+               let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
+                gradientLayer.colors = [topColor, bottomColor]
+            }
+        }
     }
 }

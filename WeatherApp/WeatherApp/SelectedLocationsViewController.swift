@@ -17,6 +17,7 @@ class SelectedLocationsViewController: UIViewController {
     private let dataManager = DataManager.instance
     private let dataBaseManager = DataBaseManager.instance
     private let measurementHelper = UnitMeasurementHelper()
+    private var gradientLayer = CAGradientLayer()
 
     private var dataSource: [WeatherModel] = []
 
@@ -41,6 +42,7 @@ class SelectedLocationsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
+        dataBaseManager.deleteAllLocations()
         StorageManager.instance.reset()
     }
 
@@ -182,7 +184,6 @@ private extension SelectedLocationsViewController {
     }
 
     func setUpData() {
-        dataBaseManager.deleteAllLocations()
         dataSource = dataManager.getDataSourceModelArray(from: dataBaseManager.getCities())
     }
 
@@ -269,17 +270,16 @@ private extension SelectedLocationsViewController {
 
     func styleUI() {
         contentTableView.backgroundColor = .clear
-        let layer = CAGradientLayer()
-        layer.frame = view.bounds
+        gradientLayer.frame = view.bounds
 
         if let topColor = UIColor(named: String.topColor)?.cgColor,
            let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
-            layer.colors = [topColor, bottomColor]
+            gradientLayer.colors = [topColor, bottomColor]
         }
 
-        layer.startPoint = CGPoint(x: 0.5, y: 0)
-        layer.endPoint = CGPoint(x: 0.5, y: 1)
-        backgroundView.layer.addSublayer(layer)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        backgroundView.layer.addSublayer(gradientLayer)
 
         makeAddButton()
         makeCurrentLocationButton()
@@ -400,5 +400,24 @@ extension SelectedLocationsViewController: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
+    }
+}
+
+// MARK: - Dark/Light Mode Appearance
+extension SelectedLocationsViewController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if #available(iOS 13.0, *) {
+            guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else {
+                return
+            }
+
+            if let topColor = UIColor(named: String.topColor)?.cgColor,
+               let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
+                gradientLayer.colors = [topColor, bottomColor]
+            }
+            // redraw your layers here
+        }
     }
 }
