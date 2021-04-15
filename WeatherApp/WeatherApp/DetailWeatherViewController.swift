@@ -170,7 +170,6 @@ extension DetailWeatherViewController: UITableViewDelegate, UITableViewDataSourc
         case .detail:
             guard !detailCollectionHandler.dataSource.isEmpty else { return 0 }
 
-            print(Double(detailCollectionHandler.dataSource.count) / 2)
             let cellHeight = (Double(detailCollectionHandler.dataSource.count) / 2).rounded(.toNearestOrAwayFromZero) * 100
             let spacing = Double((dataSource.count / 2) * 20)
             return CGFloat(cellHeight + spacing)

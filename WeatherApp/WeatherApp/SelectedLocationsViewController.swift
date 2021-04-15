@@ -66,7 +66,7 @@ class SelectedLocationsViewController: UIViewController {
 
     @objc func currentLocationButtonTapped(_ sender: UIButton) {
         guard !dataSource.isEmpty else {
-            locationManager.requestLocation()
+            locationManager.startUpdatingLocation()
 
             return
         }
@@ -75,7 +75,7 @@ class SelectedLocationsViewController: UIViewController {
             return
         }
 
-        locationManager.requestLocation()
+        locationManager.startUpdatingLocation()
     }
 
     @objc func settingsButtonTapped(_ sender: UIButton) {
@@ -194,8 +194,8 @@ private extension SelectedLocationsViewController {
     }
 
     func setUpLocationManager() {
-        locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
+        locationManager.delegate = self
     }
 
     func makeAddButton() {
