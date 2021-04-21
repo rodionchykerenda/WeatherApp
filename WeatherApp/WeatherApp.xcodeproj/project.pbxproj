@@ -277,48 +277,6 @@
 			name = Protocol;
 			sourceTree = "<group>";
 		};
-		8F6F68AE26170D1200019172 /* Manager */ = {
-			isa = PBXGroup;
-			children = (
-				8F92427B260B790C00D84DB0 /* SelectedLocationWeatherManager.swift */,
-				D1356EB62610DF0000E435C2 /* DataManager.swift */,
-				8F92428A260B94AA00D84DB0 /* DataBaseManager.swift */,
-				8F7508D8261AFC520082ACF6 /* Storage.swift */,
-				8F0056CB2624517F00884592 /* UnitMeasurementHelper.swift */,
-				8F7F45732625AC5400D11774 /* UnitMeasurementManager.swift */,
-				8F490CFA262720DB009D60C6 /* DetailWeatherManager.swift */,
-			);
-			name = Manager;
-			path = ..;
-			sourceTree = "<group>";
-		};
-		8F6F68AF26170D3600019172 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				8F924271260B76B100D84DB0 /* SelectedLocationWeatherModel.swift */,
-				D14EB9BE2615EB0400753396 /* CurrentLocationWeatherModel.swift */,
-				8F271E9A261F29DD00F75FC7 /* MainCurrentWeatherViewModel.swift */,
-				8F7099EB2620523E0067F558 /* HoursWeatherViewModel.swift */,
-				8F38FEF2262082F8008B05E4 /* DetailWeatherViewModel.swift */,
-				8F38FEFA2620A309008B05E4 /* DailyDetailWeatherModel.swift */,
-				8F490D012627373F009D60C6 /* DetailWeatherSettingsViewModel.swift */,
-			);
-			name = ViewModel;
-			path = ..;
-			sourceTree = "<group>";
-		};
-		8F6F68B026170D4100019172 /* CodableModels */ = {
-			isa = PBXGroup;
-			children = (
-				8F92427E260B7BCF00D84DB0 /* WeatherData.swift */,
-				D1356EB3260E407600E435C2 /* CityName.swift */,
-				8FAAC5ED261763D30011FC58 /* GlobalWeatherData.swift */,
-				8FAAC5F02617640B0011FC58 /* DetailWeatherData.swift */,
-			);
-			name = CodableModels;
-			path = ..;
-			sourceTree = "<group>";
-		};
 		8F7099EE262054C10067F558 /* HoursWeatherCollectionViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -402,11 +360,11 @@
 		D11435E5263033F0001E2EB6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				D17FD6F92630376600A8D405 /* Enum */,
+				D17FD700263038F600A8D405 /* CodableModels */,
 				D17FD6FC2630381A00A8D405 /* CollectionViewHandlers */,
-				8F6F68AF26170D3600019172 /* ViewModel */,
-				8F6F68AE26170D1200019172 /* Manager */,
-				8F6F68B026170D4100019172 /* CodableModels */,
+				D17FD6F92630376600A8D405 /* Enum */,
+				D17FD6FF263038D500A8D405 /* Manager */,
+				D17FD6FE263038A600A8D405 /* ViewModel */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -520,6 +478,45 @@
 				8F38FEEF2620829D008B05E4 /* DetailWeatherHandler.swift */,
 			);
 			path = CollectionViewHandlers;
+			sourceTree = "<group>";
+		};
+		D17FD6FE263038A600A8D405 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				8F924271260B76B100D84DB0 /* SelectedLocationWeatherModel.swift */,
+				D14EB9BE2615EB0400753396 /* CurrentLocationWeatherModel.swift */,
+				8F271E9A261F29DD00F75FC7 /* MainCurrentWeatherViewModel.swift */,
+				8F7099EB2620523E0067F558 /* HoursWeatherViewModel.swift */,
+				8F38FEF2262082F8008B05E4 /* DetailWeatherViewModel.swift */,
+				8F38FEFA2620A309008B05E4 /* DailyDetailWeatherModel.swift */,
+				8F490D012627373F009D60C6 /* DetailWeatherSettingsViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		D17FD6FF263038D500A8D405 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				8F92427B260B790C00D84DB0 /* SelectedLocationWeatherManager.swift */,
+				D1356EB62610DF0000E435C2 /* DataManager.swift */,
+				8F92428A260B94AA00D84DB0 /* DataBaseManager.swift */,
+				8F7508D8261AFC520082ACF6 /* Storage.swift */,
+				8F0056CB2624517F00884592 /* UnitMeasurementHelper.swift */,
+				8F7F45732625AC5400D11774 /* UnitMeasurementManager.swift */,
+				8F490CFA262720DB009D60C6 /* DetailWeatherManager.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		D17FD700263038F600A8D405 /* CodableModels */ = {
+			isa = PBXGroup;
+			children = (
+				8F92427E260B7BCF00D84DB0 /* WeatherData.swift */,
+				D1356EB3260E407600E435C2 /* CityName.swift */,
+				8FAAC5ED261763D30011FC58 /* GlobalWeatherData.swift */,
+				8FAAC5F02617640B0011FC58 /* DetailWeatherData.swift */,
+			);
+			path = CodableModels;
 			sourceTree = "<group>";
 		};
 		E8745D14F2CB37098B6324B2 /* Pods */ = {
