@@ -144,4 +144,47 @@ class DataBaseManager {
             fatalError("Couldn't fetch delete request")
         }
     }
+
+    // MARK: - CRUD for AdditionalWeatherAttributes
+    func getAdditionalWeatherAttributes() -> [AdditionalWeatherAttribute] {
+        let request: NSFetchRequest<AdditionalWeatherAttribute> = AdditionalWeatherAttribute.fetchRequest()
+        var attribute = [AdditionalWeatherAttribute]()
+
+        do {
+            attribute = try context.fetch(request)
+        } catch {
+            print("Error loading cities,\(error)")
+        }
+
+        return attribute
+    }
+
+    func addAttributes(_ attributes: [DetailWeatherSettingsViewModel]) {
+        attributes.map {
+            let newAttribute = AdditionalWeatherAttribute(context: context)
+            newAttribute.weatherAttributeName = $0.name.rawValue
+            newAttribute.isSelected = $0.isSelected
+
+            saveData()
+        }
+    }
+
+    func deleteAllAttributes() {
+        let request: NSFetchRequest<AdditionalWeatherAttribute> = AdditionalWeatherAttribute.fetchRequest()
+        request.returnsObjectsAsFaults = false
+
+        do {
+            let incidents = try context.fetch(request)
+
+            guard !incidents.isEmpty else { return }
+
+            incidents.forEach {
+                self.context.delete($0)
+            }
+
+            try context.save()
+        } catch {
+            fatalError("Couldn't fetch delete request")
+        }
+    }
 }

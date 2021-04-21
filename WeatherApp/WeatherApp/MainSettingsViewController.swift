@@ -13,7 +13,10 @@ class MainSettingsViewController: UIViewController {
     private var saveButton = UIBarButtonItem()
 
     // MARK: - Private Properties
-    private var dataSource: [SettingsRowsViewModel] = [.hours, .metrics, .distance]
+    private var dataSource: [SettingsRowsViewModel] = [.hours,
+                                                       .metrics,
+                                                       .distance,
+                                                       .details]
     private let unitMeasurementManager = UnitMeasurementManager.instance
     private let dataBaseManager = DataBaseManager.instance
 
@@ -47,6 +50,7 @@ private extension MainSettingsViewController {
         contentTableView.delegate = self
         contentTableView.dataSource = self
         contentTableView.register(cellType: SegmentedControlTableViewCell.self)
+        contentTableView.register(cellType: WeatherDetailSettingsTableViewCell.self)
     }
 
     func setUpSegmentedControlCell(name: String,
@@ -76,27 +80,48 @@ extension MainSettingsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch dataSource[indexPath.row] {
         case .hours:
-            return setUpSegmentedControlCell(name: "Hours",
+            return setUpSegmentedControlCell(name: NSLocalizedString("hours", comment: ""),
                                              segmentedControlNames: (first: String.twelve, second: String.twentyFour),
                                              selectedOption: unitMeasurementManager.hours,
                                              categoryName: dataSource[indexPath.row],
                                              for: indexPath)
         case .metrics:
-            return setUpSegmentedControlCell(name: "Metrics",
+            return setUpSegmentedControlCell(name: NSLocalizedString("metrics", comment: ""),
                                              segmentedControlNames: (first: String.celcius, second: String.farenheit),
                                              selectedOption: unitMeasurementManager.metrics,
                                              categoryName: dataSource[indexPath.row],
                                              for: indexPath)
         case .distance:
-            return setUpSegmentedControlCell(name: "Distance",
+            return setUpSegmentedControlCell(name: NSLocalizedString("distance", comment: ""),
                                              segmentedControlNames: (first: NSLocalizedString("metres", comment: ""),
                                                                      second: NSLocalizedString("miles", comment: "")),
                                              selectedOption: unitMeasurementManager.distance,
                                              categoryName: dataSource[indexPath.row],
                                              for: indexPath)
-        default:
-            fatalError("Couldnt find proper cell")
+
+        case .details:
+            let cell = contentTableView.dequeueReusableCell(for: indexPath, cellType: WeatherDetailSettingsTableViewCell.self)
+
+            cell.update(name: NSLocalizedString("weather_details", comment: ""))
+
+            return cell
         }
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard dataSource[indexPath.row] == .details else {
+            return
+        }
+
+        let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
+
+        // swiftlint:disable line_length
+        guard let destinationVC = settingsStoryboard.instantiateViewController(withIdentifier: "DetailWeatherSettingsViewController") as? DetailWeatherSettingsViewController else {
+            return
+        }
+        // swiftlint:enable line_length
+
+        navigationController?.pushViewController(destinationVC, animated: true)
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

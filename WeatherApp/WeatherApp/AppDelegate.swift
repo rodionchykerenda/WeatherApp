@@ -8,6 +8,13 @@
 import UIKit
 import CoreData
 
+// swiftlint:disable private_over_fileprivate
+fileprivate let dataBaseManager = DataBaseManager.instance
+fileprivate let detailWeatherManager = DetailWeatherManager.instance
+fileprivate let unitMeasurementManager = UnitMeasurementManager.instance
+fileprivate let dataManager = DataManager.instance
+// swiftlint:enable private_over_fileprivate
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
@@ -63,7 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window?.rootViewController = navigationController
 
-        let selectedLocations = DataBaseManager.instance.getLocations()
+        let selectedLocations = dataBaseManager.getLocations()
 
         if !selectedLocations.isEmpty {
             detailWeatherVC.selectedLocation = selectedLocations.last
@@ -87,15 +94,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func configureSettings() {
-        guard let settingsMeasurement = DataBaseManager.instance.getUnits().last,
+        guard let settingsMeasurement = dataBaseManager.getUnits().last,
               let hours = settingsMeasurement.hours,
               let distance = settingsMeasurement.distance,
               let metrics = settingsMeasurement.metrics else {
             return
         }
 
-        UnitMeasurementManager.instance.hours = DataManager.instance.getTimeFormat(from: hours)
-        UnitMeasurementManager.instance.distance = DataManager.instance.getDistanceMeasurement(from: distance)
-        UnitMeasurementManager.instance.metrics = DataManager.instance.getTemperatureMeasurement(from: metrics)
+        unitMeasurementManager.hours = dataManager.getTimeFormat(from: hours)
+        unitMeasurementManager.distance = dataManager.getDistanceMeasurement(from: distance)
+        unitMeasurementManager.metrics = dataManager.getTemperatureMeasurement(from: metrics)
+
+        guard !dataBaseManager.getAdditionalWeatherAttributes().isEmpty else {
+            return
+        }
+
+        detailWeatherManager.detailWeatherToPresent.removeAll()
+
+        dataBaseManager.getAdditionalWeatherAttributes().map {
+            // swiftlint:disable line_length
+            detailWeatherManager.detailWeatherToPresent.append(DetailWeatherSelection(detailWeather: dataManager.getDetailWeatherEnum(by: $0.weatherAttributeName ?? ""), isSelected: $0.isSelected))
+            // swiftlint:enable line_length
+        }
     }
 }

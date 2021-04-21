@@ -7,11 +7,11 @@
 
 import Foundation
 
-enum DetailWeatherName {
-    case humidity
-    case pressure
-    case minTemp
-    case maxTemp
-    case feelsLike
-    case windSpeed
+enum DetailWeatherName: String, CaseIterable {
+    case humidity = "humidity"
+    case pressure = "pressure"
+    case minTemp = "min temp"
+    case maxTemp = "max temp"
+    case feelsLike = "feels like"
+    case windSpeed = "wind speed"
 }

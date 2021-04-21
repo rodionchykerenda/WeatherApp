@@ -63,24 +63,43 @@ class DataManager {
     }
 
     func getDetailWeatherViewModalArray(from networkModel: GlobalWeatherData) -> [DetailWeatherViewModel] {
-        let humidity = String(networkModel.current.humidity) + "%"
-        let windSpeed = measurementHelper.getCorrectDistanceMeasurement(from: networkModel.current.windSpeed)
+        var resultArray = [DetailWeatherViewModel]()
 
         guard let firstDayTemperature = networkModel.daily.first else {
-            fatalError()
+            fatalError("Server didnt give daily weather")
         }
+        // swiftlint:disable line_length
+        DetailWeatherManager.instance.detailWeatherToPresent.map {
+            if $0.isSelected {
+                switch $0.detailWeather {
+                case .humidity:
+                    resultArray.append(DetailWeatherViewModel(name: $0.detailWeather,
+                                                              value: String(networkModel.current.humidity) + "%"))
 
-        let minTemp = measurementHelper.getCorrectTemperature(from: firstDayTemperature.temperature.minTemp)
-        let maxTemp = measurementHelper.getCorrectTemperature(from: firstDayTemperature.temperature.maxTemp)
-        let feelsLike = measurementHelper.getCorrectTemperature(from: networkModel.current.feelsLike)
-        let pressure = String(Int(networkModel.current.pressure)) + "hPa"
+                case .windSpeed:
+                    resultArray.append(DetailWeatherViewModel(name: $0.detailWeather,
+                                                              value: measurementHelper.getCorrectDistanceMeasurement(from: networkModel.current.windSpeed)))
 
-        return [DetailWeatherViewModel(name: .humidity, value: humidity),
-                DetailWeatherViewModel(name: .windSpeed, value: windSpeed),
-                DetailWeatherViewModel(name: .minTemp, value: minTemp),
-                DetailWeatherViewModel(name: .maxTemp, value: maxTemp),
-                DetailWeatherViewModel(name: .feelsLike, value: feelsLike),
-                DetailWeatherViewModel(name: .pressure, value: pressure)]
+                case .pressure:
+                    resultArray.append(DetailWeatherViewModel(name: $0.detailWeather,
+                                                              value: String(Int(networkModel.current.pressure)) + "hPa"))
+
+                case .feelsLike:
+                    resultArray.append(DetailWeatherViewModel(name: $0.detailWeather,
+                                                              value: measurementHelper.getCorrectTemperature(from: networkModel.current.feelsLike)))
+
+                case .minTemp:
+                    resultArray.append(DetailWeatherViewModel(name: $0.detailWeather,
+                                                              value: measurementHelper.getCorrectTemperature(from: firstDayTemperature.temperature.minTemp)))
+                case .maxTemp:
+                    resultArray.append(DetailWeatherViewModel(name: $0.detailWeather,
+                                                              value: measurementHelper.getCorrectTemperature(from: firstDayTemperature.temperature.maxTemp)))
+                }
+            }
+        }
+        // swiftlint:enable line_length
+
+        return resultArray
     }
 
     func getImage(from detailWeatherName: DetailWeatherName) -> UIImage? {
@@ -115,6 +134,14 @@ class DataManager {
         case .feelsLike:
             return NSLocalizedString("feels_like", comment: "")
         }
+    }
+
+    func getDetailWeatherEnum(by string: String) -> DetailWeatherName {
+        if let result = DetailWeatherName.allCases.filter({ $0.rawValue == string }).first {
+            return result
+        }
+
+        fatalError("Incorrect value in DataBase")
     }
 
     func getDailyWeatherViewModelArray(from networkModelArray: [DailyWeatherData]) -> [DailyDetailWeatherModel] {

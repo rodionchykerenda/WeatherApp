@@ -29,3 +29,7 @@
 "miles" = "мили";
 "miles_per_hours" = "мили/ч";
 "metre_per_second" = "метр/с";
+"metrics" = "Температура";
+"distance" = "Расстояние";
+"hours" = "Время";
+"weather_details" = "Детальная погода";

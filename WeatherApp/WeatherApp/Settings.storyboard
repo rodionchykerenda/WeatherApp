@@ -39,6 +39,36 @@
             </objects>
             <point key="canvasLocation" x="-375" y="67"/>
         </scene>
+        <!--Detail Weather Settings View Controller-->
+        <scene sceneID="ZRC-Qu-ek2">
+            <objects>
+                <viewController storyboardIdentifier="DetailWeatherSettingsViewController" id="xOI-ln-beI" customClass="DetailWeatherSettingsViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Mqr-jw-br0">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="olV-2h-ItL">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="DfD-va-6Li"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="olV-2h-ItL" firstAttribute="leading" secondItem="DfD-va-6Li" secondAttribute="leading" id="Gxj-PB-Kha"/>
+                            <constraint firstItem="olV-2h-ItL" firstAttribute="top" secondItem="DfD-va-6Li" secondAttribute="top" id="ZZr-Tp-KNA"/>
+                            <constraint firstItem="DfD-va-6Li" firstAttribute="bottom" secondItem="olV-2h-ItL" secondAttribute="bottom" id="ag0-iE-LFZ"/>
+                            <constraint firstItem="DfD-va-6Li" firstAttribute="trailing" secondItem="olV-2h-ItL" secondAttribute="trailing" id="nHn-oD-5DR"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="contentTableView" destination="olV-2h-ItL" id="RN1-QX-RIh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3Sy-4W-3fQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="357" y="67"/>
+        </scene>
     </scenes>
     <resources>
         <systemColor name="systemBackgroundColor">

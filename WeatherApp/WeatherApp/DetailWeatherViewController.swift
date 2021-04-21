@@ -11,6 +11,7 @@ class DetailWeatherViewController: UIViewController, LoadableView {
     // MARK: - Outlets
     @IBOutlet private weak var contentTableView: UITableView!
     @IBOutlet private weak var backgroundView: UIView!
+    private var gradientLayer = CAGradientLayer()
 
     // MARK: - Private Properties
     private let storage = StorageManager.instance
@@ -117,17 +118,16 @@ private extension DetailWeatherViewController {
     }
 
     func styleUI() {
-        let layer = CAGradientLayer()
-        layer.frame = view.bounds
+        gradientLayer.frame = view.bounds
 
         if let topColor = UIColor(named: String.topColor)?.cgColor,
            let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
-            layer.colors = [topColor, bottomColor]
+            gradientLayer.colors = [topColor, bottomColor]
         }
 
-        layer.startPoint = CGPoint(x: 0.5, y: 0)
-        layer.endPoint = CGPoint(x: 0.5, y: 1)
-        backgroundView.layer.addSublayer(layer)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        backgroundView.layer.addSublayer(gradientLayer)
     }
 }
 
@@ -168,7 +168,29 @@ extension DetailWeatherViewController: UITableViewDelegate, UITableViewDataSourc
         case .hourly:
             return 170
         case .detail:
-            return 320
+            guard !detailCollectionHandler.dataSource.isEmpty else { return 0 }
+
+            let cellHeight = (Double(detailCollectionHandler.dataSource.count) / 2).rounded(.toNearestOrAwayFromZero) * 100
+            let spacing = Double((dataSource.count / 2) * 20)
+            return CGFloat(cellHeight + spacing)
+        }
+    }
+}
+
+// MARK: - Dark/Light Mode Appearance
+extension DetailWeatherViewController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if #available(iOS 13.0, *) {
+            guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else {
+                return
+            }
+
+            if let topColor = UIColor(named: String.topColor)?.cgColor,
+               let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
+                gradientLayer.colors = [topColor, bottomColor]
+            }
         }
     }
 }

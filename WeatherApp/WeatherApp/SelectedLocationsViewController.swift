@@ -17,6 +17,7 @@ class SelectedLocationsViewController: UIViewController {
     private let dataManager = DataManager.instance
     private let dataBaseManager = DataBaseManager.instance
     private let measurementHelper = UnitMeasurementHelper()
+    private var gradientLayer = CAGradientLayer()
 
     private var dataSource: [WeatherModel] = []
 
@@ -41,6 +42,7 @@ class SelectedLocationsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
+        dataBaseManager.deleteAllLocations()
         StorageManager.instance.reset()
     }
 
@@ -66,7 +68,8 @@ class SelectedLocationsViewController: UIViewController {
 
     @objc func currentLocationButtonTapped(_ sender: UIButton) {
         guard !dataSource.isEmpty else {
-            locationManager.requestLocation()
+            locationManager.delegate = self
+            locationManager.startUpdatingLocation()
 
             return
         }
@@ -75,15 +78,18 @@ class SelectedLocationsViewController: UIViewController {
             return
         }
 
-        locationManager.requestLocation()
+        locationManager.delegate = self
+        locationManager.startUpdatingLocation()
     }
 
     @objc func settingsButtonTapped(_ sender: UIButton) {
         let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
 
+        // swiftlint:disable line_length
         guard let destinationVC = settingsStoryboard.instantiateViewController(withIdentifier: "MainSettingsViewController") as? MainSettingsViewController else {
             return
         }
+        // swiftlint:enable line_length
 
         destinationVC.modalPresentationStyle = .fullScreen
 
@@ -178,7 +184,6 @@ private extension SelectedLocationsViewController {
     }
 
     func setUpData() {
-        dataBaseManager.deleteAllLocations()
         dataSource = dataManager.getDataSourceModelArray(from: dataBaseManager.getCities())
     }
 
@@ -186,14 +191,11 @@ private extension SelectedLocationsViewController {
         contentTableView.delegate = self
         contentTableView.dataSource = self
         contentTableView.register(cellType: SelectedLocationTableViewCell.self)
-//        contentTableView.register(UINib(nibName: "SelectedLocationTableViewCell",
-//                                        bundle: nil),
-//                                  forCellReuseIdentifier: "SelectedLocationTableViewCell")
     }
 
     func setUpLocationManager() {
-        locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
     }
 
     func makeAddButton() {
@@ -268,17 +270,16 @@ private extension SelectedLocationsViewController {
 
     func styleUI() {
         contentTableView.backgroundColor = .clear
-        let layer = CAGradientLayer()
-        layer.frame = view.bounds
+        gradientLayer.frame = view.bounds
 
         if let topColor = UIColor(named: String.topColor)?.cgColor,
            let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
-            layer.colors = [topColor, bottomColor]
+            gradientLayer.colors = [topColor, bottomColor]
         }
 
-        layer.startPoint = CGPoint(x: 0.5, y: 0)
-        layer.endPoint = CGPoint(x: 0.5, y: 1)
-        backgroundView.layer.addSublayer(layer)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        backgroundView.layer.addSublayer(gradientLayer)
 
         makeAddButton()
         makeCurrentLocationButton()
@@ -381,6 +382,7 @@ extension SelectedLocationsViewController: CLLocationManagerDelegate {
         }
 
         locationManager.stopUpdatingLocation()
+        locationManager.delegate = nil
         let latitude = location.coordinate.latitude
         let longitude = location.coordinate.longitude
 
@@ -398,5 +400,24 @@ extension SelectedLocationsViewController: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
+    }
+}
+
+// MARK: - Dark/Light Mode Appearance
+extension SelectedLocationsViewController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if #available(iOS 13.0, *) {
+            guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else {
+                return
+            }
+
+            if let topColor = UIColor(named: String.topColor)?.cgColor,
+               let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
+                gradientLayer.colors = [topColor, bottomColor]
+            }
+            // redraw your layers here
+        }
     }
 }
