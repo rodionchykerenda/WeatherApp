@@ -207,14 +207,6 @@
 			name = DetailWeatherCollectionViewCell;
 			sourceTree = "<group>";
 		};
-		8F38FEF62620943E008B05E4 /* Enum */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Enum;
-			path = ..;
-			sourceTree = "<group>";
-		};
 		8F38FEFD2620A71F008B05E4 /* DailyDetailTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -422,11 +414,7 @@
 		D11435E5263033F0001E2EB6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				8F38FEF72620948A008B05E4 /* DetailWeatherName.swift */,
-				8F0056C326244A6E00884592 /* DetailWeatherRowsViewModel.swift */,
-				8F7F456726258F7500D11774 /* SettingsRowsViewModel.swift */,
-				8F7F45762625DA5600D11774 /* MeasurementEnums.swift */,
-				8F38FEF62620943E008B05E4 /* Enum */,
+				D17FD6F92630376600A8D405 /* Enum */,
 				8F7099E62620511F0067F558 /* CollectionViewHandlers */,
 				8F6F68AF26170D3600019172 /* ViewModel */,
 				8F6F68AE26170D1200019172 /* Manager */,
@@ -525,6 +513,17 @@
 				8F5AF57A261EEC4C00E98249 /* Cell */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		D17FD6F92630376600A8D405 /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				8F38FEF72620948A008B05E4 /* DetailWeatherName.swift */,
+				8F0056C326244A6E00884592 /* DetailWeatherRowsViewModel.swift */,
+				8F7F456726258F7500D11774 /* SettingsRowsViewModel.swift */,
+				8F7F45762625DA5600D11774 /* MeasurementEnums.swift */,
+			);
+			path = Enum;
 			sourceTree = "<group>";
 		};
 		E8745D14F2CB37098B6324B2 /* Pods */ = {
