@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AdditionalWeatherAttribute" representedClassName="AdditionalWeatherAttribute" syncable="YES" codeGenerationType="class">
+        <attribute name="isSelected" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="weatherAttributeName" attributeType="String"/>
+    </entity>
+    <entity name="SelectedCity" representedClassName="SelectedCity" syncable="YES" codeGenerationType="class">
+        <attribute name="latitude" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="longitude" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+    </entity>
+    <entity name="SelectedLocation" representedClassName="SelectedLocation" syncable="YES" codeGenerationType="class">
+        <attribute name="latitude" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="longitude" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+    </entity>
+    <entity name="UnitMeasurement" representedClassName="UnitMeasurement" syncable="YES" codeGenerationType="class">
+        <attribute name="distance" attributeType="String"/>
+        <attribute name="hours" attributeType="String"/>
+        <attribute name="metrics" attributeType="String"/>
+    </entity>
+    <elements>
+        <element name="AdditionalWeatherAttribute" positionX="-54" positionY="18" width="128" height="59"/>
+        <element name="SelectedCity" positionX="-63" positionY="-18" width="128" height="74"/>
+        <element name="SelectedLocation" positionX="-54" positionY="-9" width="128" height="74"/>
+        <element name="UnitMeasurement" positionX="-54" positionY="9" width="128" height="74"/>
+    </elements>
 </model>

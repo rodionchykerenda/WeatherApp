@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SelectedLocationTableViewCell" rowHeight="100" id="KGk-i7-Jjw" customClass="SelectedLocationTableViewCell" customModule="WeatherApp" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="397" height="100"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="397" height="100"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="en9-tU-7PE">
+                        <rect key="frame" x="10" y="32" width="283" height="36"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xIH-lq-jdk">
+                        <rect key="frame" x="293" y="32" width="94" height="36"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="en9-tU-7PE" firstAttribute="width" secondItem="xIH-lq-jdk" secondAttribute="width" multiplier="3" id="2sz-5F-hsi"/>
+                    <constraint firstItem="en9-tU-7PE" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="4jT-6z-gP3"/>
+                    <constraint firstItem="xIH-lq-jdk" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="gkx-Tl-6wo"/>
+                    <constraint firstItem="xIH-lq-jdk" firstAttribute="leading" secondItem="en9-tU-7PE" secondAttribute="trailing" id="img-LV-AfE"/>
+                    <constraint firstAttribute="trailing" secondItem="xIH-lq-jdk" secondAttribute="trailing" constant="10" id="mLJ-Ox-bGd"/>
+                    <constraint firstItem="en9-tU-7PE" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="rSA-da-aqw"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="cityNameLabel" destination="en9-tU-7PE" id="gnI-Gm-zJz"/>
+                <outlet property="temperatureLabel" destination="xIH-lq-jdk" id="t8S-Hd-RFc"/>
+            </connections>
+            <point key="canvasLocation" x="187.68115942028987" y="150.66964285714286"/>
+        </tableViewCell>
+    </objects>
+</document>

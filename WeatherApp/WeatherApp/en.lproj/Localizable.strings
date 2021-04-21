@@ -1,0 +1,35 @@
+/* 
+  Localizable.strings
+  WeatherApp
+
+  Created by Rodion Chikerenda on 31.03.2021.
+  
+*/
+"already_exists_title" = "Already exists";
+"already_exists_message" = "This place was already added to your list.";
+"ok" = "Ok";
+"find_city_name_error" = "Couldn't find city name. Try to selecet closer.";
+"city_search_placeholder" = "Search for places";
+"empty_response_alert_title" = "Empty response";
+"empty_response_alert_message" = "Sorry, we dont have this place in our DataBase. Try to find some other places close to this location.";
+"add_button_title" = "Add";
+"current_button_title" = "Current";
+"current_location" = "Current location";
+"back_button_title" = "Back";
+"humidity" = "Humidity";
+"pressure" = "Pressure";
+"min_temp" = "Min Temp";
+"max_temp" = "Max Temp";
+"wind_speed" = "Wind Speed";
+"feels_like" = "Feels Like";
+"weather" = "Weather";
+"daily" = "Daily";
+"settings" = "Settings";
+"metres" = "metres";
+"miles" = "miles";
+"miles_per_hours" = "miles/h";
+"metre_per_second" = "metre/s";
+"metrics" = "Metrics";
+"distance" = "Distance";
+"hours" = "Hours";
+"weather_details" = "Weather details";
