@@ -158,162 +158,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8F0056C726244F4B00884592 /* Extension */ = {
-			isa = PBXGroup;
-			children = (
-				8F0056C826244F6900884592 /* String+Constants.swift */,
-				8F3626B62626DFA800CEEBD1 /* Double+Constants.swift */,
-			);
-			name = Extension;
-			sourceTree = "<group>";
-		};
-		8F38FEE526207EE1008B05E4 /* DetailCurrentWeatherTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				8F38FEE026207ED6008B05E4 /* DetailCurrentWeatherTableViewCell.swift */,
-				8F38FEE126207ED6008B05E4 /* DetailCurrentWeatherTableViewCell.xib */,
-			);
-			name = DetailCurrentWeatherTableViewCell;
-			sourceTree = "<group>";
-		};
-		8F38FEE626207EFC008B05E4 /* TableCells */ = {
-			isa = PBXGroup;
-			children = (
-				8F38FEFD2620A71F008B05E4 /* DailyDetailTableViewCell */,
-				8F5AF57B261EEC5D00E98249 /* MainCurrentWeatherTableViewCell */,
-				8F709A0526205F020067F558 /* HoursWeatherTableViewCell */,
-				8F38FEE526207EE1008B05E4 /* DetailCurrentWeatherTableViewCell */,
-			);
-			name = TableCells;
-			sourceTree = "<group>";
-		};
-		8F38FEE726207F09008B05E4 /* CollectionCells */ = {
-			isa = PBXGroup;
-			children = (
-				8F7099EE262054C10067F558 /* HoursWeatherCollectionViewCell */,
-				8F38FEED26207F3E008B05E4 /* DetailWeatherCollectionViewCell */,
-			);
-			name = CollectionCells;
-			sourceTree = "<group>";
-		};
-		8F38FEED26207F3E008B05E4 /* DetailWeatherCollectionViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				8F38FEE826207F33008B05E4 /* DetailWeatherCollectionViewCell.swift */,
-				8F38FEE926207F33008B05E4 /* DetailWeatherCollectionViewCell.xib */,
-			);
-			name = DetailWeatherCollectionViewCell;
-			sourceTree = "<group>";
-		};
-		8F38FEFD2620A71F008B05E4 /* DailyDetailTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				8F38FEFE2620A744008B05E4 /* DailyDetailTableViewCell.swift */,
-				8F38FEFF2620A744008B05E4 /* DailyDetailTableViewCell.xib */,
-			);
-			name = DailyDetailTableViewCell;
-			sourceTree = "<group>";
-		};
-		8F490D0426273858009D60C6 /* SwitchTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				8F490D0526273881009D60C6 /* SwitchTableViewCell.swift */,
-				8F490D0626273881009D60C6 /* SwitchTableViewCell.xib */,
-			);
-			name = SwitchTableViewCell;
-			sourceTree = "<group>";
-		};
-		8F490D0F26274429009D60C6 /* WeatherDetailSettingsTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				8F490D0A26274425009D60C6 /* WeatherDetailSettingsTableViewCell.swift */,
-				8F490D0B26274425009D60C6 /* WeatherDetailSettingsTableViewCell.xib */,
-			);
-			name = WeatherDetailSettingsTableViewCell;
-			sourceTree = "<group>";
-		};
-		8F54C0EE26258A1800681792 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				8F54C0EB26258A1300681792 /* Settings.storyboard */,
-				8F7F456A26258FF000D11774 /* Cell */,
-			);
-			name = View;
-			sourceTree = "<group>";
-		};
-		8F54C0EF26258A3F00681792 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				8F54C0F026258A6E00681792 /* MainSettingsViewController.swift */,
-				8F490CFE262736C4009D60C6 /* DetailWeatherSettingsViewController.swift */,
-			);
-			name = Controller;
-			sourceTree = "<group>";
-		};
-		8F5AF57A261EEC4C00E98249 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				8F38FEE726207F09008B05E4 /* CollectionCells */,
-				8F38FEE626207EFC008B05E4 /* TableCells */,
-			);
-			name = Cell;
-			sourceTree = "<group>";
-		};
-		8F5AF57B261EEC5D00E98249 /* MainCurrentWeatherTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				8F5AF575261EEC4700E98249 /* MainCurrentWeatherTableViewCell.swift */,
-				8F5AF576261EEC4700E98249 /* MainCurrentWeatherTableViewCell.xib */,
-			);
-			name = MainCurrentWeatherTableViewCell;
-			sourceTree = "<group>";
-		};
-		8F6CC274261C5BAC00F245CC /* Protocol */ = {
-			isa = PBXGroup;
-			children = (
-				8F6CC275261C5BB900F245CC /* Spinner.swift */,
-				8F490CF52626EB15009D60C6 /* Reusable.swift */,
-			);
-			name = Protocol;
-			sourceTree = "<group>";
-		};
-		8F7099EE262054C10067F558 /* HoursWeatherCollectionViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				8F709A08262060850067F558 /* HoursWeatherCollectionViewCell.swift */,
-				8F709A09262060850067F558 /* HoursWeatherCollectionViewCell.xib */,
-			);
-			name = HoursWeatherCollectionViewCell;
-			sourceTree = "<group>";
-		};
-		8F709A0526205F020067F558 /* HoursWeatherTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				8F709A0026205EF90067F558 /* HoursWeatherTableViewCell.swift */,
-				8F709A0126205EF90067F558 /* HoursWeatherTableViewCell.xib */,
-			);
-			name = HoursWeatherTableViewCell;
-			sourceTree = "<group>";
-		};
-		8F7F456A26258FF000D11774 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				8F490D0426273858009D60C6 /* SwitchTableViewCell */,
-				8F7F45712625903F00D11774 /* SegmentedControlTableViewCell */,
-				8F490D0F26274429009D60C6 /* WeatherDetailSettingsTableViewCell */,
-			);
-			name = Cell;
-			sourceTree = "<group>";
-		};
-		8F7F45712625903F00D11774 /* SegmentedControlTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				8F7F456B2625903C00D11774 /* SegmentedControlTableViewCell.swift */,
-				8F7F456C2625903C00D11774 /* SegmentedControlTableViewCell.xib */,
-			);
-			name = SegmentedControlTableViewCell;
-			sourceTree = "<group>";
-		};
 		8F924248260B639000D84DB0 = {
 			isa = PBXGroup;
 			children = (
@@ -336,9 +180,9 @@
 			isa = PBXGroup;
 			children = (
 				D11435E5263033F0001E2EB6 /* Model */,
-				D1356EA8260DE4BF00E435C2 /* Flow */,
-				8F0056C726244F4B00884592 /* Extension */,
-				8F6CC274261C5BAC00F245CC /* Protocol */,
+				D17FD7022630583400A8D405 /* Flow */,
+				D1B74BE3263061D6009D9E65 /* Protocol */,
+				D1B74BE2263061B2009D9E65 /* Extension */,
 				8F92426D260B754400D84DB0 /* Supporting Files */,
 				8F924265260B639100D84DB0 /* Info.plist */,
 				8F92425D260B639000D84DB0 /* WeatherApp.xcdatamodeld */,
@@ -367,97 +211,6 @@
 				D17FD6FE263038A600A8D405 /* ViewModel */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		D1356EA8260DE4BF00E435C2 /* Flow */ = {
-			isa = PBXGroup;
-			children = (
-				D1356EA9260DE4CA00E435C2 /* MainFlow */,
-				D1356EAB260DE4DB00E435C2 /* DetailsFlow */,
-				D1356EAA260DE4D200E435C2 /* SettingsFlow */,
-			);
-			name = Flow;
-			sourceTree = "<group>";
-		};
-		D1356EA9260DE4CA00E435C2 /* MainFlow */ = {
-			isa = PBXGroup;
-			children = (
-				D1356EAC260DE56B00E435C2 /* View */,
-				D1356EAD260DE58500E435C2 /* Controller */,
-			);
-			name = MainFlow;
-			sourceTree = "<group>";
-		};
-		D1356EAA260DE4D200E435C2 /* SettingsFlow */ = {
-			isa = PBXGroup;
-			children = (
-				8F54C0EE26258A1800681792 /* View */,
-				8F54C0EF26258A3F00681792 /* Controller */,
-			);
-			name = SettingsFlow;
-			sourceTree = "<group>";
-		};
-		D1356EAB260DE4DB00E435C2 /* DetailsFlow */ = {
-			isa = PBXGroup;
-			children = (
-				D1356EB1260DE62900E435C2 /* View */,
-				D1356EB0260DE62000E435C2 /* Controller */,
-			);
-			name = DetailsFlow;
-			sourceTree = "<group>";
-		};
-		D1356EAC260DE56B00E435C2 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				8F92425A260B639000D84DB0 /* Main.storyboard */,
-				D1356EAE260DE5D900E435C2 /* Cell */,
-			);
-			name = View;
-			sourceTree = "<group>";
-		};
-		D1356EAD260DE58500E435C2 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				8F924258260B639000D84DB0 /* SelectedLocationsViewController.swift */,
-				8F92428D260B9FC400D84DB0 /* MapViewController.swift */,
-				8FA04636260C97050042F47C /* LocationSearchTableViewController.swift */,
-			);
-			name = Controller;
-			sourceTree = "<group>";
-		};
-		D1356EAE260DE5D900E435C2 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				D1356EAF260DE5E900E435C2 /* SelectedLocationTableViewCell */,
-			);
-			name = Cell;
-			sourceTree = "<group>";
-		};
-		D1356EAF260DE5E900E435C2 /* SelectedLocationTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				8F924282260B7D1700D84DB0 /* SelectedLocationTableViewCell.xib */,
-				8F924281260B7D1700D84DB0 /* SelectedLocationTableViewCell.swift */,
-			);
-			name = SelectedLocationTableViewCell;
-			sourceTree = "<group>";
-		};
-		D1356EB0260DE62000E435C2 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				8F0629B1261222650091D2F3 /* DetailWeatherViewController.swift */,
-				8FAAC5EA261749B50011FC58 /* DailyDetailWeatherViewController.swift */,
-			);
-			name = Controller;
-			sourceTree = "<group>";
-		};
-		D1356EB1260DE62900E435C2 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				8FA0463A260CEF560042F47C /* Detail.storyboard */,
-				8F5AF57A261EEC4C00E98249 /* Cell */,
-			);
-			name = View;
 			sourceTree = "<group>";
 		};
 		D17FD6F92630376600A8D405 /* Enum */ = {
@@ -517,6 +270,253 @@
 				8FAAC5F02617640B0011FC58 /* DetailWeatherData.swift */,
 			);
 			path = CodableModels;
+			sourceTree = "<group>";
+		};
+		D17FD7022630583400A8D405 /* Flow */ = {
+			isa = PBXGroup;
+			children = (
+				D17FD7032630584C00A8D405 /* MainFlow */,
+				D1B74BCB26305994009D9E65 /* DetailsFlow */,
+				D1B74BDA263060B9009D9E65 /* SettingsFlow */,
+			);
+			path = Flow;
+			sourceTree = "<group>";
+		};
+		D17FD7032630584C00A8D405 /* MainFlow */ = {
+			isa = PBXGroup;
+			children = (
+				D17FD7042630587100A8D405 /* View */,
+				D1B74BCA26305950009D9E65 /* Controller */,
+			);
+			path = MainFlow;
+			sourceTree = "<group>";
+		};
+		D17FD7042630587100A8D405 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8F92425A260B639000D84DB0 /* Main.storyboard */,
+				D17FD7052630589400A8D405 /* Cell */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		D17FD7052630589400A8D405 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				D17FD706263058AD00A8D405 /* SelectedLocationTableViewCell */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		D17FD706263058AD00A8D405 /* SelectedLocationTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8F924282260B7D1700D84DB0 /* SelectedLocationTableViewCell.xib */,
+				8F924281260B7D1700D84DB0 /* SelectedLocationTableViewCell.swift */,
+			);
+			path = SelectedLocationTableViewCell;
+			sourceTree = "<group>";
+		};
+		D1B74BCA26305950009D9E65 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				8F924258260B639000D84DB0 /* SelectedLocationsViewController.swift */,
+				8F92428D260B9FC400D84DB0 /* MapViewController.swift */,
+				8FA04636260C97050042F47C /* LocationSearchTableViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		D1B74BCB26305994009D9E65 /* DetailsFlow */ = {
+			isa = PBXGroup;
+			children = (
+				D1B74BCC26305A7E009D9E65 /* View */,
+				D1B74BD826306060009D9E65 /* Controller */,
+			);
+			path = DetailsFlow;
+			sourceTree = "<group>";
+		};
+		D1B74BCC26305A7E009D9E65 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8FA0463A260CEF560042F47C /* Detail.storyboard */,
+				D1B74BCD26305AAD009D9E65 /* Cell */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		D1B74BCD26305AAD009D9E65 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				D1B74BCE26305AD2009D9E65 /* CollectionCells */,
+				D1B74BCF26305AF1009D9E65 /* TableCells */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		D1B74BCE26305AD2009D9E65 /* CollectionCells */ = {
+			isa = PBXGroup;
+			children = (
+				D1B74BD126305B3A009D9E65 /* DetailWeatherCollectionViewCell */,
+				D1B74BD026305B26009D9E65 /* HoursWeatherCollectionViewCell */,
+			);
+			path = CollectionCells;
+			sourceTree = "<group>";
+		};
+		D1B74BCF26305AF1009D9E65 /* TableCells */ = {
+			isa = PBXGroup;
+			children = (
+				D1B74BD626305BBD009D9E65 /* HoursWeatherTableViewCell */,
+				D1B74BD526305BA4009D9E65 /* MainCurrentWeatherTableViewCell */,
+				D1B74BD426305B8D009D9E65 /* DetailCurrentWeatherTableViewCell */,
+				D1B74BD226305B59009D9E65 /* DailyDetailTableViewCell */,
+			);
+			path = TableCells;
+			sourceTree = "<group>";
+		};
+		D1B74BD026305B26009D9E65 /* HoursWeatherCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8F709A08262060850067F558 /* HoursWeatherCollectionViewCell.swift */,
+				8F709A09262060850067F558 /* HoursWeatherCollectionViewCell.xib */,
+			);
+			path = HoursWeatherCollectionViewCell;
+			sourceTree = "<group>";
+		};
+		D1B74BD126305B3A009D9E65 /* DetailWeatherCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8F38FEE826207F33008B05E4 /* DetailWeatherCollectionViewCell.swift */,
+				8F38FEE926207F33008B05E4 /* DetailWeatherCollectionViewCell.xib */,
+			);
+			path = DetailWeatherCollectionViewCell;
+			sourceTree = "<group>";
+		};
+		D1B74BD226305B59009D9E65 /* DailyDetailTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8F38FEFE2620A744008B05E4 /* DailyDetailTableViewCell.swift */,
+				8F38FEFF2620A744008B05E4 /* DailyDetailTableViewCell.xib */,
+			);
+			path = DailyDetailTableViewCell;
+			sourceTree = "<group>";
+		};
+		D1B74BD426305B8D009D9E65 /* DetailCurrentWeatherTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8F38FEE026207ED6008B05E4 /* DetailCurrentWeatherTableViewCell.swift */,
+				8F38FEE126207ED6008B05E4 /* DetailCurrentWeatherTableViewCell.xib */,
+			);
+			path = DetailCurrentWeatherTableViewCell;
+			sourceTree = "<group>";
+		};
+		D1B74BD526305BA4009D9E65 /* MainCurrentWeatherTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8F5AF575261EEC4700E98249 /* MainCurrentWeatherTableViewCell.swift */,
+				8F5AF576261EEC4700E98249 /* MainCurrentWeatherTableViewCell.xib */,
+			);
+			path = MainCurrentWeatherTableViewCell;
+			sourceTree = "<group>";
+		};
+		D1B74BD626305BBD009D9E65 /* HoursWeatherTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8F709A0026205EF90067F558 /* HoursWeatherTableViewCell.swift */,
+				8F709A0126205EF90067F558 /* HoursWeatherTableViewCell.xib */,
+			);
+			path = HoursWeatherTableViewCell;
+			sourceTree = "<group>";
+		};
+		D1B74BD826306060009D9E65 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				8F0629B1261222650091D2F3 /* DetailWeatherViewController.swift */,
+				8FAAC5EA261749B50011FC58 /* DailyDetailWeatherViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		D1B74BDA263060B9009D9E65 /* SettingsFlow */ = {
+			isa = PBXGroup;
+			children = (
+				D1B74BE026306180009D9E65 /* Controller */,
+				D1B74BDB263060EA009D9E65 /* View */,
+			);
+			path = SettingsFlow;
+			sourceTree = "<group>";
+		};
+		D1B74BDB263060EA009D9E65 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8F54C0EB26258A1300681792 /* Settings.storyboard */,
+				D1B74BDC26306105009D9E65 /* Cell */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		D1B74BDC26306105009D9E65 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				D1B74BDE26306136009D9E65 /* SegmentedControlTableViewCell */,
+				D1B74BDD2630611C009D9E65 /* SwitchTableViewCell */,
+				D1B74BDF2630614C009D9E65 /* WeatherDetailSettingsTableViewCell */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		D1B74BDD2630611C009D9E65 /* SwitchTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8F490D0526273881009D60C6 /* SwitchTableViewCell.swift */,
+				8F490D0626273881009D60C6 /* SwitchTableViewCell.xib */,
+			);
+			path = SwitchTableViewCell;
+			sourceTree = "<group>";
+		};
+		D1B74BDE26306136009D9E65 /* SegmentedControlTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8F7F456B2625903C00D11774 /* SegmentedControlTableViewCell.swift */,
+				8F7F456C2625903C00D11774 /* SegmentedControlTableViewCell.xib */,
+			);
+			path = SegmentedControlTableViewCell;
+			sourceTree = "<group>";
+		};
+		D1B74BDF2630614C009D9E65 /* WeatherDetailSettingsTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8F490D0A26274425009D60C6 /* WeatherDetailSettingsTableViewCell.swift */,
+				8F490D0B26274425009D60C6 /* WeatherDetailSettingsTableViewCell.xib */,
+			);
+			path = WeatherDetailSettingsTableViewCell;
+			sourceTree = "<group>";
+		};
+		D1B74BE026306180009D9E65 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				8F54C0F026258A6E00681792 /* MainSettingsViewController.swift */,
+				8F490CFE262736C4009D60C6 /* DetailWeatherSettingsViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		D1B74BE2263061B2009D9E65 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				8F0056C826244F6900884592 /* String+Constants.swift */,
+				8F3626B62626DFA800CEEBD1 /* Double+Constants.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		D1B74BE3263061D6009D9E65 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				8F6CC275261C5BB900F245CC /* Spinner.swift */,
+				8F490CF52626EB15009D60C6 /* Reusable.swift */,
+			);
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 		E8745D14F2CB37098B6324B2 /* Pods */ = {
