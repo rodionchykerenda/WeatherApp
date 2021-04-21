@@ -399,7 +399,7 @@
 		8F924253260B639000D84DB0 /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
-				D1504EF026302A1C006F3258 /* Model */,
+				D11435E5263033F0001E2EB6 /* Model */,
 				D1356EA8260DE4BF00E435C2 /* Flow */,
 				8F0056C726244F4B00884592 /* Extension */,
 				8F6CC274261C5BAC00F245CC /* Protocol */,
@@ -419,6 +419,18 @@
 				8F924260260B639100D84DB0 /* Assets.xcassets */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D11435E5263033F0001E2EB6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8F38FEF62620943E008B05E4 /* Enum */,
+				8F7099E62620511F0067F558 /* CollectionViewHandlers */,
+				8F6F68AF26170D3600019172 /* ViewModel */,
+				8F6F68AE26170D1200019172 /* Manager */,
+				8F6F68B026170D4100019172 /* CodableModels */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		D1356EA8260DE4BF00E435C2 /* Flow */ = {
@@ -510,18 +522,6 @@
 				8F5AF57A261EEC4C00E98249 /* Cell */,
 			);
 			name = View;
-			sourceTree = "<group>";
-		};
-		D1504EF026302A1C006F3258 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				8F38FEF62620943E008B05E4 /* Enum */,
-				8F7099E62620511F0067F558 /* CollectionViewHandlers */,
-				8F6F68AF26170D3600019172 /* ViewModel */,
-				8F6F68AE26170D1200019172 /* Manager */,
-				8F6F68B026170D4100019172 /* CodableModels */,
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		E8745D14F2CB37098B6324B2 /* Pods */ = {
