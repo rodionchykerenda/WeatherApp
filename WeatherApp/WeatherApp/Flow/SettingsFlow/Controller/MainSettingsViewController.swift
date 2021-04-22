@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainSettingsViewController: UIViewController {
+class MainSettingsViewController: UIViewController, Stroyboarded {
     // MARK: - Outlets
     @IBOutlet private weak var contentTableView: UITableView!
     private var saveButton = UIBarButtonItem()
@@ -20,12 +20,19 @@ class MainSettingsViewController: UIViewController {
     private let unitMeasurementManager = UnitMeasurementManager.instance
     private let dataBaseManager = DataBaseManager.instance
 
+    private weak var coordinator: SettingsCoordinator!
+
     // MARK: - LifeCycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUpUI()
         setUpTableView()
+    }
+
+    // MARK: - Setter
+    func setCoorinator(_ coordinator: SettingsCoordinator) {
+        self.coordinator = coordinator
     }
 
     // MARK: - Actions
@@ -113,15 +120,7 @@ extension MainSettingsViewController: UITableViewDelegate, UITableViewDataSource
             return
         }
 
-        let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
-
-        // swiftlint:disable line_length
-        guard let destinationVC = settingsStoryboard.instantiateViewController(withIdentifier: "DetailWeatherSettingsViewController") as? DetailWeatherSettingsViewController else {
-            return
-        }
-        // swiftlint:enable line_length
-
-        navigationController?.pushViewController(destinationVC, animated: true)
+        coordinator.selectDetailWeather()
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

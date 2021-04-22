@@ -21,6 +21,8 @@ class SelectedLocationsViewController: UIViewController {
 
     private var dataSource: [WeatherModel] = []
 
+    private var settingsCoordinator: SettingsCoordinator?
+
     private var currentLocationButton: UIButton?
     private let locationManager = CLLocationManager()
 
@@ -83,17 +85,24 @@ class SelectedLocationsViewController: UIViewController {
     }
 
     @objc func settingsButtonTapped(_ sender: UIButton) {
-        let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
-
-        // swiftlint:disable line_length
-        guard let destinationVC = settingsStoryboard.instantiateViewController(withIdentifier: "MainSettingsViewController") as? MainSettingsViewController else {
-            return
+        guard let navController = navigationController else {
+            fatalError("Couldnt find navigation controller")
         }
-        // swiftlint:enable line_length
 
-        destinationVC.modalPresentationStyle = .fullScreen
+        settingsCoordinator = SettingsCoordinator(navigationController: navController)
+        settingsCoordinator?.start()
 
-        navigationController?.pushViewController(destinationVC, animated: true)
+//        let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
+//
+////        // swiftlint:disable line_length
+////        guard let destinationVC = settingsStoryboard.instantiateViewController(withIdentifier: "MainSettingsViewController") as? MainSettingsViewController else {
+////            return
+////        }
+////        // swiftlint:enable line_length
+////
+////        destinationVC.modalPresentationStyle = .fullScreen
+////
+////        navigationController?.pushViewController(destinationVC, animated: true)
     }
 
     @objc func handleRefreshControl() {
