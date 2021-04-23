@@ -7,11 +7,11 @@
 
 import UIKit
 
-protocol Stroyboarded {
+protocol StoryboardLoadable {
     static func instantiateWith(storyboardName: StoryboardName) -> Self
 }
 
-extension Stroyboarded where Self: UIViewController {
+extension StoryboardLoadable where Self: UIViewController {
     static func instantiateWith(storyboardName: StoryboardName) -> Self {
         let id = String(describing: self)
         let storyboard = UIStoryboard(name: storyboardName.rawValue, bundle: nil)

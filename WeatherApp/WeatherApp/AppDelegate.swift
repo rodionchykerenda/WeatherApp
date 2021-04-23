@@ -18,6 +18,7 @@ fileprivate let dataManager = DataManager.instance
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
+    var mainCoordinator: Coordinator?
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -53,41 +54,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func didStart() -> Bool {
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let navController = UINavigationController()
 
-        let detailStoryboard = UIStoryboard(name: "Detail", bundle: nil)
+        mainCoordinator = SelectedLocationCoordinator(router: ConcreteRouter(navController: navController))
 
-        // swiftlint:disable line_length
-        guard let detailWeatherVC = detailStoryboard.instantiateViewController(withIdentifier: "DetailWeatherViewController") as? DetailWeatherViewController else {
-            return false
-        }
+        mainCoordinator?.start()
 
-        let selectedLocationVC = mainStoryboard.instantiateViewController(withIdentifier: "SelectedLocationsViewController")
-        let dailyDetailWeatherVC = detailStoryboard.instantiateViewController(withIdentifier: "DailyDetailWeatherViewController")
-        // swiftlint:enable line_length
-
-        let navigationController = UINavigationController(rootViewController: selectedLocationVC)
-
-        window?.rootViewController = navigationController
-
-        let selectedLocations = dataBaseManager.getLocations()
-
-        if !selectedLocations.isEmpty {
-            detailWeatherVC.selectedLocation = selectedLocations.last
-
-            let tabBarViewController = UITabBarController()
-
-            detailWeatherVC.title = NSLocalizedString("weather", comment: "")
-
-            dailyDetailWeatherVC.title = NSLocalizedString("daily", comment: "")
-
-            tabBarViewController.setViewControllers([detailWeatherVC, dailyDetailWeatherVC], animated: false)
-
-            navigationController.setViewControllers([selectedLocationVC, tabBarViewController],
-                                                    animated: false)
-            return true
-        }
-
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = navController
         window?.makeKeyAndVisible()
 
         return true

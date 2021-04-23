@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainSettingsViewController: UIViewController, Stroyboarded {
+class MainSettingsViewController: UIViewController, StoryboardLoadable {
     // MARK: - Outlets
     @IBOutlet private weak var contentTableView: UITableView!
     private var saveButton = UIBarButtonItem()
@@ -20,7 +20,8 @@ class MainSettingsViewController: UIViewController, Stroyboarded {
     private let unitMeasurementManager = UnitMeasurementManager.instance
     private let dataBaseManager = DataBaseManager.instance
 
-    private weak var coordinator: SettingsCoordinator!
+    // MARK: - Output
+    var onSelectDetailWeatherSettings: (() -> Void)?
 
     // MARK: - LifeCycle Methods
     override func viewDidLoad() {
@@ -28,11 +29,6 @@ class MainSettingsViewController: UIViewController, Stroyboarded {
 
         setUpUI()
         setUpTableView()
-    }
-
-    // MARK: - Setter
-    func setCoorinator(_ coordinator: SettingsCoordinator) {
-        self.coordinator = coordinator
     }
 
     // MARK: - Actions
@@ -120,7 +116,7 @@ extension MainSettingsViewController: UITableViewDelegate, UITableViewDataSource
             return
         }
 
-        coordinator.selectDetailWeather()
+        onSelectDetailWeatherSettings?()
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

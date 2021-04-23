@@ -8,20 +8,25 @@
 import UIKit
 
 class SettingsCoordinator: Coordinator {
-    var navigationController: UINavigationController
+    var router: Router
 
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
+    init(router: Router) {
+        self.router = router
     }
 
     func start() {
         let destinationVC = MainSettingsViewController.instantiateWith(storyboardName: .settings)
-        destinationVC.setCoorinator(self)
-        navigationController.pushViewController(destinationVC, animated: true)
+
+        destinationVC.onSelectDetailWeatherSettings = {
+            self.selectDetailWeather()
+        }
+        
+        router.push(viewController: destinationVC, animated: true)
     }
 
-    func selectDetailWeather() {
+    private func selectDetailWeather() {
         let destinationVC = DetailWeatherSettingsViewController.instantiateWith(storyboardName: .settings)
-        navigationController.pushViewController(destinationVC, animated: true)
+
+        router.push(viewController: destinationVC, animated: true)
     }
 }

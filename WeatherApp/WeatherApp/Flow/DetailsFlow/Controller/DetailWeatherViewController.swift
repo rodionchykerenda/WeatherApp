@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DetailWeatherViewController: UIViewController, LoadableView {
+class DetailWeatherViewController: UIViewController, LoadableView, StoryboardLoadable {
     // MARK: - Outlets
     @IBOutlet private weak var contentTableView: UITableView!
     @IBOutlet private weak var backgroundView: UIView!

@@ -8,7 +8,7 @@
 import UIKit
 
 protocol Coordinator: class {
-    var navigationController: UINavigationController { get set }
+    var router: Router { get set }
 
     func start()
 }

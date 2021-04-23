@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DetailWeatherSettingsViewController: UIViewController, Stroyboarded {
+class DetailWeatherSettingsViewController: UIViewController, StoryboardLoadable {
     // MARK: - Outlets
     @IBOutlet private weak var contentTableView: UITableView!
     private var saveButton = UIBarButtonItem()
