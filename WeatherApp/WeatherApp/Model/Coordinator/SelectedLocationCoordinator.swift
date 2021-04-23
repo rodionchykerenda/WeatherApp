@@ -10,15 +10,6 @@ import Foundation
 class SelectedLocationCoordinator: Coordinator {
     var router: Router
 
-    var selectedLocation: (longitude: Double, latitude: Double)? {
-        didSet {
-            guard let longitude = selectedLocation?.longitude,
-                  let latitude = selectedLocation?.latitude else { return }
-
-            updateInterfaces(longitude: longitude, latitude: latitude)
-        }
-    }
-
     init(router: Router) {
         self.router = router
     }
@@ -36,7 +27,7 @@ class SelectedLocationCoordinator: Coordinator {
             let destinationVC = MapViewController.instantiateWith(storyboardName: .main)
 
             destinationVC.onSelectAddButton = { [weak self] (latitude, longitude) in
-                self?.selectedLocation = (longitude: longitude, latitude: latitude)
+                self?.updateInterfaces(longitude: longitude, latitude: latitude)
             }
 
             self?.router.push(viewController: destinationVC, animated: true)

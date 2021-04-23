@@ -21,9 +21,6 @@ class SelectedLocationsViewController: UIViewController, StoryboardLoadable {
 
     private var dataSource: [WeatherModel] = []
 
-    //    private var settingsCoordinator: SettingsCoordinator?
-    //    private var detailsCoordinator: DetailsCoordinator?
-
     private var currentLocationButton: UIButton?
     private let locationManager = CLLocationManager()
 
@@ -62,17 +59,6 @@ class SelectedLocationsViewController: UIViewController, StoryboardLoadable {
     // MARK: - Actions
     @objc func addButtonTapped(_ sender: UIButton) {
         onSelectAddButton?()
-        //        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        //        // swiftlint:disable line_length
-        //        guard let destinationVC = mainStoryboard.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else {
-        //            return
-        //        }
-        //        // swiftlint:enable line_length
-        //
-        //        destinationVC.delegate = self
-        //        destinationVC.modalPresentationStyle = .fullScreen
-        //
-        //        navigationController?.pushViewController(destinationVC, animated: true)
     }
 
     @objc func currentLocationButtonTapped(_ sender: UIButton) {
@@ -92,14 +78,7 @@ class SelectedLocationsViewController: UIViewController, StoryboardLoadable {
     }
 
     @objc func settingsButtonTapped(_ sender: UIButton) {
-        guard let navController = navigationController else {
-            fatalError("Couldnt find navigation controller")
-        }
-
         onSelectSettingsButton?()
-
-        //        settingsCoordinator = SettingsCoordinator(router: ConcreteRouter(navController: navController))
-        //        settingsCoordinator?.start()
     }
 
     @objc func handleRefreshControl() {
@@ -158,14 +137,7 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
                                     longitude: dataSource[indexPath.row].longtitude,
                                     name: dataSource[indexPath.row].cityName)
 
-        guard let navController = navigationController else {
-            fatalError("Couldnt find navigation controller")
-        }
-
         onSelectDetailWeather?()
-
-        //        detailsCoordinator = DetailsCoordinator(router: ConcreteRouter(navController: navController))
-        //        detailsCoordinator?.start()
     }
 }
 
@@ -291,7 +263,7 @@ private extension SelectedLocationsViewController {
 
         var weathersLoaded = 0
 
-        dataSource.map {
+        dataSource.forEach {
             let networkManager = WeatherNetworkManager()
             networkManager.getTemperatureBy(coordinates: (longitude: $0.longtitude,
                                                           latitude: $0.lattitude)) { (temperature, coordinates, error) in
@@ -413,7 +385,6 @@ extension SelectedLocationsViewController {
                let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
                 gradientLayer.colors = [topColor, bottomColor]
             }
-            // redraw your layers here
         }
     }
 }

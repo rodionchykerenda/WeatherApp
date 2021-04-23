@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func didStart() -> Bool {
         let navController = UINavigationController()
 
-        mainCoordinator = SelectedLocationCoordinator(router: ConcreteRouter(navController: navController))
+        mainCoordinator = AppCoordinator(router: ConcreteRouter(navController: navController))
 
         mainCoordinator?.start()
 
@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         detailWeatherManager.detailWeatherToPresent.removeAll()
 
-        dataBaseManager.getAdditionalWeatherAttributes().map {
+        dataBaseManager.getAdditionalWeatherAttributes().forEach {
             // swiftlint:disable line_length
             detailWeatherManager.detailWeatherToPresent.append(DetailWeatherSelection(detailWeather: dataManager.getDetailWeatherEnum(by: $0.weatherAttributeName ?? ""), isSelected: $0.isSelected))
             // swiftlint:enable line_length

@@ -24,8 +24,7 @@ class MapViewController: UIViewController, StoryboardLoadable {
     private var latitude: Double?
     private var resultSearchController: UISearchController?
 
-    // MARK: - Public Properties
-//    weak var delegate: MapViewControllerDelegate?
+    // MARK: - Output
     var onSelectAddButton: ((Double, Double) -> Void)?
 
     // MARK: - VC LifeCycle Methods
@@ -49,8 +48,6 @@ class MapViewController: UIViewController, StoryboardLoadable {
             showAlreadyAddedAlert()
             return
         }
-
-//        delegate?.mapViewController(self, didAddLocation: (longitude: longitude, latitude: latitude))
 
         onSelectAddButton?(latitude, longitude)
         navigationController?.popViewController(animated: true)
