@@ -14,7 +14,7 @@ protocol MapViewControllerDelegate: class {
                                             latitude: Double?))
 }
 
-class MapViewController: UIViewController {
+class MapViewController: UIViewController, StoryboardLoadable {
     // MARK: - Outlets
     @IBOutlet private weak var mapView: MKMapView!
 
@@ -24,8 +24,8 @@ class MapViewController: UIViewController {
     private var latitude: Double?
     private var resultSearchController: UISearchController?
 
-    // MARK: - Public Properties
-    weak var delegate: MapViewControllerDelegate?
+    // MARK: - Output
+    var onSelectAddButton: ((Double, Double) -> Void)?
 
     // MARK: - VC LifeCycle Methods
     override func viewDidLoad() {
@@ -49,8 +49,7 @@ class MapViewController: UIViewController {
             return
         }
 
-        delegate?.mapViewController(self, didAddLocation: (longitude: longitude, latitude: latitude))
-
+        onSelectAddButton?(latitude, longitude)
         navigationController?.popViewController(animated: true)
     }
 

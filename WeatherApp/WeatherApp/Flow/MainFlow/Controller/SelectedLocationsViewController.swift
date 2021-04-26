@@ -8,7 +8,7 @@
 import UIKit
 import CoreLocation
 
-class SelectedLocationsViewController: UIViewController {
+class SelectedLocationsViewController: UIViewController, StoryboardLoadable {
     // MARK: - Outlets
     @IBOutlet private weak var backgroundView: UIView!
     @IBOutlet private weak var contentTableView: UITableView!
@@ -23,6 +23,11 @@ class SelectedLocationsViewController: UIViewController {
 
     private var currentLocationButton: UIButton?
     private let locationManager = CLLocationManager()
+
+    // MARK: - Public Properties
+    var onSelectDetailWeather: (() -> Void)?
+    var onSelectAddButton: (() -> Void)?
+    var onSelectSettingsButton: (() -> Void)?
 
     // MARK: - LifeCycle Methods
     override func viewDidLoad() {
@@ -53,17 +58,7 @@ class SelectedLocationsViewController: UIViewController {
 
     // MARK: - Actions
     @objc func addButtonTapped(_ sender: UIButton) {
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        // swiftlint:disable line_length
-        guard let destinationVC = mainStoryboard.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController else {
-            return
-        }
-        // swiftlint:enable line_length
-
-        destinationVC.delegate = self
-        destinationVC.modalPresentationStyle = .fullScreen
-
-        navigationController?.pushViewController(destinationVC, animated: true)
+        onSelectAddButton?()
     }
 
     @objc func currentLocationButtonTapped(_ sender: UIButton) {
@@ -83,17 +78,7 @@ class SelectedLocationsViewController: UIViewController {
     }
 
     @objc func settingsButtonTapped(_ sender: UIButton) {
-        let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
-
-        // swiftlint:disable line_length
-        guard let destinationVC = settingsStoryboard.instantiateViewController(withIdentifier: "MainSettingsViewController") as? MainSettingsViewController else {
-            return
-        }
-        // swiftlint:enable line_length
-
-        destinationVC.modalPresentationStyle = .fullScreen
-
-        navigationController?.pushViewController(destinationVC, animated: true)
+        onSelectSettingsButton?()
     }
 
     @objc func handleRefreshControl() {
@@ -152,26 +137,7 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
                                     longitude: dataSource[indexPath.row].longtitude,
                                     name: dataSource[indexPath.row].cityName)
 
-        let detailStoryBoard = UIStoryboard(name: "Detail", bundle: nil)
-
-        // swiftlint:disable line_length
-        guard let detailWeatherVC = detailStoryBoard.instantiateViewController(withIdentifier: "DetailWeatherViewController") as? DetailWeatherViewController,
-              let dailyDetailWeatherVC = detailStoryBoard.instantiateViewController(withIdentifier: "DailyDetailWeatherViewController") as? DailyDetailWeatherViewController else {
-            return
-        }
-        // swiftlint:enable line_length
-
-        detailWeatherVC.selectedLocation = dataBaseManager.getLocations().last
-
-        let tabBarViewController = UITabBarController()
-
-        detailWeatherVC.title = NSLocalizedString("weather", comment: "")
-
-        dailyDetailWeatherVC.title = NSLocalizedString("daily", comment: "")
-
-        tabBarViewController.setViewControllers([detailWeatherVC, dailyDetailWeatherVC], animated: false)
-
-        navigationController?.pushViewController(tabBarViewController, animated: true)
+        onSelectDetailWeather?()
     }
 }
 
@@ -233,9 +199,9 @@ private extension SelectedLocationsViewController {
 
         button.translatesAutoresizingMaskIntoConstraints = false
         button.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
-                                                    constant: 20).isActive = true
+                                     constant: 20).isActive = true
         button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                                                      constant: -140).isActive = true
+                                       constant: -140).isActive = true
         button.heightAnchor.constraint(equalToConstant: 80).isActive = true
         button.widthAnchor.constraint(equalToConstant: 80).isActive = true
 
@@ -297,7 +263,7 @@ private extension SelectedLocationsViewController {
 
         var weathersLoaded = 0
 
-        dataSource.map {
+        dataSource.forEach {
             let networkManager = WeatherNetworkManager()
             networkManager.getTemperatureBy(coordinates: (longitude: $0.longtitude,
                                                           latitude: $0.lattitude)) { (temperature, coordinates, error) in
@@ -339,37 +305,39 @@ private extension SelectedLocationsViewController {
     }
 }
 
-// MARK: - MapViewController Delegate Methods
-extension SelectedLocationsViewController: MapViewControllerDelegate {
-    func mapViewController(_ sender: MapViewController,
-                           didAddLocation: (longitude: Double?, latitude: Double?)) {
-        if let longitude = didAddLocation.longitude, let latitude = didAddLocation.latitude {
-            let networkManager = WeatherNetworkManager()
-            networkManager.getCityName(with: (longitude: longitude,
-                                              latitude: latitude)) { (cityName, coordinates, error) in
-                if let error = error {
-                    fatalError("\(error)")
-                }
+// MARK: - MapViewController Updated Methods
+extension SelectedLocationsViewController: UpdatableWithLocation {
+    func didSelectOnMap(location: (longitude: Double?, latitude: Double?)) {
+        guard let longitude = location.longitude, let latitude = location.latitude else {
+            return
+        }
 
-                guard let coordinates = coordinates, let cityName = cityName else {
-                    fatalError()
-                }
+        let networkManager = WeatherNetworkManager()
 
-                self.dataBaseManager.addCity(latitude: coordinates.lat,
-                                             longitude: coordinates.long,
-                                             name: cityName)
-
-                if DataManager.instance.isContainedCurrentLocation(in: self.dataSource) {
-                    self.dataSource.removeSubrange(1..<self.dataSource.count)
-                    self.dataSource.append(contentsOf:
-                                            DataManager.instance.getDataSourceModelArray(from:
-                                                                                            self.dataBaseManager.getCities()))
-                } else {
-                    self.dataSource = DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities())
-                }
-
-                self.loadAllWeathers()
+        networkManager.getCityName(with: (longitude: longitude,
+                                          latitude: latitude)) { (cityName, coordinates, error) in
+            if let error = error {
+                fatalError("\(error)")
             }
+
+            guard let coordinates = coordinates, let cityName = cityName else {
+                fatalError()
+            }
+
+            self.dataBaseManager.addCity(latitude: coordinates.lat,
+                                         longitude: coordinates.long,
+                                         name: cityName)
+
+            if DataManager.instance.isContainedCurrentLocation(in: self.dataSource) {
+                self.dataSource.removeSubrange(1..<self.dataSource.count)
+                self.dataSource.append(contentsOf:
+                                        DataManager.instance.getDataSourceModelArray(from:
+                                                                                        self.dataBaseManager.getCities()))
+            } else {
+                self.dataSource = DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities())
+            }
+
+            self.loadAllWeathers()
         }
     }
 }
@@ -417,7 +385,6 @@ extension SelectedLocationsViewController {
                let bottomColor = UIColor(named: String.bottomColor)?.cgColor {
                 gradientLayer.colors = [topColor, bottomColor]
             }
-            // redraw your layers here
         }
     }
 }
