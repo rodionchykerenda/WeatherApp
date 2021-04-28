@@ -23,6 +23,7 @@ class LocationSearchTableViewController: UITableViewController, MKLocalSearchCom
             self.tableView.reloadData()
         }
     }
+
     private var completer: MKLocalSearchCompleter = MKLocalSearchCompleter()
 
     // MARK: - Helpers

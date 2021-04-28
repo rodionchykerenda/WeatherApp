@@ -8,7 +8,15 @@
 import UIKit
 import CoreData
 
-class DataBaseManager {
+protocol SelectedLocationDataBaseManager {
+    func deleteAllLocations()
+    func delete(city: SelectedCity)
+    func getCities() -> [SelectedCity]
+    func addCity(latitude: Double, longitude: Double, name: String)
+    func addLocation(latitude: Double, longitude: Double, name: String)
+}
+
+class DataBaseManager: SelectedLocationDataBaseManager, SettingsDataBaseManager {
     static let instance = DataBaseManager()
 
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -160,7 +168,7 @@ class DataBaseManager {
     }
 
     func addAttributes(_ attributes: [DetailWeatherSettingsViewModel]) {
-        attributes.map {
+        attributes.forEach {
             let newAttribute = AdditionalWeatherAttribute(context: context)
             newAttribute.weatherAttributeName = $0.name.rawValue
             newAttribute.isSelected = $0.isSelected

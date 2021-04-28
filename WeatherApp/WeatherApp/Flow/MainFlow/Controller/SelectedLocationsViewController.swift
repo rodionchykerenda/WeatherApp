@@ -14,9 +14,9 @@ class SelectedLocationsViewController: UIViewController, StoryboardLoadable {
     @IBOutlet private weak var contentTableView: UITableView!
 
     // MARK: - Private Properties
-    private let dataManager = DataManager.instance
-    private let dataBaseManager = DataBaseManager.instance
-    private let measurementHelper = UnitMeasurementHelper()
+    private var dataManipulationManager: DataManipulationManager!
+    private var measurementHelper: UnitMeasurementHelperProtocol!
+    
     private var gradientLayer = CAGradientLayer()
 
     private var dataSource: [WeatherModel] = []
@@ -47,13 +47,22 @@ class SelectedLocationsViewController: UIViewController, StoryboardLoadable {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        dataBaseManager.deleteAllLocations()
+        dataManipulationManager.deleteAllLocations()
         StorageManager.instance.reset()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
+    // MARK: - Setters
+    func setDataManipulationManager(_ manager: DataManipulationManager) {
+        dataManipulationManager = manager
+    }
+
+    func setUnitMeasurementHelper(_ helper: UnitMeasurementHelperProtocol) {
+        measurementHelper = helper
     }
 
     // MARK: - Actions
@@ -122,7 +131,7 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
             DispatchQueue.main.async {
                 // swiftlint:disable line_length
                 if self.dataSource[indexPath.row] as? CurrentLocationWeatherModel == nil {
-                    self.dataBaseManager.delete(city: DataManager.instance.isContainedCurrentLocation(in: self.dataSource) ? self.dataBaseManager.getCities()[indexPath.row - 1] : self.dataBaseManager.getCities()[indexPath.row])
+                    self.dataManipulationManager.delete(city: self.isContainedCurrentLocation(in: self.dataSource) ? self.dataManipulationManager.getCities()[indexPath.row - 1] : self.dataManipulationManager.getCities()[indexPath.row])
                 }
                 // swiftlint:enable line_length
 
@@ -133,7 +142,7 @@ extension SelectedLocationsViewController: UITableViewDelegate, UITableViewDataS
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dataBaseManager.addLocation(latitude: dataSource[indexPath.row].lattitude,
+        dataManipulationManager.addLocationToDataBase(latitude: dataSource[indexPath.row].lattitude,
                                     longitude: dataSource[indexPath.row].longtitude,
                                     name: dataSource[indexPath.row].cityName)
 
@@ -150,7 +159,7 @@ private extension SelectedLocationsViewController {
     }
 
     func setUpData() {
-        dataSource = dataManager.getDataSourceModelArray(from: dataBaseManager.getCities())
+        dataSource = dataManipulationManager.getDataSourceModelArray()
     }
 
     func setUpTableview() {
@@ -252,6 +261,10 @@ private extension SelectedLocationsViewController {
         makeSettingsButton()
     }
 
+    func isContainedCurrentLocation(in dataSource: [WeatherModel]) -> Bool {
+        return !dataSource.filter { $0 as? CurrentLocationWeatherModel != nil }.isEmpty
+    }
+
     func loadAllWeathers(completionHandler: @escaping () -> Void = {}) {
         for index in 0..<dataSource.count {
             dataSource[index].temperature = nil
@@ -324,17 +337,16 @@ extension SelectedLocationsViewController: UpdatableWithLocation {
                 fatalError()
             }
 
-            self.dataBaseManager.addCity(latitude: coordinates.lat,
+            self.dataManipulationManager.addCityToDataBase(latitude: coordinates.lat,
                                          longitude: coordinates.long,
                                          name: cityName)
 
-            if DataManager.instance.isContainedCurrentLocation(in: self.dataSource) {
+            if self.isContainedCurrentLocation(in: self.dataSource) {
                 self.dataSource.removeSubrange(1..<self.dataSource.count)
                 self.dataSource.append(contentsOf:
-                                        DataManager.instance.getDataSourceModelArray(from:
-                                                                                        self.dataBaseManager.getCities()))
+                                        self.dataManipulationManager.getDataSourceModelArray())
             } else {
-                self.dataSource = DataManager.instance.getDataSourceModelArray(from: self.dataBaseManager.getCities())
+                self.dataSource = self.dataManipulationManager.getDataSourceModelArray()
             }
 
             self.loadAllWeathers()

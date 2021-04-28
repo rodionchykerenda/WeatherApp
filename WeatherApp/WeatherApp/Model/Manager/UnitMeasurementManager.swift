@@ -7,7 +7,13 @@
 
 import Foundation
 
-class UnitMeasurementManager {
+protocol UnitMeasurementManagerProtocol {
+    var hours: TimeFormat { get set }
+    var metrics: TemperatureMeasurement { get set }
+    var distance: DistanceMeasurement { get set }
+}
+
+class UnitMeasurementManager: UnitMeasurementManagerProtocol {
     static let instance = UnitMeasurementManager()
 
     var hours: TimeFormat = .twentyFour

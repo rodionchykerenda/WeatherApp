@@ -7,7 +7,11 @@
 
 import Foundation
 
-class UnitMeasurementHelper {
+protocol UnitMeasurementHelperProtocol {
+    func getCorrectTemperature(from celcius: Double) -> String
+}
+
+class UnitMeasurementHelper: UnitMeasurementHelperProtocol {
     private let dateFormater = DateFormatter()
     private let fullDateFormat = "EEEE, MMM d, yyyy"
     private let onlyTimeFormat24 = "HH:mm"

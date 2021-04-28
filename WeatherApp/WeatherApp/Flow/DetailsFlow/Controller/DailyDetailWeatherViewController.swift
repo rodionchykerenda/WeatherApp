@@ -13,20 +13,30 @@ class DailyDetailWeatherViewController: UIViewController, LoadableView, Storyboa
     @IBOutlet private weak var backView: UIView!
 
     // MARK: - Private Properties
-    private let storage = StorageManager.instance
+    private var storage: StorageManagerProtocol!
     private var dataSource = [DailyDetailWeatherModel]()
-    private let dataManager = DataManager.instance
+    private var dataManager: DetailWeatherDataManager!
     private var gradientLayer = CAGradientLayer()
 
     // MARK: - Public Properties
     var loaderView: UIView?
 
+    // MARK: - LifeCycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUpDelegates()
         styleUI()
         loadData()
+    }
+
+    // MARK: - Setters
+    func setDataManager(_ manager: DetailWeatherDataManager) {
+        dataManager = manager
+    }
+
+    func setStorage(_ manager: StorageManagerProtocol) {
+        storage = manager
     }
 }
 

@@ -14,10 +14,10 @@ class DetailWeatherViewController: UIViewController, LoadableView, StoryboardLoa
     private var gradientLayer = CAGradientLayer()
 
     // MARK: - Private Properties
-    private let storage = StorageManager.instance
-    private let dataManager = DataManager.instance
-    private let hoursCollectionHandler = HoursWeatherHandler()
-    private let detailCollectionHandler = DetailWeatherHandler()
+    private var storage: StorageManagerProtocol!
+    private var dataManager: DetailWeatherDataManager!
+    private var hoursCollectionHandler: CollectionViewHandler!
+    private var detailCollectionHandler: CollectionViewHandler!
     private var mainCurrentWeatherModel: MainCurrentWeatherViewModel?
     private var dataSource: [DetailWeatherRowsViewModel] = [.main,
                                                             .hourly,
@@ -39,6 +39,20 @@ class DetailWeatherViewController: UIViewController, LoadableView, StoryboardLoa
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+
+    // MARK: - Setters
+    func setDataManager(_ manager: DetailWeatherDataManager) {
+        dataManager = manager
+    }
+
+    func setCollectionViewHandlers(hours: CollectionViewHandler, detail: CollectionViewHandler) {
+        hoursCollectionHandler = hours
+        detailCollectionHandler = detail
+    }
+
+    func setStorage(_ manager: StorageManagerProtocol) {
+        storage = manager
     }
 
     // MARK: - Actions

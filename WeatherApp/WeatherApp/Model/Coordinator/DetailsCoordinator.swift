@@ -16,7 +16,13 @@ class DetailsCoordinator: Coordinator {
 
     func start() {
         let detailWeatherVC = DetailWeatherViewController.instantiateWith(storyboardName: .detail)
+        detailWeatherVC.setDataManager(DataManager())
+        detailWeatherVC.setStorage(StorageManager.instance)
+        detailWeatherVC.setCollectionViewHandlers(hours: HoursWeatherHandler(), detail: DetailWeatherHandler())
+        
         let dailyDetailWeatherVC = DailyDetailWeatherViewController.instantiateWith(storyboardName: .detail)
+        dailyDetailWeatherVC.setDataManager(DataManager())
+        dailyDetailWeatherVC.setStorage(StorageManager.instance)
 
         detailWeatherVC.selectedLocation = DataBaseManager.instance.getLocations().last
 

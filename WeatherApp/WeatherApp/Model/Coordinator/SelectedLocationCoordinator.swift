@@ -16,6 +16,11 @@ class SelectedLocationCoordinator: Coordinator {
 
     func start() {
         let destinationVC = SelectedLocationsViewController.instantiateWith(storyboardName: .main)
+        
+        destinationVC.setDataManipulationManager(MainDataManipulationManager(dataManager: DataManager(),
+                                                                         dataBaseManager: DataBaseManager.instance))
+        destinationVC.setUnitMeasurementHelper(UnitMeasurementHelper())
+
         destinationVC.onSelectDetailWeather = { [weak self] in
             guard let selfCoordinator = self else { return }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DetailWeatherViewModel {
+struct DetailWeatherViewModel: CollectionViewModel {
     let name: DetailWeatherName
     let value: String
 }

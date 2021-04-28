@@ -17,7 +17,6 @@ class AppCoordinator: Coordinator {
 
     func start() {
         mainCoordinator = SelectedLocationCoordinator(router: router)
-
         mainCoordinator?.start()
     }
 }

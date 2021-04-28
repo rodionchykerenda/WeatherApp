@@ -7,7 +7,11 @@
 
 import Foundation
 
-class DetailWeatherManager {
+protocol DetailWeatherManagerProtocol {
+    var detailWeatherToPresent: [DetailWeatherSelection] { get set }
+}
+
+class DetailWeatherManager: DetailWeatherManagerProtocol {
     static let instance = DetailWeatherManager()
 
     var detailWeatherToPresent: [DetailWeatherSelection] = [DetailWeatherSelection(detailWeather: .humidity, isSelected: true),

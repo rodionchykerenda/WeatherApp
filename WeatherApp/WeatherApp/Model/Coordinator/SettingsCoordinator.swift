@@ -16,6 +16,8 @@ class SettingsCoordinator: Coordinator {
 
     func start() {
         let destinationVC = MainSettingsViewController.instantiateWith(storyboardName: .settings)
+        destinationVC.setDataBaseManager(DataBaseManager.instance)
+        destinationVC.setUnitMeasurement(UnitMeasurementManager.instance)
 
         destinationVC.onSelectDetailWeatherSettings = {
             self.selectDetailWeather()
@@ -26,6 +28,8 @@ class SettingsCoordinator: Coordinator {
 
     private func selectDetailWeather() {
         let destinationVC = DetailWeatherSettingsViewController.instantiateWith(storyboardName: .settings)
+        destinationVC.setDataBaseManager(DataBaseManager.instance)
+        destinationVC.setDetailWeatherManager(DetailWeatherManager.instance)
 
         router.push(viewController: destinationVC, animated: true)
     }

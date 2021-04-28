@@ -11,8 +11,15 @@ protocol StorageObserver: class {
     func didGetUpdated(globalWeatherData: GlobalWeatherData?)
 }
 
-class StorageManager {
-    private(set) var isLoading: Bool = false
+protocol StorageManagerProtocol {
+    func getGlobalWeatherData() -> GlobalWeatherData?
+    func attach(_ observer: StorageObserver)
+    func getWeatherForLocationBy(longitude: Double, latitude: Double)
+    var isLoading: Bool { get set }
+}
+
+class StorageManager: StorageManagerProtocol {
+    var isLoading: Bool = false
 
     private lazy var observers = [StorageObserver]()
 
@@ -54,7 +61,7 @@ class StorageManager {
 
     func reset() {
         isLoading = false
-        observers.map {
+        observers.forEach {
             detach($0)
         }
     }
