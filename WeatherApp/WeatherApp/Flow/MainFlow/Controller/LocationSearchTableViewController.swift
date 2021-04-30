@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-protocol LocationSearchTableViewControllerDelegate: class {
+protocol LocationSearchTableViewControllerDelegate: AnyObject {
     func locationSearchTableViewController(_ sender: LocationSearchTableViewController,
                                            didSelectItem item: String)
 }

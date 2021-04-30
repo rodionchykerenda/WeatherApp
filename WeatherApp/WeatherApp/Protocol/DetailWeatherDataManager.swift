@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol DetailWeatherDataManager: class {
+protocol DetailWeatherDataManager: AnyObject {
     func getDetailWeatherViewModalArray(from networkModel: GlobalWeatherData) -> [DetailWeatherViewModel]
     func getHoursWeatherViewModelArray(from networkModelArray: [HourlyWeatherData]) -> [HoursWeatherViewModel]
     func getCurrentWeatherModel(from networkModel: CurrentWeatherData, with name: String) -> MainCurrentWeatherViewModel

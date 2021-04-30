@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol DataManipulationManager: class {
+protocol DataManipulationManager: AnyObject {
     var dataManager: SelectedLocationDataManager { get set }
     var dataBaseManager: SelectedLocationDataBaseManager { get set }
 

@@ -17,8 +17,6 @@ protocol SelectedLocationDataBaseManager {
 }
 
 class DataBaseManager: SelectedLocationDataBaseManager, SettingsDataBaseManager {
-    static let instance = DataBaseManager()
-
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     // MARK: - CRUD for SelectedCity

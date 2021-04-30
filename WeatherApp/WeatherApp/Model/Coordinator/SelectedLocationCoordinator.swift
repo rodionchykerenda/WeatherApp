@@ -8,23 +8,25 @@
 import Foundation
 
 class SelectedLocationCoordinator: Coordinator {
+    var managerFactory: ManagerFactoryProtocol
+    
     var router: Router
 
-    init(router: Router) {
+    init(router: Router, factory: ManagerFactoryProtocol) {
         self.router = router
+        self.managerFactory = factory
     }
 
     func start() {
         let destinationVC = SelectedLocationsViewController.instantiateWith(storyboardName: .main)
         
-        destinationVC.setDataManipulationManager(MainDataManipulationManager(dataManager: DataManager(),
-                                                                         dataBaseManager: DataBaseManager.instance))
+        destinationVC.setDataManipulationManager(managerFactory.getDataManipulationManager())
         destinationVC.setUnitMeasurementHelper(UnitMeasurementHelper())
 
         destinationVC.onSelectDetailWeather = { [weak self] in
             guard let selfCoordinator = self else { return }
 
-            let detailsCoordinator = DetailsCoordinator(router: selfCoordinator.router)
+            let detailsCoordinator = DetailsCoordinator(router: selfCoordinator.router, factory: selfCoordinator.managerFactory)
             detailsCoordinator.start()
         }
 
@@ -41,13 +43,15 @@ class SelectedLocationCoordinator: Coordinator {
         destinationVC.onSelectSettingsButton = { [weak self] in
             guard let selfCoordinator = self else { return }
 
-            let settingsCoordinator = SettingsCoordinator(router: selfCoordinator.router)
+            let settingsCoordinator = SettingsCoordinator(router: selfCoordinator.router, factory: selfCoordinator.managerFactory)
             settingsCoordinator.start()
         }
 
         router.push(viewController: destinationVC, animated: true)
 
-        if !DataBaseManager.instance.getLocations().isEmpty {
+        let dataBaseManager = DataBaseManager()
+        
+        if !dataBaseManager.getLocations().isEmpty {
             destinationVC.onSelectDetailWeather?()
         }
     }

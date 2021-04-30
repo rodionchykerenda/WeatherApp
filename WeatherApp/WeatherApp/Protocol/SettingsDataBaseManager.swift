@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol SettingsDataBaseManager: class {
+protocol SettingsDataBaseManager: AnyObject {
     func addUnit(hours: String, distance: String, metrics: String)
     func deleteAllUnits()
     func addAttributes(_ attributes: [DetailWeatherSettingsViewModel])

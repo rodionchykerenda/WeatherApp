@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol UpdatableWithLocation: class {
+protocol UpdatableWithLocation: AnyObject {
     func didSelectOnMap(location: (longitude: Double?, latitude: Double?))
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol LoadableView: class {
+protocol LoadableView: AnyObject {
     var loaderView: UIView? { get set }
 
     func showSpinner()

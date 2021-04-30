@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-protocol MapViewControllerDelegate: class {
+protocol MapViewControllerDelegate: AnyObject {
     func mapViewController(_ sender: MapViewController,
                            didAddLocation: (longitude: Double?,
                                             latitude: Double?))
@@ -43,8 +43,10 @@ class MapViewController: UIViewController, StoryboardLoadable {
     // MARK: - Actions
     @objc func addButtonTapped(_ sender: UIButton) {
         guard let latitude = latitude, let longitude = longitude else { return }
+        
+        let dataBaseManager = DataBaseManager()
 
-        if DataBaseManager.instance.isSelected(latitude: latitude, longitude: longitude) {
+        if dataBaseManager.isSelected(latitude: latitude, longitude: longitude) {
             showAlreadyAddedAlert()
             return
         }

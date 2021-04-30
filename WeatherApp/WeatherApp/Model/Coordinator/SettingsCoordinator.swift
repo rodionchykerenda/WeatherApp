@@ -8,16 +8,18 @@
 import UIKit
 
 class SettingsCoordinator: Coordinator {
+    var managerFactory: ManagerFactoryProtocol
     var router: Router
 
-    init(router: Router) {
+    init(router: Router, factory: ManagerFactoryProtocol) {
         self.router = router
+        self.managerFactory = factory
     }
 
     func start() {
         let destinationVC = MainSettingsViewController.instantiateWith(storyboardName: .settings)
-        destinationVC.setDataBaseManager(DataBaseManager.instance)
-        destinationVC.setUnitMeasurement(UnitMeasurementManager.instance)
+        destinationVC.setDataBaseManager(managerFactory.getSettingsDataBaseManager())
+        destinationVC.setUnitMeasurement(managerFactory.getUnitMeasurementManager())
 
         destinationVC.onSelectDetailWeatherSettings = {
             self.selectDetailWeather()
@@ -28,8 +30,8 @@ class SettingsCoordinator: Coordinator {
 
     private func selectDetailWeather() {
         let destinationVC = DetailWeatherSettingsViewController.instantiateWith(storyboardName: .settings)
-        destinationVC.setDataBaseManager(DataBaseManager.instance)
-        destinationVC.setDetailWeatherManager(DetailWeatherManager.instance)
+        destinationVC.setDataBaseManager(managerFactory.getSettingsDataBaseManager())
+        destinationVC.setDetailWeatherManager(managerFactory.getDetailWeatherManager())
 
         router.push(viewController: destinationVC, animated: true)
     }

@@ -12,8 +12,6 @@ protocol SelectedLocationDataManager {
 }
 
 class DataManager {
-    static let instance = DataManager()
-
     private let measurementHelper = UnitMeasurementHelper()
 
     func getImage(from detailWeatherName: DetailWeatherName) -> UIImage? {

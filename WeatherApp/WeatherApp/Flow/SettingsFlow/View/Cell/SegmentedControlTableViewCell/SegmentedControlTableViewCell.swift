@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol SegmentedControlTableViewCellDelegate: class {
+protocol SegmentedControlTableViewCellDelegate: AnyObject {
     func segmentedControlTableViewCell(_ sender: SegmentedControlTableViewCell, didSelectOption selectedOption: Int)
 }
 
