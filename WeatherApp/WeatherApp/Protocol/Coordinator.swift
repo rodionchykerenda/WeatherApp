@@ -7,8 +7,9 @@
 
 import UIKit
 
-protocol Coordinator: class {
+protocol Coordinator: AnyObject {
     var router: Router { get set }
+    var managerFactory: ManagerFactoryProtocol { get set }
 
     func start()
 }

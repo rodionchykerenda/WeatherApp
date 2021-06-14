@@ -7,7 +7,10 @@
 
 import Foundation
 
-struct HoursWeatherViewModel {
+protocol CollectionViewModel {
+}
+
+struct HoursWeatherViewModel: CollectionViewModel {
     var time: String
     var temperature: String
     var conditionName: String

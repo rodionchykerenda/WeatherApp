@@ -14,15 +14,25 @@ class DetailWeatherSettingsViewController: UIViewController, StoryboardLoadable 
     
     // MARK: - Private Properties
     private var dataSource = [DetailWeatherSettingsViewModel]()
-    private let detailWeatherManager = DetailWeatherManager.instance
-    private let dataBaseManager = DataBaseManager.instance
+    private var detailWeatherManager: DetailWeatherManagerProtocol!
+    private var dataBaseManager: SettingsDataBaseManager!
 
+    // MARK: - LifeCycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUpUI()
         setUpDataSource()
         setUpTableView()
+    }
+
+    // MARK: - Setters
+    func setDataBaseManager(_ manager: SettingsDataBaseManager) {
+        dataBaseManager = manager
+    }
+
+    func setDetailWeatherManager(_ manager: DetailWeatherManagerProtocol) {
+        detailWeatherManager = manager
     }
 
     // MARK: - Actions

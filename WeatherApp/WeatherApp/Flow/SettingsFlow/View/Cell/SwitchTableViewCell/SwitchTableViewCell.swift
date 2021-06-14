@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol SwitchTableViewCellDelegate: class {
+protocol SwitchTableViewCellDelegate: AnyObject {
     func switchTableViewCell(_ sender: SwitchTableViewCell, didSelectOption selectedOption: Bool)
 }
 
@@ -21,7 +21,8 @@ class SwitchTableViewCell: UITableViewCell {
 
     // MARK: - Setters
     func update(with settingsModel: DetailWeatherSettingsViewModel) {
-        detailWeatherNameLabel.text = DataManager.instance.getLocalizedName(from: settingsModel.name)
+        let dataManager = DataManager()
+        detailWeatherNameLabel.text = dataManager.getLocalizedName(from: settingsModel.name)
         isSelectedSwitch.setOn(settingsModel.isSelected, animated: false)
     }
 

@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-protocol LocationSearchTableViewControllerDelegate: class {
+protocol LocationSearchTableViewControllerDelegate: AnyObject {
     func locationSearchTableViewController(_ sender: LocationSearchTableViewController,
                                            didSelectItem item: String)
 }
@@ -23,6 +23,7 @@ class LocationSearchTableViewController: UITableViewController, MKLocalSearchCom
             self.tableView.reloadData()
         }
     }
+
     private var completer: MKLocalSearchCompleter = MKLocalSearchCompleter()
 
     // MARK: - Helpers

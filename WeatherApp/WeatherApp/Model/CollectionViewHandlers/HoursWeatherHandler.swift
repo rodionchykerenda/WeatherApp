@@ -7,13 +7,8 @@
 
 import UIKit
 
-class HoursWeatherHandler: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    private(set) var dataSource = [HoursWeatherViewModel]()
-
-    // MARK: - Setters
-    func setDataSource(with array: [HoursWeatherViewModel]) {
-        dataSource = array
-    }
+class HoursWeatherHandler: NSObject, CollectionViewHandler {
+    var dataSource = [CollectionViewModel]()
 
     // MARK: - CollectionView Delegate & DataSource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -23,7 +18,11 @@ class HoursWeatherHandler: NSObject, UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(for: indexPath, cellType: HoursWeatherCollectionViewCell.self)
 
-        cell.update(with: dataSource[indexPath.row])
+        guard let viewModel = dataSource[indexPath.row] as? HoursWeatherViewModel else {
+            fatalError("Wrong model passed to the cell")
+        }
+
+        cell.update(with: viewModel)
 
         return cell
     }

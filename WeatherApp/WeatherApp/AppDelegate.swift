@@ -9,10 +9,10 @@ import UIKit
 import CoreData
 
 // swiftlint:disable private_over_fileprivate
-fileprivate let dataBaseManager = DataBaseManager.instance
+fileprivate let dataBaseManager = DataBaseManager()
 fileprivate let detailWeatherManager = DetailWeatherManager.instance
 fileprivate let unitMeasurementManager = UnitMeasurementManager.instance
-fileprivate let dataManager = DataManager.instance
+fileprivate let dataManager = DataManager()
 // swiftlint:enable private_over_fileprivate
 
 @main
@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func didStart() -> Bool {
         let navController = UINavigationController()
 
-        mainCoordinator = AppCoordinator(router: ConcreteRouter(navController: navController))
+        mainCoordinator = AppCoordinator(router: ConcreteRouter(navController: navController), factory: ManagerFactory())
 
         mainCoordinator?.start()
 

@@ -17,8 +17,8 @@ class MainSettingsViewController: UIViewController, StoryboardLoadable {
                                                        .metrics,
                                                        .distance,
                                                        .details]
-    private let unitMeasurementManager = UnitMeasurementManager.instance
-    private let dataBaseManager = DataBaseManager.instance
+    private var unitMeasurementManager: UnitMeasurementManagerProtocol!
+    private var dataBaseManager: SettingsDataBaseManager!
 
     // MARK: - Output
     var onSelectDetailWeatherSettings: (() -> Void)?
@@ -29,6 +29,15 @@ class MainSettingsViewController: UIViewController, StoryboardLoadable {
 
         setUpUI()
         setUpTableView()
+    }
+
+    // MARK: - Setters
+    func setDataBaseManager(_ manager: SettingsDataBaseManager) {
+        dataBaseManager = manager
+    }
+
+    func setUnitMeasurement(_ manager: UnitMeasurementManagerProtocol) {
+        unitMeasurementManager = manager
     }
 
     // MARK: - Actions

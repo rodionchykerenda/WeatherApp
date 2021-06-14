@@ -14,9 +14,10 @@ class DetailWeatherCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var detailWeatherValueLabel: UILabel!
 
     func update(with detailWeatherViewModel: DetailWeatherViewModel) {
-        detailWeatherNameLabel.text = DataManager.instance.getLocalizedName(from: detailWeatherViewModel.name)
+        let dataManager = DataManager()
+        detailWeatherNameLabel.text = dataManager.getLocalizedName(from: detailWeatherViewModel.name)
         detailWeatherValueLabel.text = detailWeatherViewModel.value
 
-        detailWeatherImage.image = DataManager.instance.getImage(from: detailWeatherViewModel.name)
+        detailWeatherImage.image = dataManager.getImage(from: detailWeatherViewModel.name)
     }
 }

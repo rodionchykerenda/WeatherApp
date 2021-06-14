@@ -11,7 +11,7 @@ struct WeatherNetworkManager {
     private let appID = "&appid=73894ed3d982502db57069e27afdfc6b"
     private let session = URLSession(configuration: .default)
 
-    func parseWeatherJSON(_ weatherData: Data) -> Double? {
+    private func parseWeatherJSON(_ weatherData: Data) -> Double? {
         let decoder = JSONDecoder()
         do {
             let decodedData = try decoder.decode(WeatherData.self, from: weatherData)

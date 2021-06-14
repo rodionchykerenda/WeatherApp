@@ -7,13 +7,8 @@
 
 import UIKit
 
-class DetailWeatherHandler: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    private(set) var dataSource = [DetailWeatherViewModel]()
-
-    // MARK: - Setters
-    func setDataSource(with array: [DetailWeatherViewModel]) {
-        dataSource = array
-    }
+class DetailWeatherHandler: NSObject, CollectionViewHandler {
+    var dataSource = [CollectionViewModel]()
 
     // MARK: - CollectionView Delegate & DataSource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -23,7 +18,11 @@ class DetailWeatherHandler: NSObject, UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(for: indexPath, cellType: DetailWeatherCollectionViewCell.self)
 
-        cell.update(with: dataSource[indexPath.row])
+        guard let viewModel = dataSource[indexPath.row] as? DetailWeatherViewModel else {
+            fatalError("Wrong model passed to the cell")
+        }
+
+        cell.update(with: viewModel)
 
         return cell
     }
